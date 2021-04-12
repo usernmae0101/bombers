@@ -1,0 +1,44 @@
+{
+    "name": "bombers",
+    "version": "0.1.0",
+    "private": true,
+    "workspaces": {
+        "packages": [
+            "packages/*"
+        ]
+    },
+    "jest": {
+        "rootDir": "__tests__",
+        "transform": {
+            ".+\\.(css|styl|less|sass|scss)$": "jest-css-modules-transform",
+            ".(ts|tsx)": "ts-jest"
+        },
+        "testRegex": "spec\\.tsx?$",
+        "snapshotSerializers": [
+            "enzyme-to-json/serializer"
+        ],
+        "setupFilesAfterEnv": [
+            "<rootDir>/setupEnzyme.ts"
+        ]
+    },
+    "scripts": {
+        "test": "jest",
+        "dev:client": "yarn workspace @bombers/client dev",
+        "dev:server": "yarn workspace @bombers/server dev",
+        "prod:client": "yarn workspace @bombers/client build",
+        "prod:server": "yarn workspace @bombers/server serve"
+    },
+    "devDependencies": {
+        "@types/enzyme": "^3.10.8",
+        "@types/enzyme-adapter-react-16": "^1.0.6",
+        "@types/jest": "^26.0.22",
+        "@types/react": "^17.0.3",
+        "enzyme": "^3.11.0",
+        "enzyme-adapter-react-16": "^1.15.6",
+        "enzyme-to-json": "^3.6.1",
+        "jest": "^26.6.3",
+        "jest-css-modules-transform": "^4.2.0",
+        "react": "^17.0.2",
+        "ts-jest": "^26.5.4"
+    }
+}

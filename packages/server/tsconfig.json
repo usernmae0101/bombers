@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "target": "es2015",
+        "experimentalDecorators": true
+    },
+    "references": [
+        {
+            "path": "../shared"
+        }
+    ]
+}
