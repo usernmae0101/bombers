@@ -16,9 +16,8 @@ export default class BattleRoom extends Game {
         this.onMessage(SocketChannels.BATTLE_ON_PLACE_BOMB, (client: Client) => {
             const color = this.players[client.sessionId].color;
             const player = this.state.plyaers.get(String(color));
-            const map = this.state.map;
 
-            player.bombs && this.tryToPlaceBomb(map, player, color);
+            player.bombs && this.tryToPlaceBomb(player, color);
         });
 
         this.onMessage(SocketChannels.BATTLE_ON_PING, (client: Client, data: any) => {
@@ -79,7 +78,7 @@ export default class BattleRoom extends Game {
         this.setPatchRate(SERVER_SOCKET_PATCH_RATE);
         this.setState(new GameState(inverseMap(getMapByRoomId(this._roomNumId))));
         this.setMetadata({ id: this._roomNumId, isLocked: false });
-        this.setSimulationInterval(deltaMS => this.update(deltaMS, this.state), 1000 / GAME_SERVER_TICK_RATE);
+        this.setSimulationInterval(deltaMS => this.update(deltaMS), 1000 / GAME_SERVER_TICK_RATE);
     }
 
     private _updateMetada(key: string, value: any) {

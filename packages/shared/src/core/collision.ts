@@ -1,4 +1,4 @@
-import { MoveDirections } from "../utils/enums";
+import { EntityNumbers, MoveDirections } from "../utils/enums";
 import { IOverlapData } from "../utils/interfaces";
 import {
     Cell,
@@ -8,6 +8,11 @@ import {
     GAME_RESOLUTION_TILE_SIZE,
     GAME_RESOLUTION_WIDTH
 } from "./../idnex";
+
+const COLLIDED_ENTITIES = [
+    EntityNumbers.ROCK, EntityNumbers.BOX, EntityNumbers.BOMB_YELLOW,
+    EntityNumbers.BOMB_BLUE, EntityNumbers.BOMB_RED, EntityNumbers.BOMB_PURPLE
+];
 
 export function align(position: number): number {
     return Math.round(position / GAME_RESOLUTION_TILE_SIZE) * GAME_RESOLUTION_TILE_SIZE;
@@ -130,8 +135,8 @@ export function detectOverlap(player: IPlayer, map: number[][][] | Cell[]): IOve
         }
             break
         case MoveDirections.LEFT: {
-            // at the right border
-            if (tileXRound === GAME_RESOLUTION_TILE_LENGTH_X - 1) return [];
+            // at the left border
+            if (tileXRound === 0) return [];
 
             const col: number = tileXRound - 1;
             const rowCeilEntities: number[] = parseEntitiesFromMap(map, tileYCeil, col);
@@ -144,8 +149,8 @@ export function detectOverlap(player: IPlayer, map: number[][][] | Cell[]): IOve
         }
             break;
         case MoveDirections.RIGHT: {
-            // at the left border
-            if (tileXRound === 0) return [];
+            // at the right border
+            if (tileXRound === GAME_RESOLUTION_TILE_LENGTH_X - 1) return [];
 
             const col: number = tileXRound + 1;
             const rowCeilEntities: number[] = parseEntitiesFromMap(map, tileYCeil, col);
@@ -159,6 +164,17 @@ export function detectOverlap(player: IPlayer, map: number[][][] | Cell[]): IOve
     }
 
     return overlapData;
+}
+
+export function detectCollision(overlapData: IOverlapData[]): [boolean, number, number] {
+    for (let {row, col, entities} of overlapData) {
+        for (let entity_id of COLLIDED_ENTITIES) {
+            if (entities.includes(entity_id))
+                return [true, row, col];
+        }
+    }
+
+    return [false, null, null];
 }
 
 export function isOutOfBorder(player: IPlayer) {

@@ -22,7 +22,7 @@ export interface IPredictBuffer {
     [tick: number]: {
         toX?: number;
         toY?: number;
-        isLate?: boolean;
+        isUnpredicted?: boolean;
     };
 }
 

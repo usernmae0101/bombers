@@ -2,6 +2,12 @@ import { GAME_RESOLUTION_TILE_LENGTH_X, Cell, IGameStatePlayer, IPredictBuffer, 
 import { GAME_STATE_BUFFER_CLIENT_MAX_SIZE } from "../utils/constants";
 import { MoveDirections } from "../utils/enums";
 import { IOverlapData, IStateChanges } from "../utils/interfaces";
+import { detectCollision } from "./collision";
+import { ArraySchema } from "@colyseus/schema";
+
+/*
+    Converts map from [row][col][entities] to [Cell.entities];
+*/
 
 export function inverseMap(map: number[][][]): Cell[] {
     const _map = [];
@@ -14,6 +20,10 @@ export function inverseMap(map: number[][][]): Cell[] {
 
     return _map;
 }
+
+/*
+    Converts map from [Cell.entities] to [row][col][entities];
+*/
 
 export function normalizeMap(map: Cell[], width?: number): number[][][] {
     const _map = [];
@@ -43,21 +53,23 @@ export function tryToMovePlayer(player: IGameStatePlayer): [boolean, "x" | "y", 
 }
 
 export function reconciliation(player: IGameStatePlayer, buffer: IPredictBuffer, tick: number, changes: IStateChanges) {    
+    // unpredicted tick
     if (!buffer[tick]) {
         if (GAME_STATE_BUFFER_CLIENT_MAX_SIZE <= Object.keys(buffer).length)
-            cleanPredictBuffer(buffer, tick);
+            clearPredictBuffer(buffer, tick);
 
-        buffer[tick] = { isLate: true };
+        buffer[tick] = { isUnpredicted: true };
     }
 
     changes.y !== undefined && alignPlayer(buffer, "toY", player, tick, changes.y);
     changes.x !== undefined && alignPlayer(buffer, "toX", player, tick, changes.x);
 
-    cleanPredictBuffer(buffer, tick);
+    clearPredictBuffer(buffer, tick);
 }
 
 function alignPlayer(buffer: IPredictBuffer, field: "toX" | "toY", player: IGameStatePlayer, tick: number, value: number) {    
-    if (buffer[tick].isLate) {
+    if (buffer[tick].isUnpredicted) {
+        // just force the change?
         player[field] = value;
         return;
     }
@@ -73,15 +85,37 @@ function alignPlayer(buffer: IPredictBuffer, field: "toX" | "toY", player: IGame
     }
 }
 
-function filterOverlap(player: IGameStatePlayer, entities: number[]) {
-    for (let entity_id of entities) {
-        switch (entity_id) {
+/*
+    Update map object to trigger the Proxy trap "set".
+*/
 
+export function updateCellOnTheMap(map: ArraySchema<Cell>, indexOfCell: number, entity_id: number, action: "add" | "remove", doCheckDubs?: boolean) {
+    const entities = map[indexOfCell].entinies.toArray();
+
+    if (action === "add") {
+        if (doCheckDubs && entities.includes(entity_id)) return;
+        entities.push(entity_id);
+    }
+
+    if (action === "remove") {
+        const entitityIndex = entities.findIndex(id => id === entity_id);
+        entities.splice(entitityIndex, 1);
+    }
+
+    map[indexOfCell] = new Cell(entities);
+}
+
+export function filterOverlap(player: IGameStatePlayer, overlapData: IOverlapData[], map: Cell[]) {
+    for (let { row, col, entities } of overlapData) {
+        for (let entity_id of entities) {
+            switch(entity_id) {
+
+            }
         }
     }
 }
 
-export function movePlayer(player: IGameStatePlayer, field: "x"| "y", offset: number, map: number[][][] | Cell[]): IOverlapData[] {
+export function movePlayer(player: IGameStatePlayer, field: "x"| "y", offset: number, map: number[][][] | Cell[]): IOverlapData[] | undefined {
     const _player = { x: player.x, y: player.y, direction: player.direction };
 
     _player[field] += offset;
@@ -93,10 +127,12 @@ export function movePlayer(player: IGameStatePlayer, field: "x"| "y", offset: nu
     
     const overlapData: IOverlapData[] = detectOverlap(_player, map);
     if (overlapData.length) {
-        /*if (collide) {
-            align;
+        const [isCollide, row, col] = detectCollision(overlapData);
+        if (isCollide) {
+            player[field] = align(_player[field]);
+            // sliding?
             return;
-        }*/
+        }
     }
 
     player[field] = _player[field];
@@ -104,7 +140,11 @@ export function movePlayer(player: IGameStatePlayer, field: "x"| "y", offset: nu
     return overlapData;
 }
 
-function cleanPredictBuffer(buffer: IPredictBuffer, tick: number) {
+/*
+    Clrears all client-side predictions to the current tick.
+*/
+
+function clearPredictBuffer(buffer: IPredictBuffer, tick: number) {
     delete buffer[tick];
 
     const min = Math.min(...Object.keys(buffer).map(key => +key));

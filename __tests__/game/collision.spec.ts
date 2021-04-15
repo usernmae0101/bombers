@@ -2,7 +2,13 @@ import { Cell, detectOverlap, GAME_RESOLUTION_TILE_SIZE, IOverlapData, IPlayer, 
 
 describe("collision", () => {
     describe("overlap detection should be detected correctly", () => {
-        let player: IPlayer, overlapDataServer: IOverlapData[], overlapDataClient: IOverlapData[];
+        let overlapDataServer: IOverlapData[], overlapDataClient: IOverlapData[];
+        
+        const player: IPlayer = {
+            x: GAME_RESOLUTION_TILE_SIZE * 2,
+            y: GAME_RESOLUTION_TILE_SIZE * 2,
+            direction: null
+        };
 
         const clinetMap: number[][][] = [
             [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
@@ -25,11 +31,8 @@ describe("collision", () => {
         };
 
         test("overlap detection by top should finds [2] in a row 1 and col 2", () => {
-            player = {
-                x: GAME_RESOLUTION_TILE_SIZE * 2,
-                y: GAME_RESOLUTION_TILE_SIZE * 2 - 4,
-                direction: MoveDirections.UP
-            };
+            player.direction = MoveDirections.UP;
+            player.y -= 4;
 
             setOverlapData(player);
 
@@ -38,11 +41,8 @@ describe("collision", () => {
         });
 
         test("overlap detection by bottom should finds [1, 2, 3] in a row 3 and col 2", () => {
-            player = {
-                x: GAME_RESOLUTION_TILE_SIZE * 2,
-                y: GAME_RESOLUTION_TILE_SIZE * 2 + 4,
-                direction: MoveDirections.DOWN
-            };
+            player.direction = MoveDirections.DOWN;
+            player.y += 4;
 
             setOverlapData(player);
 
@@ -51,11 +51,8 @@ describe("collision", () => {
         });
 
         test("overlap detection by right should finds [1] in a row 2 and col 3", () => {
-            player = {
-                x: GAME_RESOLUTION_TILE_SIZE * 2 + 4,
-                y: GAME_RESOLUTION_TILE_SIZE * 2,
-                direction: MoveDirections.RIGHT
-            };
+            player.direction = MoveDirections.RIGHT;
+            player.x += 4;
 
             setOverlapData(player);
 
@@ -64,11 +61,8 @@ describe("collision", () => {
         });
 
         test("overlap detection by left should finds [3] in a row 2 and col 1", () => {
-            player = {
-                x: GAME_RESOLUTION_TILE_SIZE * 2 - 4,
-                y: GAME_RESOLUTION_TILE_SIZE * 2,
-                direction: MoveDirections.LEFT
-            };
+            player.direction = MoveDirections.LEFT;
+            player.x -= 4;
 
             setOverlapData(player);
 

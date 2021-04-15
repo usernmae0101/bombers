@@ -134,6 +134,7 @@ export class Game implements IGame {
 
     onMapChange = (cell: Cell, index: number) => {
         const entities = cell.entinies.toArray();
+       
         const row = Math.floor(index / GAME_RESOLUTION_TILE_LENGTH_X);
         const col = index % GAME_RESOLUTION_TILE_LENGTH_X;
 				
@@ -143,7 +144,7 @@ export class Game implements IGame {
     onPong = (data: any) => {
         this._ping = Date.now() - data.t;
         this._delay = this._ping + SERVER_SOCKET_PATCH_RATE;
-
+        
         this._dispatch(action_game_set_ping(this._ping));
     };
 
@@ -222,7 +223,7 @@ export class Game implements IGame {
         this._app.ticker.add((delta: number) => {
             const alpha = Math.min((performance.now() - then) / this._delay, 1);
 
-            this._movePlayer(alpha);
+            //this._movePlayer(alpha);
             this._moveEnemies(alpha);
 
             this._renderer.update(this._state);
@@ -273,10 +274,11 @@ export class Game implements IGame {
     }
 
     private _updatePlayer() {
-        const [hasBeenMoved, field, offset] = tryToMovePlayer(this._state.players[this._color]);
+        const player = this._state.players[this._color];
+        const [hasBeenMoved, field, offset] = tryToMovePlayer(player);
         if (hasBeenMoved) {
-            movePlayer(this._state.players[this._color], field, offset, this._state.map);
-            this._state.players[this._color][field === "x" ? "toX" : "toY"] = this._state.players[this._color][field];
+            movePlayer(player, field, offset, this._state.map);
+            player[field === "x" ? "toX" : "toY"] = player[field];
             this._insertPredictToBuffer();
         }
     }
