@@ -1,7 +1,7 @@
-import { GAME_RESOLUTION_TILE_LENGTH_X, Cell, IGameStatePlayer, IPredictBuffer } from "../idnex";
+import { GAME_RESOLUTION_TILE_LENGTH_X, Cell, IGameStatePlayer, IPredictBuffer, isOutOfBorder, align, detectOverlap } from "../idnex";
 import { GAME_STATE_BUFFER_CLIENT_MAX_SIZE } from "../utils/constants";
 import { MoveDirections } from "../utils/enums";
-import { IStateChanges } from "../utils/interfaces";
+import { IOverlapData, IStateChanges } from "../utils/interfaces";
 
 export function inverseMap(map: number[][][]): Cell[] {
     const _map = [];
@@ -71,6 +71,37 @@ function alignPlayer(buffer: IPredictBuffer, field: "toX" | "toY", player: IGame
 
         player[field] = buffer[max][field];
     }
+}
+
+function filterOverlap(player: IGameStatePlayer, entities: number[]) {
+    for (let entity_id of entities) {
+        switch (entity_id) {
+
+        }
+    }
+}
+
+export function movePlayer(player: IGameStatePlayer, field: "x"| "y", offset: number, map: number[][][] | Cell[]): IOverlapData[] {
+    const _player = { x: player.x, y: player.y, direction: player.direction };
+
+    _player[field] += offset;
+    
+    if (isOutOfBorder(_player)) {
+        player[field] = align(_player[field]);
+        return;
+    } 
+    
+    const overlapData: IOverlapData[] = detectOverlap(_player, map);
+    if (overlapData.length) {
+        /*if (collide) {
+            align;
+            return;
+        }*/
+    }
+
+    player[field] = _player[field];
+
+    return overlapData;
 }
 
 function cleanPredictBuffer(buffer: IPredictBuffer, tick: number) {

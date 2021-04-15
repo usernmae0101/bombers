@@ -1,28 +1,23 @@
-// not good enough! must slide on the wall
-
+import { MoveDirections } from "../utils/enums";
+import { IOverlapData } from "../utils/interfaces";
 import {
+    Cell,
     GAME_RESOLUTION_HEIGHT,
     GAME_RESOLUTION_TILE_LENGTH_X,
     GAME_RESOLUTION_TILE_LENGTH_Y,
     GAME_RESOLUTION_TILE_SIZE,
     GAME_RESOLUTION_WIDTH
 } from "./../idnex";
-import { EntityNumbers } from "./../idnex";
 
-const COLLIDING_ENTITIES = [
-    EntityNumbers.BOX, EntityNumbers.ROCK,
-    EntityNumbers.BOMB_BLUE, EntityNumbers.BOMB_RED,
-    EntityNumbers.BOMB_YELLOW, EntityNumbers.BOMB_PURPLE
-];
-
-function align(position: number): number {
+export function align(position: number): number {
     return Math.round(position / GAME_RESOLUTION_TILE_SIZE) * GAME_RESOLUTION_TILE_SIZE;
 }
 
-interface IPlayer {
+export interface IPlayer {
     x: number;
     y: number;
-    r: number;
+    r?: number;
+    direction?: number;
 }
 
 interface IBlock {
@@ -53,7 +48,7 @@ function getBlockPos(tileX: number, tileY: number): IBlock {
     }
 }
 
-function hasDetectCollison(player: IPlayer, block: IBlock): boolean {
+function hasDetectOverlap(player: IPlayer, block: IBlock): boolean {
     const playerDistanceX = Math.abs(player.x - block.x);
     const playerDistanceY = Math.abs(player.y - block.y);
 
@@ -69,98 +64,110 @@ function hasDetectCollison(player: IPlayer, block: IBlock): boolean {
     return (cornerDistanceSq <= Math.pow(player.r, 2));
 }
 
-function isOverlapTop(x: number, y: number, map: number[][][]): boolean {
-    if (y < 0) return true;
+function parseEntitiesFromMap(map: Cell[] | number[][][], row: number, col: number): number[] {
+    if (map[0] instanceof Cell)
+        return (map[row * GAME_RESOLUTION_TILE_LENGTH_X + col] as Cell).entinies.toArray();
 
-    const [tileXCeil, tileXFloor] = getCurrentTilePos(x);
-    const [_, __, tileYRound] = getCurrentTilePos(y);
+    return (map as number[][][])[row][col];
+}
 
-    for (let entity_id of COLLIDING_ENTITIES) {
-        if (tileYRound === 0) return false;
-        if (map[tileYRound - 1][tileXCeil].includes(entity_id)) {
-            if (hasDetectCollison(getPlayerPos(x, y), getBlockPos(tileXCeil, tileYRound - 1))) return true;
+/*
+    Detection depends on the move direction and of the occupied space.
+    ____________
+   |_|_|_|_|_|_|
+   |_|_|X|X|_|_|
+   |_|_|XPX|_|_|
+   |_|_|X|X|_|_|
+   |_|_|_|_|_|_|
+*/
+
+export function detectOverlap(player: IPlayer, map: number[][][] | Cell[]): IOverlapData[] {
+    let overlapData: IOverlapData[] = [];
+
+    let tileXCeil, tileXFloor, tileYRound, _, __, tileYCeil, tileYFloor, tileXRound, isSameLine;
+
+    if ([MoveDirections.DOWN, MoveDirections.UP].includes(player.direction)) {
+        [tileXCeil, tileXFloor] = getCurrentTilePos(player.x);
+        [_, __, tileYRound] = getCurrentTilePos(player.y);
+        isSameLine = tileXCeil === tileXFloor;
+    }
+
+    if ([MoveDirections.LEFT, MoveDirections.RIGHT].includes(player.direction)) {
+        [tileYCeil, tileYFloor] = getCurrentTilePos(player.y);
+        [_, __, tileXRound] = getCurrentTilePos(player.x);
+        isSameLine = tileYCeil === tileYFloor;
+    }
+
+    const playersPos = getPlayerPos(player.x, player.y);
+
+    switch (player.direction) {
+        case MoveDirections.UP: {
+            // at the top border
+            if (tileYRound === 0) return [];
+
+            const row: number = tileYRound - 1;
+            const colCeilEntities: number[] = parseEntitiesFromMap(map, row, tileXCeil);
+            const colFloorEntities: number[] = parseEntitiesFromMap(map, row, tileXFloor);
+
+            if (colCeilEntities.length && hasDetectOverlap(playersPos, getBlockPos(tileXCeil, row)))
+                overlapData.push({ row, col: tileXCeil, entities: colCeilEntities });
+            if (!isSameLine && colFloorEntities.length && hasDetectOverlap(playersPos, getBlockPos(tileXFloor, row)))
+                overlapData.push({ row, col: tileXFloor, entities: colFloorEntities });
         }
-        if (map[tileYRound - 1][tileXFloor].includes(entity_id)) {
-            if (hasDetectCollison(getPlayerPos(x, y), getBlockPos(tileXFloor, tileYRound - 1))) return true;
+            break;
+        case MoveDirections.DOWN: {
+            // at the bottom border
+            if (tileYRound === GAME_RESOLUTION_TILE_LENGTH_Y - 1) return [];
+
+            const row: number = tileYRound + 1;
+            const colCeilEntities: number[] = parseEntitiesFromMap(map, row, tileXCeil);
+            const colFloorEntities: number[] = parseEntitiesFromMap(map, row, tileXFloor);
+
+            if (colCeilEntities.length && hasDetectOverlap(playersPos, getBlockPos(tileXCeil, row)))
+                overlapData.push({ row, col: tileXCeil, entities: colCeilEntities });
+            if (!isSameLine && colFloorEntities.length && hasDetectOverlap(playersPos, getBlockPos(tileXFloor, row)))
+                overlapData.push({ row, col: tileXFloor, entities: colFloorEntities });
+        }
+            break
+        case MoveDirections.LEFT: {
+            // at the right border
+            if (tileXRound === GAME_RESOLUTION_TILE_LENGTH_X - 1) return [];
+
+            const col: number = tileXRound - 1;
+            const rowCeilEntities: number[] = parseEntitiesFromMap(map, tileYCeil, col);
+            const rowFloorEntities: number[] = parseEntitiesFromMap(map, tileYFloor, col);
+
+            if (rowCeilEntities.length && hasDetectOverlap(playersPos, getBlockPos(col, tileYCeil)))
+                overlapData.push({ row: tileYCeil, col, entities: rowCeilEntities });
+            if (!isSameLine && rowFloorEntities.length && hasDetectOverlap(playersPos, getBlockPos(col, tileYFloor)))
+                overlapData.push({ row: tileYFloor, col, entities: rowFloorEntities });
+        }
+            break;
+        case MoveDirections.RIGHT: {
+            // at the left border
+            if (tileXRound === 0) return [];
+
+            const col: number = tileXRound + 1;
+            const rowCeilEntities: number[] = parseEntitiesFromMap(map, tileYCeil, col);
+            const rowFloorEntities: number[] = parseEntitiesFromMap(map, tileYFloor, col);
+
+            if (rowCeilEntities.length && hasDetectOverlap(playersPos, getBlockPos(col, tileYCeil)))
+                overlapData.push({ row: tileYCeil, col, entities: rowCeilEntities });
+            if (!isSameLine && rowFloorEntities.length && hasDetectOverlap(playersPos, getBlockPos(col, tileYFloor)))
+                overlapData.push({ row: tileYFloor, col, entities: rowFloorEntities });
         }
     }
 
-    return false;
+    return overlapData;
 }
 
-function isOverlapBottom(x: number, y: number, map: number[][][]): boolean {
-    if (y + GAME_RESOLUTION_TILE_SIZE > GAME_RESOLUTION_HEIGHT) return true;
-
-    const [tileXCeil, tileXFloor] = getCurrentTilePos(x);
-    const [_, __, tileYRound] = getCurrentTilePos(y);
-
-    for (let entity_id of COLLIDING_ENTITIES) {
-        if (tileYRound === GAME_RESOLUTION_TILE_LENGTH_Y - 1) return false;
-        if (map[tileYRound + 1][tileXCeil].includes(entity_id)) {
-            if (hasDetectCollison(getPlayerPos(x, y), getBlockPos(tileXCeil, tileYRound + 1))) return true;
-        }
-        if (map[tileYRound + 1][tileXFloor].includes(entity_id)) {
-            if (hasDetectCollison(getPlayerPos(x, y), getBlockPos(tileXFloor, tileYRound + 1))) return true;
-        }
-    }
+export function isOutOfBorder(player: IPlayer) {
+    if (
+        player.x < 0 ||
+        player.x + GAME_RESOLUTION_TILE_SIZE > GAME_RESOLUTION_WIDTH ||
+        player.y + GAME_RESOLUTION_TILE_SIZE > GAME_RESOLUTION_HEIGHT ||
+        player.y < 0
+    ) return true;
 
     return false;
-}
-
-function isOverlapRight(x: number, y: number, map: number[][][]): boolean {
-    if (x + GAME_RESOLUTION_TILE_SIZE > GAME_RESOLUTION_WIDTH) return true;
-
-    const [tileYCeil, tileYFloor] = getCurrentTilePos(y);
-    const [_, __, tileXRound] = getCurrentTilePos(x);
-
-    for (let entity_id of COLLIDING_ENTITIES) {
-        if (tileXRound === GAME_RESOLUTION_TILE_LENGTH_X - 1) return false;
-        if (map[tileYCeil][tileXRound + 1].includes(entity_id)) {
-            if (hasDetectCollison(getPlayerPos(x, y), getBlockPos(tileXRound + 1, tileYCeil))) return true;
-        }
-        if (map[tileYFloor][tileXRound + 1].includes(entity_id)) {
-            if (hasDetectCollison(getPlayerPos(x, y), getBlockPos(tileXRound + 1, tileYFloor))) return true;
-        }
-    }
-
-    return false;
-}
-
-function isOverlapLeft(x: number, y: number, map: number[][][]): boolean {
-    if (x < 0) return true;
-
-    const [tileYCeil, tileYFloor] = getCurrentTilePos(y);
-    const [_, __, tileXRound] = getCurrentTilePos(x);
-
-    for (let entity_id of COLLIDING_ENTITIES) {
-        if (tileXRound === 0) return false;
-        if (map[tileYCeil][tileXRound - 1].includes(entity_id)) {
-            if (hasDetectCollison(getPlayerPos(x, y), getBlockPos(tileXRound - 1, tileYCeil))) return true;
-        }
-        if (map[tileYFloor][tileXRound - 1].includes(entity_id)) {
-            if (hasDetectCollison(getPlayerPos(x, y), getBlockPos(tileXRound - 1, tileYFloor))) return true;
-        }
-    }
-
-    return false;
-}
-
-export function calculateTopCollision(x: number, y: number, map: number[][][]): number {
-    if (isOverlapTop(x, y, map)) return align(y);
-    return y;
-}
-
-export function calculateRightCollision(x: number, y: number, map: number[][][]): number {
-    if (isOverlapRight(x, y, map)) return align(x);
-    return x;
-}
-
-export function calculateBottomCollision(x: number, y: number, map: number[][][]): number {
-    if (isOverlapBottom(x, y, map)) return align(y);
-    return y;
-}
-
-export function calculateLeftCollision(x: number, y: number, map: number[][][]): number {
-    if (isOverlapLeft(x, y, map)) return align(x);
-    return x;
 }

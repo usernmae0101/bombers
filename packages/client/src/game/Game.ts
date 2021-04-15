@@ -26,6 +26,7 @@ import {
     IGameInitialData,
     Cell,
     GAME_RESOLUTION_TILE_LENGTH_X,
+    movePlayer,
 } from "@bombers/shared/src/idnex";
 import BombsContainer from "./containers/BombsContainer";
 import BoxesContainer from "./containers/BoxesContainer";
@@ -87,12 +88,25 @@ export class Game implements IGame {
             ]);
     }
 
-    set players(value: IGameStatePlayers) { this._state.players = value; }
-    set map(value: number[][][]) { this._state.map = value; }
-    set room(value: Room<GameState>) { this._room = value; }
-    set dispatch(value: Dispatch) { this._dispatch = value; }
+    set players(value: IGameStatePlayers) { 
+        this._state.players = value; 
+    }
 
-    get ping(): number { return this._ping; }
+    set map(value: number[][][]) { 
+        this._state.map = value; 
+    }
+
+    set room(value: Room<GameState>) { 
+        this._room = value; 
+    }
+
+    set dispatch(value: Dispatch) { 
+        this._dispatch = value; 
+    }
+
+    get ping(): number { 
+        return this._ping; 
+    }
 
     onAddPlayer = (player: Player, color: string) => {
         this._state.players[Number(color)] = player.toJSON() as IGameStatePlayer;
@@ -261,8 +275,8 @@ export class Game implements IGame {
     private _updatePlayer() {
         const [hasBeenMoved, field, offset] = tryToMovePlayer(this._state.players[this._color]);
         if (hasBeenMoved) {
-            this._state.players[this._color][field === "x" ? "toX" : "toY"] += offset;
-            this._state.players[this._color][field] += offset;
+            movePlayer(this._state.players[this._color], field, offset, this._state.map);
+            this._state.players[this._color][field === "x" ? "toX" : "toY"] = this._state.players[this._color][field];
             this._insertPredictToBuffer();
         }
     }

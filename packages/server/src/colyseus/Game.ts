@@ -1,4 +1,13 @@
-import { GameState, GAME_SERVER_TICK_RATE, tryToMovePlayer, PlayerColors, ISlots, slots, Player, Cell, GAME_RESOLUTION_TILE_SIZE, GAME_RESOLUTION_TILE_LENGTH_X, EntityNumbers, getBombByThePlayersColor, GAME_RESOLUTION_TILE_LENGTH_Y } from "@bombers/shared/src/idnex";
+import {
+    GameState,
+    GAME_SERVER_TICK_RATE,
+    tryToMovePlayer,
+    PlayerColors, ISlots, slots, Player, Cell,
+    GAME_RESOLUTION_TILE_SIZE,
+    GAME_RESOLUTION_TILE_LENGTH_X,
+    EntityNumbers, getBombByThePlayersColor,
+    GAME_RESOLUTION_TILE_LENGTH_Y, movePlayer, IOverlapData
+} from "@bombers/shared/src/idnex";
 import { Room } from "colyseus";
 import { ArraySchema } from "@colyseus/schema";
 
@@ -29,7 +38,9 @@ export default class Game extends Room<GameState> {
         return color;
     }
 
-    get tick(): number { return this._tick; }
+    get tick(): number { 
+        return this._tick; 
+    }
 
     protected reset() {
         this.slots = slots;
@@ -79,12 +90,12 @@ export default class Game extends Room<GameState> {
 
         for (let radius = 1, fire, cellIndex; radius <= player.radius; radius++) {
             // spread rigth
-            if (!isStopRight && epicenterCol + radius < GAME_RESOLUTION_TILE_LENGTH_X 
+            if (!isStopRight && epicenterCol + radius < GAME_RESOLUTION_TILE_LENGTH_X
                 && !this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, indexOfEpicenterCell + 1)) {
                 cellIndex = indexOfEpicenterCell + radius;
 
                 const isRightBorder = epicenterCol + radius === GAME_RESOLUTION_TILE_LENGTH_X - 1;
-                isStopRight = !isRightBorder && this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, cellIndex + 1); 
+                isStopRight = !isRightBorder && this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, cellIndex + 1);
 
                 if (this._doesEntityExistAtIndex(map, EntityNumbers.BOX, cellIndex)) {
                     isStopRight = true;
@@ -97,12 +108,12 @@ export default class Game extends Room<GameState> {
             }
 
             // spread left
-            if (!isStopLeft && epicenterCol - radius > -1 
+            if (!isStopLeft && epicenterCol - radius > -1
                 && !this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, indexOfEpicenterCell - 1)) {
                 cellIndex = indexOfEpicenterCell - radius;
 
                 const isLeftBorder = epicenterCol - radius === 0;
-                isStopLeft = !isLeftBorder && this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, cellIndex - 1); 
+                isStopLeft = !isLeftBorder && this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, cellIndex - 1);
 
                 if (this._doesEntityExistAtIndex(map, EntityNumbers.BOX, cellIndex)) {
                     isStopLeft = true;
@@ -120,7 +131,7 @@ export default class Game extends Room<GameState> {
                 cellIndex = indexOfEpicenterCell - (radius * GAME_RESOLUTION_TILE_LENGTH_X);
 
                 const isUpBorder = epicenterRow - radius === 0;
-                isStopUp = !isUpBorder && this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, cellIndex - GAME_RESOLUTION_TILE_LENGTH_X); 
+                isStopUp = !isUpBorder && this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, cellIndex - GAME_RESOLUTION_TILE_LENGTH_X);
 
                 if (this._doesEntityExistAtIndex(map, EntityNumbers.BOX, cellIndex)) {
                     isStopUp = true;
@@ -133,12 +144,12 @@ export default class Game extends Room<GameState> {
             }
 
             // spread down
-            if (!isStopDown && epicenterRow + radius < GAME_RESOLUTION_TILE_LENGTH_Y 
+            if (!isStopDown && epicenterRow + radius < GAME_RESOLUTION_TILE_LENGTH_Y
                 && !this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, indexOfEpicenterCell + GAME_RESOLUTION_TILE_LENGTH_X)) {
                 cellIndex = indexOfEpicenterCell + (radius * GAME_RESOLUTION_TILE_LENGTH_X);
 
                 const isDownBorder = epicenterRow + radius === GAME_RESOLUTION_TILE_LENGTH_Y - 1;
-                isStopDown = !isDownBorder && this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, cellIndex + GAME_RESOLUTION_TILE_LENGTH_X); 
+                isStopDown = !isDownBorder && this._doesEntityExistAtIndex(map, EntityNumbers.ROCK, cellIndex + GAME_RESOLUTION_TILE_LENGTH_X);
 
                 if (this._doesEntityExistAtIndex(map, EntityNumbers.BOX, cellIndex)) {
                     isStopDown = true;
@@ -170,7 +181,7 @@ export default class Game extends Room<GameState> {
                 EntityNumbers.ITEM_RADIUS, EntityNumbers.ITEM_SPEED
             ];
             const index = Math.floor(Math.random() * items.length);
-    
+
             this._updateCellOnTheMap(map, cellIndex, items[index], "add");
         }
     }
@@ -197,11 +208,15 @@ export default class Game extends Room<GameState> {
 
             const [hasBeenMoved, field, offset] = tryToMovePlayer(player);
             if (hasBeenMoved) {
-                player[field] += offset;
+                const overlapData: IOverlapData[] = movePlayer(player, field, offset, state.map);
                 ++player.tick;
+                
+                console.log(overlapData);
+                // interete to overlap array
             }
         }
     }
+
 
     protected update(deltaMS: number, state: GameState) {
         const deltaTick = deltaMS / (1000 / GAME_SERVER_TICK_RATE);

@@ -32,6 +32,12 @@ export interface ISnapshotBuffer {
     }
 }
 
+export interface IOverlapData {
+    row: number;
+    col: number;
+    entities: number[];
+}
+
 export interface ISnapshot {
     timestamp: number;
     changes: {
