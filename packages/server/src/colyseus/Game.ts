@@ -1,13 +1,4 @@
-import {
-    GameState,
-    GAME_SERVER_TICK_RATE,
-    tryToMovePlayer,
-    PlayerColors, ISlots, slots, Player, Cell,
-    GAME_RESOLUTION_TILE_SIZE,
-    GAME_RESOLUTION_TILE_LENGTH_X,
-    EntityNumbers, getBombByThePlayersColor,
-    GAME_RESOLUTION_TILE_LENGTH_Y, movePlayer, IOverlapData, filterOverlap, updateCellOnTheMap
-} from "@bombers/shared/src/idnex";
+import * as Shared from "@bombers/shared/src/idnex";
 import { Room } from "colyseus";
 
 interface IPlayers {
@@ -18,12 +9,15 @@ interface IPlayers {
     }
 }
 
-const COLORS = [PlayerColors.BLUE, PlayerColors.PURPLE, PlayerColors.RED, PlayerColors.YELLOW];
+const COLORS = [
+    Shared.PlayerColors.BLUE, Shared.PlayerColors.PURPLE,
+    Shared.PlayerColors.RED, Shared.PlayerColors.YELLOW
+];
 
-export default class Game extends Room<GameState> {
+export default class Game extends Room<Shared.GameState> {
     private _availableColors: number[] = COLORS;
     protected isGameActive = false;
-    protected slots: ISlots = slots;
+    protected slots: Shared.ISlots = Shared.slots;
     protected readyPlayers: number = 0;
     protected players: IPlayers = {};
     protected readyTickerInterval: NodeJS.Timeout = null;
@@ -44,31 +38,31 @@ export default class Game extends Room<GameState> {
     }
 
     protected reset() {
-        this.slots = slots;
+        this.slots = Shared.slots;
         this.readyPlayers = 0;
         this.readyTimer = 5;
         this._tick = 0;
         this._availableColors = COLORS;
     }
 
-    protected tryToPlaceBomb(player: Player, color: number) {
-        const playersRow = Math.floor((player.y + (GAME_RESOLUTION_TILE_SIZE / 2)) / GAME_RESOLUTION_TILE_SIZE);
-        const playersCol = Math.floor((player.x + (GAME_RESOLUTION_TILE_SIZE / 2)) / GAME_RESOLUTION_TILE_SIZE);
+    protected tryToPlaceBomb(player: Shared.Player, color: number) {
+        const playersRow = Math.floor((player.y + (Shared.GAME_RESOLUTION_TILE_SIZE / 2)) / Shared.GAME_RESOLUTION_TILE_SIZE);
+        const playersCol = Math.floor((player.x + (Shared.GAME_RESOLUTION_TILE_SIZE / 2)) / Shared.GAME_RESOLUTION_TILE_SIZE);
 
-        const indexOfCell = playersRow * GAME_RESOLUTION_TILE_LENGTH_X + playersCol;
+        const indexOfCell = playersRow * Shared.GAME_RESOLUTION_TILE_LENGTH_X + playersCol;
 
         const entitiesAtThePoint = this.state.map[indexOfCell].entinies.toArray();
         const bombs = [
-            EntityNumbers.BOMB_YELLOW, EntityNumbers.BOMB_RED,
-            EntityNumbers.BOMB_PURPLE, EntityNumbers.BOMB_BLUE
+            Shared.EntityNumbers.BOMB_YELLOW, Shared.EntityNumbers.BOMB_RED,
+            Shared.EntityNumbers.BOMB_PURPLE, Shared.EntityNumbers.BOMB_BLUE
         ];
 
         for (let entity of entitiesAtThePoint)
             if (bombs.includes(entity)) return;
 
-        const bomb = getBombByThePlayersColor(color);
+        const bomb = Shared.getBombByThePlayersColor(color);
 
-        updateCellOnTheMap(this.state.map, indexOfCell, bomb, "add");
+        Shared.updateCellOnTheMap(this.state.map, indexOfCell, bomb, "add");
         --player.bombs;
 
         setTimeout(() => {
@@ -93,91 +87,92 @@ export default class Game extends Room<GameState> {
         let isStop = false, cellIndex: number, fire: number, isBorder: boolean;
 
         switch (frame) {
-            case EntityNumbers.FIRE_RIGHT:
+            case Shared.EntityNumbers.FIRE_RIGHT:
                 cellIndex = indexOfEpicenterCell + radius;
-                isBorder = epicenterCol + radius === GAME_RESOLUTION_TILE_LENGTH_X - 1;
-                isStop = !isBorder && this._doesEntityExistAtIndex(EntityNumbers.ROCK, cellIndex + 1);
+                isBorder = epicenterCol + radius === Shared.GAME_RESOLUTION_TILE_LENGTH_X - 1;
+                isStop = !isBorder && this._doesEntityExistAtIndex(Shared.EntityNumbers.ROCK, cellIndex + 1);
                 break;
-            case EntityNumbers.FIRE_LEFT:
+            case Shared.EntityNumbers.FIRE_LEFT:
                 cellIndex = indexOfEpicenterCell - radius;
                 isBorder = epicenterCol - radius === 0
-                isStop = !isBorder && this._doesEntityExistAtIndex(EntityNumbers.ROCK, cellIndex - 1);
+                isStop = !isBorder && this._doesEntityExistAtIndex(Shared.EntityNumbers.ROCK, cellIndex - 1);
                 break;
-            case EntityNumbers.FIRE_TOP:
-                cellIndex = indexOfEpicenterCell - (radius * GAME_RESOLUTION_TILE_LENGTH_X)
+            case Shared.EntityNumbers.FIRE_TOP:
+                cellIndex = indexOfEpicenterCell - (radius * Shared.GAME_RESOLUTION_TILE_LENGTH_X)
                 isBorder = epicenterRow - radius === 0;
-                isStop = !isBorder && this._doesEntityExistAtIndex(EntityNumbers.ROCK, cellIndex - GAME_RESOLUTION_TILE_LENGTH_X)
+                isStop = !isBorder && this._doesEntityExistAtIndex(Shared.EntityNumbers.ROCK, cellIndex - Shared.GAME_RESOLUTION_TILE_LENGTH_X)
                 break;
-            case EntityNumbers.FIRE_BOTTOM:
-                cellIndex = indexOfEpicenterCell + (radius * GAME_RESOLUTION_TILE_LENGTH_X);
-                isBorder = epicenterRow + radius === GAME_RESOLUTION_TILE_LENGTH_Y - 1;
-                isStop = !isBorder && this._doesEntityExistAtIndex(EntityNumbers.ROCK, cellIndex + GAME_RESOLUTION_TILE_LENGTH_X);
+            case Shared.EntityNumbers.FIRE_BOTTOM:
+                cellIndex = indexOfEpicenterCell + (radius * Shared.GAME_RESOLUTION_TILE_LENGTH_X);
+                isBorder = epicenterRow + radius === Shared.GAME_RESOLUTION_TILE_LENGTH_Y - 1;
+                isStop = !isBorder && this._doesEntityExistAtIndex(Shared.EntityNumbers.ROCK, cellIndex + Shared.GAME_RESOLUTION_TILE_LENGTH_X);
         }
 
-        if (this._doesEntityExistAtIndex(EntityNumbers.BOX, cellIndex)) {
+        if (this._doesEntityExistAtIndex(Shared.EntityNumbers.BOX, cellIndex)) {
             isStop = true;
-            updateCellOnTheMap(this.state.map, cellIndex, EntityNumbers.BOX, "remove");
+            Shared.updateCellOnTheMap(this.state.map, cellIndex, Shared.EntityNumbers.BOX, "remove");
             this._dropRandomItem(cellIndex);
         }
 
-        fire = isStop || isEndOfRadius ? frame : EntityNumbers.FIRE_CENTER;
+        fire = isStop || isEndOfRadius ? frame : Shared.EntityNumbers.FIRE_CENTER;
         blaze.push({ id: fire, index: cellIndex });
 
         return isStop;
     }
 
-    private _detonateTheBomb(player: Player, indexOfEpicenterCell: number, bomb: number, epicenter: [number, number]) {
-        updateCellOnTheMap(this.state.map, indexOfEpicenterCell, bomb, "remove");
+    private _detonateTheBomb(player: Shared.Player, indexOfEpicenterCell: number, bomb: number, epicenter: [number, number]) {
+        Shared.updateCellOnTheMap(this.state.map, indexOfEpicenterCell, bomb, "remove");
 
         const [epicenterRow, epicenterCol] = epicenter;
 
-        const blaze = [{ id: EntityNumbers.FIRE_CENTER, index: indexOfEpicenterCell }];
+        const blaze = [{ id: Shared.EntityNumbers.FIRE_CENTER, index: indexOfEpicenterCell }];
 
         let isStopRight, isStopDown, isStopUp, isStopLeft = false;
 
         for (let radius = 1; radius <= player.radius; radius++) {
             let isEndOfRadius = radius === player.radius;
+
             // spread rigth
-            if (!isStopRight && epicenterCol + radius < GAME_RESOLUTION_TILE_LENGTH_X
-                && !this._doesEntityExistAtIndex(EntityNumbers.ROCK, indexOfEpicenterCell + 1))
+            if (!isStopRight && epicenterCol + radius < Shared.GAME_RESOLUTION_TILE_LENGTH_X
+                && !this._doesEntityExistAtIndex(Shared.EntityNumbers.ROCK, indexOfEpicenterCell + 1))
                 isStopRight = this._spreadFlame(
                     indexOfEpicenterCell,
-                    EntityNumbers.FIRE_RIGHT,
+                    Shared.EntityNumbers.FIRE_RIGHT,
                     blaze, epicenterRow, epicenterCol, radius, isEndOfRadius);
 
             // spread left
             if (!isStopLeft && epicenterCol - radius > -1
-                && !this._doesEntityExistAtIndex(EntityNumbers.ROCK, indexOfEpicenterCell - 1))
+                && !this._doesEntityExistAtIndex(Shared.EntityNumbers.ROCK, indexOfEpicenterCell - 1))
                 isStopLeft = this._spreadFlame(
                     indexOfEpicenterCell,
-                    EntityNumbers.FIRE_LEFT,
+                    Shared.EntityNumbers.FIRE_LEFT,
                     blaze, epicenterRow, epicenterCol, radius, isEndOfRadius);
 
             // spread up
             if (!isStopUp && epicenterRow - radius > -1
-                && !this._doesEntityExistAtIndex(EntityNumbers.ROCK, indexOfEpicenterCell - GAME_RESOLUTION_TILE_LENGTH_X))
+                && !this._doesEntityExistAtIndex(Shared.EntityNumbers.ROCK, indexOfEpicenterCell - Shared.GAME_RESOLUTION_TILE_LENGTH_X))
                 isStopUp = this._spreadFlame(
                     indexOfEpicenterCell,
-                    EntityNumbers.FIRE_TOP,
+                    Shared.EntityNumbers.FIRE_TOP,
                     blaze, epicenterRow, epicenterCol, radius, isEndOfRadius);
 
             // spread down
-            if (!isStopDown && epicenterRow + radius < GAME_RESOLUTION_TILE_LENGTH_Y
-                && !this._doesEntityExistAtIndex(EntityNumbers.ROCK, indexOfEpicenterCell + GAME_RESOLUTION_TILE_LENGTH_X))
+            if (!isStopDown && epicenterRow + radius < Shared.GAME_RESOLUTION_TILE_LENGTH_Y
+                && !this._doesEntityExistAtIndex(Shared.EntityNumbers.ROCK, indexOfEpicenterCell + Shared.GAME_RESOLUTION_TILE_LENGTH_X))
                 isStopDown = this._spreadFlame(
                     indexOfEpicenterCell,
-                    EntityNumbers.FIRE_BOTTOM,
+                    Shared.EntityNumbers.FIRE_BOTTOM,
                     blaze, epicenterRow, epicenterCol, radius, isEndOfRadius);
         }
 
         const changeVisionOfBlaze = (action: "add" | "remove") => {
             for (let flame of blaze)
-                updateCellOnTheMap(this.state.map, flame.index, flame.id, action);
+                Shared.updateCellOnTheMap(this.state.map, flame.index, flame.id, action);
         };
 
         changeVisionOfBlaze("add");
 
-        updateCellOnTheMap(this.state.map, indexOfEpicenterCell, EntityNumbers.CRATER, "add", true);
+        Shared.updateCellOnTheMap(this.state.map, indexOfEpicenterCell, Shared.EntityNumbers.CRATER, "add", true);
 
         setTimeout(() => { changeVisionOfBlaze("remove"); }, 500);
     }
@@ -185,12 +180,12 @@ export default class Game extends Room<GameState> {
     private _dropRandomItem(cellIndex: number) {
         if (Math.round(Math.random() * 5) > 3) {
             const items = [
-                EntityNumbers.ITEM_BOMB, EntityNumbers.ITEM_HEALTH,
-                EntityNumbers.ITEM_RADIUS, EntityNumbers.ITEM_SPEED
+                Shared.EntityNumbers.ITEM_BOMB, Shared.EntityNumbers.ITEM_HEALTH,
+                Shared.EntityNumbers.ITEM_RADIUS, Shared.EntityNumbers.ITEM_SPEED
             ];
             const index = Math.floor(Math.random() * items.length);
 
-            updateCellOnTheMap(this.state.map, cellIndex, items[index], "add");
+            Shared.updateCellOnTheMap(this.state.map, cellIndex, items[index], "add");
         }
     }
 
@@ -198,19 +193,19 @@ export default class Game extends Room<GameState> {
         for (let { color } of Object.values(this.players)) {
             const player = this.state.plyaers.get(String(color));
 
-            const [hasBeenMoved, field, offset] = tryToMovePlayer(player);
+            const [hasBeenMoved, field, offset] = Shared.tryToMovePlayer(player);
             if (hasBeenMoved) {
-                const overlapData: IOverlapData[] = movePlayer(player, field, offset, this.state.map);
+                const overlapData: Shared.IOverlapData[] = Shared.movePlayer(player, field, offset, this.state.map);
                 ++player.tick;
 
                 if (overlapData && overlapData.length)
-                    filterOverlap(player, overlapData, this.state.map);
+                    Shared.filterOverlap(player, overlapData, this.state.map);
             }
         }
     }
 
     protected update(deltaMS: number) {
-        const deltaTick = deltaMS / (1000 / GAME_SERVER_TICK_RATE);
+        const deltaTick = deltaMS / (1000 / Shared.GAME_SERVER_TICK_RATE);
 
         if (this.isGameActive) {
             this._updatePlayers();

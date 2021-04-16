@@ -1,54 +1,54 @@
 import React from "react";
-import {BrowserRouter} from "react-router-dom";
-import {Provider, useDispatch, useSelector} from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import { Provider, useDispatch, useSelector } from "react-redux";
 
 import Routes from "./Routes";
 import store from "./redux/store";
-import {select_user_auth, select_user_auth_is_social, select_user_auth_token, select_user_data_nickname, select_user_error_code, select_user_social_type, select_user_social_uid, select_user_socket_instance, select_user_socket_room_app} from "./redux/selectors/user-selecrots";
-import {action_uesr_set_social_uid, action_user_create_social, action_user_fetch_data_social, action_user_set_auth_is_social, action_user_set_social_type, action_user_set_socket_app_room} from "./redux/actions/user-actions";
-import {ApiResponseCodes, SocketChannels} from "@bombers/shared/src/idnex";
-import {handle_socket_app_online, IOnline} from "../handlers/socket-app-handler";
+import * as UserSelectors from "./redux/selectors/user-selecrots";
+import * as UserActions from "./redux/actions/user-actions";
+import { ApiResponseCodes, SocketChannels } from "@bombers/shared/src/idnex";
+import { handle_socket_app_online, IOnline } from "../handlers/socket-app-handler";
 import Loader from "./components/Loader";
 
 const Main = () => {
     const dispatch = useDispatch();
 
-    const isAuthViaSocial = useSelector(select_user_auth_is_social);
-    const authToken = useSelector(select_user_auth_token);
-    const userUid = useSelector(select_user_social_uid);
-    const userSocialType = useSelector(select_user_social_type);
-    const errorCode = useSelector(select_user_error_code);
-    const isAuth = useSelector(select_user_auth);
-    const nickname = useSelector(select_user_data_nickname);
-    const socket = useSelector(select_user_socket_instance);
-    const appRoom = useSelector(select_user_socket_room_app);
+    const isAuthViaSocial = useSelector(UserSelectors.select_user_auth_is_social);
+    const authToken = useSelector(UserSelectors.select_user_auth_token);
+    const userUid = useSelector(UserSelectors.select_user_social_uid);
+    const userSocialType = useSelector(UserSelectors.select_user_social_type);
+    const errorCode = useSelector(UserSelectors.select_user_error_code);
+    const isAuth = useSelector(UserSelectors.select_user_auth);
+    const nickname = useSelector(UserSelectors.select_user_data_nickname);
+    const socket = useSelector(UserSelectors.select_user_socket_instance);
+    const appRoom = useSelector(UserSelectors.select_user_socket_room_app);
 
     React.useEffect(() => {
         if (isDevMode) {
-            dispatch(action_user_set_social_type("vk"));
-            dispatch(action_uesr_set_social_uid(-1));
-            dispatch(action_user_set_auth_is_social(true));
+            dispatch(UserActions.action_user_set_social_type("vk"));
+            dispatch(UserActions.action_uesr_set_social_uid(-1));
+            dispatch(UserActions.action_user_set_auth_is_social(true));
         }
     }, []);
 
     React.useEffect(() => {
         if (isAuthViaSocial === true) {
-            dispatch(action_user_fetch_data_social({
+            dispatch(UserActions.action_user_fetch_data_social({
                 uid: userUid,
                 social: userSocialType
             }));
         }
 
-        if (isAuthViaSocial === false) {}
+        if (isAuthViaSocial === false) { }
     }, [isAuthViaSocial]);
 
     React.useEffect(() => {
         switch (errorCode) {
             case ApiResponseCodes.USER_NOT_EXISTS_SOCIAL:
-                dispatch(action_user_create_social({
+                dispatch(UserActions.action_user_create_social({
                     uid: isDevMode ? Math.round(Math.random() * 90000 + 2) : userUid,
                     social: userSocialType,
-                    data: {nickname: Math.random().toString(32).slice(4)}
+                    data: { nickname: Math.random().toString(32).slice(4) }
                 }));
                 break;
         }
@@ -65,7 +65,7 @@ const Main = () => {
                     handle_socket_app_online(dispatch, online);
                 });
 
-                dispatch(action_user_set_socket_app_room(_appRoom));
+                dispatch(UserActions.action_user_set_socket_app_room(_appRoom));
             }
         })();
     }, [isAuth]);

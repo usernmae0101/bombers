@@ -1,6 +1,6 @@
-import { Client, Room } from "colyseus";
+import { Room } from "colyseus";
 
-import { IMember, AppState, SocketChannels} from "@bombers/shared/src/idnex";
+import { AppState, SocketChannels} from "@bombers/shared/src/idnex";
 
 interface IClients {
     [sessionId: string]: {

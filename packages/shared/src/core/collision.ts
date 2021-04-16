@@ -1,12 +1,12 @@
-import { EntityNumbers, MoveDirections } from "../utils/enums";
-import { IOverlapData } from "../utils/interfaces";
 import {
     Cell,
+    IOverlapData,
     GAME_RESOLUTION_HEIGHT,
     GAME_RESOLUTION_TILE_LENGTH_X,
     GAME_RESOLUTION_TILE_LENGTH_Y,
     GAME_RESOLUTION_TILE_SIZE,
-    GAME_RESOLUTION_WIDTH
+    GAME_RESOLUTION_WIDTH,
+    EntityNumbers, MoveDirections 
 } from "./../idnex";
 
 const COLLIDED_ENTITIES = [
@@ -177,7 +177,7 @@ export function detectCollision(overlapData: IOverlapData[]): [boolean, number, 
     return [false, null, null];
 }
 
-export function isOutOfBorder(player: IPlayer) {
+export function isOutOfBorder(player: IPlayer): boolean {
     if (
         player.x < 0 ||
         player.x + GAME_RESOLUTION_TILE_SIZE > GAME_RESOLUTION_WIDTH ||
