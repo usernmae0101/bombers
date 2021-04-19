@@ -1,4 +1,5 @@
 import * as Shared from "@bombers/shared/src/idnex";
+import { IKeysBuffer } from "@bombers/shared/src/idnex";
 import { Room } from "colyseus";
 
 interface IPlayers {
@@ -18,6 +19,7 @@ export default class Game extends Room<Shared.GameState> {
     private _availableColors: number[] = COLORS;
     protected isGameActive = false;
     protected slots: Shared.ISlots = Shared.slots;
+    protected keysBuffer: IKeysBuffer = [];
     protected readyPlayers: number = 0;
     protected players: IPlayers = {};
     protected readyTickerInterval: NodeJS.Timeout = null;
@@ -42,10 +44,14 @@ export default class Game extends Room<Shared.GameState> {
         this.readyPlayers = 0;
         this.readyTimer = 5;
         this._tick = 0;
+        this.keysBuffer = [];
         this._availableColors = COLORS;
     }
+ 
+    protected tryToPlaceBomb(player: Shared.Player, color: number, keys: number[]) {
+        if (!keys.includes(Shared.InputKeys.INPUT_KEY_SPACE)) return;
+        if (!player.bombs) return;
 
-    protected tryToPlaceBomb(player: Shared.Player, color: number) {
         const playersRow = Math.floor((player.y + (Shared.GAME_RESOLUTION_TILE_SIZE / 2)) / Shared.GAME_RESOLUTION_TILE_SIZE);
         const playersCol = Math.floor((player.x + (Shared.GAME_RESOLUTION_TILE_SIZE / 2)) / Shared.GAME_RESOLUTION_TILE_SIZE);
 
@@ -191,15 +197,20 @@ export default class Game extends Room<Shared.GameState> {
 
     private _updatePlayers() {
         for (let { color } of Object.values(this.players)) {
-            const player = this.state.plyaers.get(String(color));
+            if (this.keysBuffer[color].queue.length) {
+                const player = this.state.plyaers.get(String(color));
+                const { keys, tick } = this.keysBuffer[color].queue.shift();
 
-            const [hasBeenMoved, field, offset] = Shared.tryToMovePlayer(player);
-            if (hasBeenMoved) {
-                const overlapData: Shared.IOverlapData[] = Shared.movePlayer(player, field, offset, this.state.map);
-                ++player.tick;
+                this.tryToPlaceBomb(player, color, keys);
 
-                if (overlapData && overlapData.length)
-                    Shared.filterOverlap(player, overlapData, this.state.map);
+                const [hasBeenMoved, field, offset] = Shared.tryToMovePlayer(player, keys);
+                if (hasBeenMoved) {
+                    const overlapData: Shared.IOverlapData[] = Shared.movePlayer(player, field, offset, this.state.map);
+                    player.tick = tick + 1;
+
+                    if (overlapData && overlapData.length)
+                        Shared.filterOverlap(player, overlapData, this.state.map);
+                }
             }
         }
     }

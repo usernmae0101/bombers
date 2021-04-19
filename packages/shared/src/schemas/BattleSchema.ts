@@ -26,7 +26,7 @@ export class Player extends Schema {
     direction: number;
 
     @type("boolean")
-    isMove: boolean = false;
+    isImmortal: boolean = false;
 
     constructor(direction: number, x: number, y: number) {
         super();

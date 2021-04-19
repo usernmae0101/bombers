@@ -1,6 +1,6 @@
 import { GAME_RESOLUTION_TILE_LENGTH_X, Cell, IGameStatePlayer, IPredictBuffer, isOutOfBorder, align, detectOverlap } from "../idnex";
 import { GAME_STATE_BUFFER_CLIENT_MAX_SIZE } from "../utils/constants";
-import { MoveDirections } from "../utils/enums";
+import { InputKeys, MoveDirections } from "../utils/enums";
 import { IOverlapData, IStateChanges } from "../utils/interfaces";
 import { detectCollision } from "./collision";
 import { ArraySchema } from "@colyseus/schema";
@@ -37,28 +37,35 @@ export function normalizeMap(map: Cell[], width?: number): number[][][] {
     return _map;
 }
 
-export function tryToMovePlayer(player: IGameStatePlayer): [boolean, "x" | "y", number] {
-    if (!player.isMove) return [false, null, null];
+function tryToSetDirection(player: IGameStatePlayer, direction: number): void {
+    if (player.direction !== direction) player.direction = direction;
+}
 
-    switch (player.direction) {
-        case MoveDirections.UP:
+export function tryToMovePlayer(player: IGameStatePlayer, keys: number[]): [boolean, "x" | "y", number] {
+    switch (true) {
+        case keys.includes(InputKeys.INPUT_KEY_W):
+            tryToSetDirection(player, MoveDirections.UP);
             return [true, "y", -player.speed];
-        case MoveDirections.RIGHT:
+        case keys.includes(InputKeys.INPUT_KEY_D):
+            tryToSetDirection(player, MoveDirections.RIGHT);
             return [true, "x", player.speed];
-        case MoveDirections.DOWN:
+        case keys.includes(InputKeys.INPUT_KEY_S):
+            tryToSetDirection(player, MoveDirections.DOWN);
             return [true, "y", player.speed];
-        case MoveDirections.LEFT:
+        case keys.includes(InputKeys.INPUT_KEY_A):
+            tryToSetDirection(player, MoveDirections.LEFT);
             return [true, "x", -player.speed];
     }
+
+    return [false, null, null];
 }
 
 export function reconciliation(player: IGameStatePlayer, buffer: IPredictBuffer, tick: number, changes: IStateChanges) {    
-    // unpredicted tick
     if (!buffer[tick]) {
         if (GAME_STATE_BUFFER_CLIENT_MAX_SIZE <= Object.keys(buffer).length)
             clearPredictBuffer(buffer, tick);
 
-        buffer[tick] = { isUnpredicted: true };
+        return;
     }
 
     changes.y !== undefined && alignPlayer(buffer, "toY", player, tick, changes.y);
@@ -68,18 +75,14 @@ export function reconciliation(player: IGameStatePlayer, buffer: IPredictBuffer,
 }
 
 function alignPlayer(buffer: IPredictBuffer, field: "toX" | "toY", player: IGameStatePlayer, tick: number, value: number) {    
-    if (buffer[tick].isUnpredicted) {
-        // just force the change?
-        player[field] = value;
-        return;
-    }
-
     if (buffer[tick][field] !== value) {
         const max = Math.max(...Object.keys(buffer).map(key => +key));
         const difference = value - buffer[tick][field];
 
-        for (let i = tick; i <= max; i++)
+        for (let i = tick; i <= max; i++) {
+            // not good
             (buffer[i][field] !== undefined) && (buffer[i][field] += difference);
+        }
 
         player[field] = buffer[max][field];
     }

@@ -40,7 +40,7 @@ server.define("chat", ChatRoom);
 server.define("battle", BattleRoom)
     .enableRealtimeListing();
 
-isDevMode && server.simulateLatency(5);
+isDevMode && server.simulateLatency(100);
 
 mongoose.connect(`mongodb://${mongoHostname}:27017/bombers`, {
     useNewUrlParser: true,

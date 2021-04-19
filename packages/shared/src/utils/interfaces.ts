@@ -3,7 +3,6 @@ export interface IGameStatePlayer {
     x: number;
     y: number;
     speed: number;
-    isMove: boolean;
     direction: number;
     toX?: number;
     toY?: number;
@@ -22,7 +21,7 @@ export interface IPredictBuffer {
     [tick: number]: {
         toX?: number;
         toY?: number;
-        isUnpredicted?: boolean;
+        keys: number[];
     };
 }
 
@@ -51,9 +50,9 @@ export interface IBattleOptions {
     id: number;
 }
 
-export interface IServerBuffer {
-    [tick: number]: {
-        queue: { (): void }[];
+export interface IKeysBuffer {
+    [color: number]: {
+        queue: { tick: number; keys: number[]; }[];
     }
 }
 
@@ -64,13 +63,12 @@ export interface IOnMessageData {
     data: number;
 }
 
-export interface IMoveInputsData {
-    isMove: boolean;
-    direction: number;
+export interface IInputKeysData {
     tick: number;
+    keys: number[];
 }
 
-export interface ISlot  {
+export interface ISlot {
     nickname: string;
     avatar: string;
     rating: number;
@@ -92,8 +90,8 @@ export interface IBattleJoinOptions {
 }
 
 export interface IMovements {
-    delayed: Array<{x: number; y: number}>;
-    now: Array<{x: number; y: number}>;
+    delayed: Array<{ x: number; y: number }>;
+    now: Array<{ x: number; y: number }>;
 }
 
 export interface IStateChanges {

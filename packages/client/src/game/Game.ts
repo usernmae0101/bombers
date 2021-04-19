@@ -31,6 +31,7 @@ export class Game implements IGame {
     private _ping: number = 0;
     private _dispatch: Dispatch;
     private _delay: number = 0;
+    private _keys: number[] = [];
     private _buffer: Shared.IPredictBuffer = {};
     private _tick: number = 0;
     private _snapshots: Shared.ISnapshotBuffer = {};
@@ -62,24 +63,24 @@ export class Game implements IGame {
             ]);
     }
 
-    set players(value: Shared.IGameStatePlayers) { 
-        this._state.players = value; 
+    set players(value: Shared.IGameStatePlayers) {
+        this._state.players = value;
     }
 
-    set map(value: number[][][]) { 
-        this._state.map = value; 
+    set map(value: number[][][]) {
+        this._state.map = value;
     }
 
-    set room(value: Room<Shared.GameState>) { 
-        this._room = value; 
+    set room(value: Room<Shared.GameState>) {
+        this._room = value;
     }
 
-    set dispatch(value: Dispatch) { 
-        this._dispatch = value; 
+    set dispatch(value: Dispatch) {
+        this._dispatch = value;
     }
 
-    get ping(): number { 
-        return this._ping; 
+    get ping(): number {
+        return this._ping;
     }
 
     onAddPlayer = (player: Shared.Player, color: string) => {
@@ -108,31 +109,24 @@ export class Game implements IGame {
 
     onMapChange = (cell: Shared.Cell, index: number) => {
         const entities = cell.entinies.toArray();
-       
+
         const row = Math.floor(index / Shared.GAME_RESOLUTION_TILE_LENGTH_X);
         const col = index % Shared.GAME_RESOLUTION_TILE_LENGTH_X;
-				
+
         this._state.map[row][col] = entities;
-    }; 
+    };
 
     onPong = (data: any) => {
         this._ping = Date.now() - data.t;
         this._delay = this._ping + Shared.SERVER_SOCKET_PATCH_RATE;
-        
+
         this._dispatch(action_game_set_ping(this._ping));
     };
 
-    private _sendMoveInputs(isMove: boolean, direction: number) {
-        if (Cache.state.direction !== direction || Cache.state.isMove !== isMove) {
-            this._room.send(Shared.SocketChannels.BATTLE_ON_SET_MOVE, { isMove, direction, tick: this._tick });
-
-            Cache.state.direction = direction;
-            Cache.state.isMove = isMove;
-
-            this._state.players[this._color].direction = direction;
-            this._state.players[this._color].isMove = isMove;
-
-            // keep moving until the ping offset       
+    private _sendInputKeysToServer() {
+        if (this._keys.length) {
+            const data = { keys: this._keys, tick: this._tick };
+            this._room.send(Shared.SocketChannels.BATTLE_ON_SEND_INPUT_KEYS, data);
         }
     }
 
@@ -143,22 +137,14 @@ export class Game implements IGame {
         this._snapshots[color].snapshots.push({ timestamp: performance.now(), changes });
     }
 
-    private _movePlayer(alpha: number) {
-        const player = this._state.players[this._color];
-
-        if (player && player.toX !== undefined && Math.abs(player.toX - player.x) > 0.01)
-            player.x = Shared.lerp(player.x, player.toX, alpha * 1.05);
-
-        if (player && player.toY !== undefined && Math.abs(player.toY - player.y) > 0.01)
-            player.y = Shared.lerp(player.y, player.toY, alpha * 1.05);
-    }
-
-    private _moveEnemies(alpha: number) {
+    private _moveEnemies(then: number) {
+    	const alpha = Math.min((performance.now() - then) / 100, 1);
+    
         for (let color in this._snapshots) {
             const snapshots = this._snapshots[color].snapshots;
             const enemy = this._state.players[color];
 
-            if (snapshots.length && this._delay <= (performance.now() - snapshots[0].timestamp)) {
+            if (snapshots.length && 100 <= (performance.now() - snapshots[0].timestamp)) {
                 const snapshot = snapshots.shift();
 
                 snapshot.changes.direction !== undefined && (enemy.direction = snapshot.changes.direction);
@@ -167,14 +153,14 @@ export class Game implements IGame {
                 snapshot.changes.y !== undefined && (enemy.toY = snapshot.changes.y);
             }
 
-            if (enemy.toX !== undefined && Math.abs(enemy.toX - enemy.x) > 0.01)
+            if (enemy.toX !== undefined && Math.abs(enemy.toX - enemy.x) > 0.01) 
                 enemy.x = Shared.lerp(enemy.x, enemy.toX, alpha);
 
             if (enemy.toY !== undefined && Math.abs(enemy.toY - enemy.y) > 0.01)
                 enemy.y = Shared.lerp(enemy.y, enemy.toY, alpha);
         }
     }
-
+ 
     startPing() {
         this._room.send(Shared.SocketChannels.BATTLE_ON_PING, { t: Date.now() });
 
@@ -186,7 +172,6 @@ export class Game implements IGame {
     init(data: Shared.IGameInitialData) {
         this._color = data.color;
 
-        Cache.state.direction = Shared.MoveDirections.DOWN;
         document.getElementById(Shared.GAME_VIEW_CANVAS_ID).appendChild(this._app.view);
     }
 
@@ -195,10 +180,7 @@ export class Game implements IGame {
 
         let then = performance.now();
         this._app.ticker.add((delta: number) => {
-            const alpha = Math.min((performance.now() - then) / this._delay, 1);
-
-            //this._movePlayer(alpha);
-            this._moveEnemies(alpha);
+            this._moveEnemies(then);
 
             this._renderer.update(this._state);
             then = performance.now();
@@ -218,31 +200,32 @@ export class Game implements IGame {
     private _handleInputs() {
         switch (true) {
             case (Inputs.keys["KeyW"] || Inputs.keys["ArrowUp"]):
-                this._sendMoveInputs(true, Shared.MoveDirections.UP);
+                this._keys.push(Shared.InputKeys.INPUT_KEY_W);
                 break;
             case (Inputs.keys["KeyD"] || Inputs.keys["ArrowRight"]):
-                this._sendMoveInputs(true, Shared.MoveDirections.RIGHT);
+                this._keys.push(Shared.InputKeys.INPUT_KEY_D);
                 break;
             case (Inputs.keys["KeyS"] || Inputs.keys["ArrowDown"]):
-                this._sendMoveInputs(true, Shared.MoveDirections.DOWN);
+                this._keys.push(Shared.InputKeys.INPUT_KEY_S);
                 break;
             case (Inputs.keys["KeyA"] || Inputs.keys["ArrowLeft"]):
-                this._sendMoveInputs(true, Shared.MoveDirections.LEFT);
+                this._keys.push(Shared.InputKeys.INPUT_KEY_A);
                 break;
-            default: this._sendMoveInputs(false, Cache.state.direction);
         }
 
         if (Inputs.keys["Space"] && !Inputs.locked["Space"]) {
-            this._room.send(Shared.SocketChannels.BATTLE_ON_PLACE_BOMB);
+            this._keys.push(Shared.InputKeys.INPUT_KEY_SPACE);
+
             Inputs.locked["Space"] = true;
         }
     }
 
     private _insertPredictToBuffer() {
         if (Object.keys(this._buffer).length <= Shared.GAME_STATE_BUFFER_CLIENT_MAX_SIZE) {
-            this._buffer[this._tick] = {
+            this._buffer[this._tick + 1] = {
                 toX: this._state.players[this._color].toX,
-                toY: this._state.players[this._color].toY
+                toY: this._state.players[this._color].toY,
+                keys: this._keys
             };
         }
     }
@@ -250,21 +233,26 @@ export class Game implements IGame {
     private _updatePlayer() {
         const player = this._state.players[this._color];
 
-        const [hasBeenMoved, field, offset] = Shared.tryToMovePlayer(player);
+        const [hasBeenMoved, field, offset] = Shared.tryToMovePlayer(player, this._keys);
         if (hasBeenMoved) {
             Shared.movePlayer(player, field, offset, this._state.map);
+            
             player[field === "x" ? "toX" : "toY"] = player[field];
             this._insertPredictToBuffer();
         }
     }
 
     private _update(deltaMS: number) {
+        if (!this._state.players[this._color]) return; // fix it?
+
         const deltaTick = deltaMS / (1000 / Shared.GAME_CLIENT_TICK_RATE);
 
-        if (this._state.players[this._color]) { // fix it?
-            this._updatePlayer();
-            this._handleInputs();
-        }
+        this._handleInputs();
+        this._sendInputKeysToServer();
+        this._updatePlayer();
+
+        // reset keys every frame
+        this._keys = [];
 
         this._tick += 1;
     }

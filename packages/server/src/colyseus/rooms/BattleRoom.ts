@@ -1,6 +1,7 @@
 import { Client, updateLobby } from "colyseus";
 import * as Shared from "@bombers/shared/src/idnex";
 import Game from "../Game";
+import { GAME_STATE_BUFFER_SERVER_MAX_SIZE } from "@bombers/shared/src/idnex";
 
 export default class BattleRoom extends Game {
     autoDispose = false;
@@ -13,23 +14,15 @@ export default class BattleRoom extends Game {
 
         this._configurate();
 
-        this.onMessage(Shared.SocketChannels.BATTLE_ON_PLACE_BOMB, (client: Client) => {
-            const color = this.players[client.sessionId].color;
-            const player = this.state.plyaers.get(String(color));
-
-            player.bombs && this.tryToPlaceBomb(player, color);
-        });
-
         this.onMessage(Shared.SocketChannels.BATTLE_ON_PING, (client: Client, data: any) => {
             client.send(Shared.SocketChannels.BATTLE_ON_PONG, data);
         });
 
-        this.onMessage(Shared.SocketChannels.BATTLE_ON_SET_MOVE, (client: Client, data: Shared.IMoveInputsData) => {
-            const player = this.state.plyaers.get(String(this.players[client.sessionId].color));
+        this.onMessage(Shared.SocketChannels.BATTLE_ON_SEND_INPUT_KEYS, (client: Client, data: Shared.IInputKeysData) => {
+            const color = this.players[client.sessionId].color;
 
-            player.direction = data.direction;
-            player.isMove = data.isMove;
-            player.tick = data.tick;
+            if (this.keysBuffer[color].queue.length <= GAME_STATE_BUFFER_SERVER_MAX_SIZE)
+                this.keysBuffer[color].queue.push({ ...data });
         });
 
         this.onMessage(Shared.SocketChannels.BATTLE_ON_SEND_READY, (client: Client, isReady: boolean) => {
@@ -88,7 +81,7 @@ export default class BattleRoom extends Game {
     }
 
     private _updateMetada(key: string, value: any) {
-        this.setMetadata({...this.metadata, [key]: value}).then(() => updateLobby(this));
+        this.setMetadata({ ...this.metadata, [key]: value }).then(() => updateLobby(this));
     }
 
     private _readyTicker() {
@@ -109,6 +102,11 @@ export default class BattleRoom extends Game {
 
     private _start() {
         this._initPlayers();
+
+        for (let { color } of Object.values(this.players)) {
+            this.keysBuffer[color] = { queue: [] };
+        }
+
         this.broadcast(Shared.SocketChannels.BATTLE_ON_RUN_GAME);
         this._switchStatusBattle(true);
         this.lock();

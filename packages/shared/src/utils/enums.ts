@@ -19,6 +19,14 @@ export enum EntityNumbers {
     ITEM_SPEED
 }
 
+export enum InputKeys {
+    INPUT_KEY_W,
+    INPUT_KEY_D,
+    INPUT_KEY_S,
+    INPUT_KEY_A,
+    INPUT_KEY_SPACE
+}
+
 export enum SocketChannels {
     CHAT_ON_MESSAGE,
     CHAT_ON_SET_STATE,
@@ -31,7 +39,7 @@ export enum SocketChannels {
     APP_ON_SET_ONLINE,
     BATTLE_ON_SET_INIT_DATA,
     BATTLE_ON_RUN_GAME,
-    BATTLE_ON_SET_MOVE,
+    BATTLE_ON_SEND_INPUT_KEYS,
     BATTLE_ON_SEND_READY,
     BATTLE_ON_SET_START_TIMER,
     BATTLE_ON_PING,
