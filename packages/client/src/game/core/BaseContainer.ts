@@ -5,7 +5,7 @@ import BaseEntity from "./BaseEntity";
 import EntityFactory from "./EntityFactory";
 
 export default abstract class BaseContainer<T extends BaseEntity> extends Container {
-    private _entities: T[][] = [];
+    protected entities: T[][] = [];
     private _current_entity_id: number[][] = [];
     private _entity_ids: number[];
     private _priority_id: number;
@@ -24,31 +24,45 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
     abstract update(state?: IGameState): void;
 
     private _addEntity(entity_id: number, row: number, col: number) {
-        if (!this._entities[row][col]) {
+        if (!this.entities[row][col]) {
             const entity: T = EntityFactory.create(entity_id);
 
             entity.setPosition(row, col);
             this.addChild(entity);
 
             this._current_entity_id[row][col] = entity_id;
-            this._entities[row][col] = entity;
+            this.entities[row][col] = entity;
         }
     }
 
     private _removeEntity(row: number, col: number) {
-        if (this._entities[row][col]) {
-            this._entities[row][col].destroy();
+        if (this.entities[row][col]) {
+            this.entities[row][col].destroy();
             this._current_entity_id[row][col] = null;
-            delete this._entities[row][col];
+            delete this.entities[row][col];
         }
     }
 
-    protected updateMap(map: number[][][]) {
+    protected updateMap(map: number[][][], callbacks: { (entity: T): boolean }[] = []) {
         for (let row = 0; row < map.length; row++) {
-            if (!this._entities[row]) this._entities[row] = [];
+            if (!this.entities[row]) this.entities[row] = [];
             if (!this._current_entity_id[row]) this._current_entity_id[row] = [];
 
             for (let col = 0; col < map[row].length; col++) {
+                // individual container logic for the current set of entiteis, flexible
+                let isContinue = false;
+
+                if (callbacks.length) {
+                    for (let callback of callbacks) {
+                        isContinue = callback(this.entities[row][col]);
+
+                        if (isContinue) break;
+                    }
+                }
+
+                if (isContinue) continue;
+
+                // overwrite sprite by highest priority, if it is set
                 if (map[row][col].includes(this._priority_id)) {
                     if (this._priority_id === this._current_entity_id[row][col]) 
                         continue;

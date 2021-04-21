@@ -14,6 +14,8 @@ export default class BombEntity extends BaseEntity {
         );
     }
 
+    tick() {}
+
     setPosition(row: number, col: number) {
         this.x = col * GAME_RESOLUTION_TILE_SIZE;
         this.y = row * GAME_RESOLUTION_TILE_SIZE;

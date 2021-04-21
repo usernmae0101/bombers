@@ -15,7 +15,11 @@ export default class FiresContainer extends BaseContainer<FireEntity> {
         );
     }
 
+    private _replaceCrossByCenter(entity: FireEntity): boolean {
+        return false;
+    }
+
     update(state: IGameState) {
-        this.updateMap(state.map);
+        this.updateMap(state.map, [this._replaceCrossByCenter]);
     }
 }

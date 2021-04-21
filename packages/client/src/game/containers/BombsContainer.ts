@@ -13,7 +13,11 @@ export default class BombsContainer extends BaseContainer<BombEntity> {
         );
     }
 
+    private _tickBomb(entity: BombEntity): boolean {
+        return false;
+    }
+
     update(state: IGameState) {
-        this.updateMap(state.map);
+        this.updateMap(state.map, [this._tickBomb]);
     }
 }

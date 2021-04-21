@@ -18,7 +18,7 @@ export const default_map = [
     [E, E, B, E, E, E, E, E, E, E, E, E, E, E, E, E, E],
 ];
 
-export const getMapByRoomId = (room_id: number) => {
+export const getMapByRoomId = (room_id: number): number[][][] => {
     switch (room_id) {
         case 1: return default_map;
         case 2: return default_map;
