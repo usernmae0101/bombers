@@ -51,15 +51,12 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
             for (let col = 0; col < map[row].length; col++) {
                 // individual container logic for the current set of entiteis, flexible
                 let isContinue = false;
-
                 if (callbacks.length) {
                     for (let callback of callbacks) {
                         isContinue = callback(this.entities[row][col]);
-
                         if (isContinue) break;
                     }
                 }
-
                 if (isContinue) continue;
 
                 // overwrite sprite by highest priority, if it is set
