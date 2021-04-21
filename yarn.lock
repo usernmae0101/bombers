@@ -312,10 +312,15 @@
     express "^4.16.3"
     node-os-utils "^1.2.0"
 
-"@colyseus/schema@^1.0.15", "@colyseus/schema@^1.0.16":
+"@colyseus/schema@^1.0.15":
   version "1.0.16"
   resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-1.0.16.tgz#c0c1cb9870bd50b5f12e0fb274bb31d1498430f7"
   integrity sha512-9fMyKplgUvNW7EwxK0q4GzOcmrkoeBPM+IpvPpj8+/3uLKNFOXz1quVHQfBelFy83psYV+CdMR5EuXOVZ/2YKQ==
+
+"@colyseus/schema@^1.0.22":
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-1.0.22.tgz#6483faf08f5a4bce4fe222a76bfbb5c090775868"
+  integrity sha512-vhXRsO2x6IikeCiCsECDlLXkY4eeMgAlzz2m0dHmjhNlQLn7/jb63UsVLely5C2u4vqrzg7OYH8reXWOjbqQlw==
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.2"
@@ -2160,12 +2165,12 @@ colorette@^1.2.1, colorette@^1.2.2:
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.2.2.tgz#cbcc79d5e99caea2dbf10eb3a26fd8b3e6acfa94"
   integrity sha512-MKGMzyfeuutC/ZJ1cba9NqcNpfeqMUcYmyF1ZFY6/Cn7CNSAKx6a+s48sqLqyAiZuaP2TcqMhoo+dlwFnVxT9w==
 
-colyseus.js@^0.14.8:
-  version "0.14.8"
-  resolved "https://registry.yarnpkg.com/colyseus.js/-/colyseus.js-0.14.8.tgz#ac93f0dbf6341362129f919cbeeecf619a42dd70"
-  integrity sha512-yErwJJLJYn2j4YCyikTMH0klr9n/xZOOGxvyQoD/XWCXZ1J2N4khL2bN4LUCbuRzRNGD1kjOA6AecFHQB63Ipg==
+colyseus.js@^0.14.11:
+  version "0.14.11"
+  resolved "https://registry.yarnpkg.com/colyseus.js/-/colyseus.js-0.14.11.tgz#9025a8ce212b7e728501c86757e8371050320153"
+  integrity sha512-gyv+YCHOW9ifZGTl2gEKaFHBvFGBOnL+da1aBVwKKkIU2SvB68TcN2dFnjAIC0a5E+LRlBqgZnrzXX56g4ZBbw==
   dependencies:
-    "@colyseus/schema" "^1.0.16"
+    "@colyseus/schema" "^1.0.22"
     httpie "^2.0.0-next.13"
     nanoevents "^5.1.12"
     notepack.io "^2.1.3"
