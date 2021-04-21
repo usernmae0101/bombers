@@ -1,0 +1,11 @@
+.bar {
+    grid-area: bar;
+
+    display: grid;
+
+    color: white;
+    background-color: black;
+
+    justify-items: end;
+    align-items: center;
+}

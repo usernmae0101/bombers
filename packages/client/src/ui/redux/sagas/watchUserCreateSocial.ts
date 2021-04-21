@@ -1,12 +1,12 @@
 import { call, takeEvery, put } from "@redux-saga/core/effects";
 import { api_user_create_social } from "../../../api/users";
-import { FetchUserDataRsponseType } from "../../../api/users/types";
+import { AuthUserDataRsponseType } from "../../../api/users/types";
 import { action_user_set_data, action_user_set_auth, action_user_set_error_message } from "../actions/user-actions";
 import { ACTION_TYPE_USER_CREATE_SOCIAL, UserCreateSocialActionType } from "../types/user-types";
 
 function* userCreateSocial(action: UserCreateSocialActionType) {
 	try {
-		const userData: FetchUserDataRsponseType = yield call(
+		const userData: AuthUserDataRsponseType = yield call(
 			api_user_create_social,
 			action.payload.uid,
 			action.payload.social,

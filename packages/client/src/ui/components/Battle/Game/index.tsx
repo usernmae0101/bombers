@@ -1,12 +1,13 @@
-import { GameState, SocketChannels } from "@bombers/shared/src/idnex";
-import { Room } from "colyseus.js";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import { SocketChannels } from "@bombers/shared/src/idnex";
 import { action_game_set_ready } from "../../../redux/actions/game-actions";
 import { select_game_ready } from "../../../redux/selectors/game-selectors";
 import { select_user_socket_room_battle } from "../../../redux/selectors/user-selecrots";
+import styles from "./game.module.scss";
 
-const Menu = () => {
+const Game = () => {
     const dispatch = useDispatch();
 
     const room = useSelector(select_user_socket_room_battle);
@@ -27,11 +28,14 @@ const Menu = () => {
     };
 
     return (
-        <div>
-            <button onClick={sendReadyStatus}>{isReady && "не"} готов</button>
-            <span>запуск через {startTimer}</span>
+        <div className={styles.game}>
+            <div className={styles.menu}>
+                <button onClick={sendReadyStatus}>{isReady && "не"} готов</button>
+                <span>запуск через {startTimer}</span>
+            </div>
+            <div className={styles.canvas} id="cnv"></div>
         </div>
     );
 };
 
-export default Menu;
+export default Game;

@@ -7,12 +7,13 @@ import Inputs from "../../../game/core/Inputs";
 import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import { Game } from "../../../game/Game";
 import styles from "./battle.module.scss";
-import Menu from "./Menu";
 import Loader from "../Loader";
 import { action_user_set_socket_battle_room } from "../../redux/actions/user-actions";
-import HUD from "./HUD";
-import { action_game_set_instance, action_game_set_slots } from "../../redux/actions/game-actions";
+import { action_game_set_instance, action_game_set_ping, action_game_set_slots } from "../../redux/actions/game-actions";
+import Bar from "./Bar";
 import Slots from "./Slots";
+import GameComponent from "./Game";
+import HUD from "./HUD";
 
 const Battle: React.FC<{ id: string; }> = ({ id }) => {
     const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const Battle: React.FC<{ id: string; }> = ({ id }) => {
 
     React.useEffect(() => {
         let room: Room<Shared.GameState>;
+        let pingInterval: NodeJS.Timeout = null;
 
         Inputs.subscribe();
 
@@ -34,15 +36,30 @@ const Battle: React.FC<{ id: string; }> = ({ id }) => {
 
             room = await socket.joinById(id, { nickname, rating, avatar });
 
+            const onPing = () => { 
+                room.send(Shared.SocketChannels.BATTLE_ON_PING, { 
+                    t: Date.now() 
+                }); 
+            };
+
+            const onPong = (data: any) => {
+                const ping = Date.now() - data.t;
+                
+                game.ping = ping;
+                dispatch(action_game_set_ping(ping));
+            };
+
             game.room = room;
             game.dispatch = dispatch;
-            game.startPing();
+            
+            onPing();
+            pingInterval = setInterval(() => { onPing(); }, 5000);
 
             room.onStateChange.once(state => {
                 game.players = state.plyaers.toJSON();
                 game.map = Shared.normalizeMap(state.map.toJSON());
 
-                room.onMessage(Shared.SocketChannels.BATTLE_ON_PONG, game.onPong);
+                room.onMessage(Shared.SocketChannels.BATTLE_ON_PONG, onPong);
                 room.onMessage(Shared.SocketChannels.BATTLE_ON_RUN_GAME, _ => game.run());
                 room.onMessage(Shared.SocketChannels.BATTLE_ON_SET_INIT_DATA, data => game.init(data));
                 room.onMessage(Shared.SocketChannels.BATTLE_ON_UPDATE_SLOTS, (slots: Shared.ISlots) => {
@@ -62,7 +79,7 @@ const Battle: React.FC<{ id: string; }> = ({ id }) => {
 
         return () => {
             room && room.leave();
-
+            clearInterval(pingInterval);
             Inputs.unsubscribe();
         };
     }, []);
@@ -71,17 +88,10 @@ const Battle: React.FC<{ id: string; }> = ({ id }) => {
 
     return (
         <div className={styles.battle}>
-            <div className={styles.slots}>
-                <Slots />
-            </div>
-            <div className={styles.canvas__container} id="cnv">
-                <div className={styles.menu}>
-                    <Menu />
-                </div>
-            </div>
-            <div className={styles.HUD}>
-                <HUD />
-            </div>
+            <Bar />
+            <Slots />
+            <GameComponent />
+            <HUD />
         </div>
     );
 };

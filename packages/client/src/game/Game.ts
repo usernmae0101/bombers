@@ -13,14 +13,17 @@ import RocksContainer from "./containers/RocksContainer";
 import Inputs from "./core/Inputs";
 import { IRenderer, Renderer } from "./core/Renderer";
 import { Room } from "colyseus.js";
-import Cache from "./core/Cache";
 import { Dispatch } from "redux";
-import { action_game_set_ping } from "../ui/redux/actions/game-actions";
 
 export interface IGame {
     init: (data: Shared.IGameInitialData) => void;
     run: () => void;
 }
+
+const COLORS = [
+    Shared.PlayerColors.BLUE, Shared.PlayerColors.PURPLE,
+    Shared.PlayerColors.RED, Shared.PlayerColors.YELLOW
+];
 
 export class Game implements IGame {
     private _app: Application;
@@ -36,7 +39,6 @@ export class Game implements IGame {
     private _tick: number = 0;
     private _snapshots: Shared.ISnapshotBuffer = {};
     private _clock: Timer = new Timer;
-    private _pingInterval: NodeJS.Timeout = null;
 
     constructor() {
         this._app = new Application({
@@ -79,8 +81,8 @@ export class Game implements IGame {
         this._dispatch = value;
     }
 
-    get ping(): number {
-        return this._ping;
+    set ping(value: number) {
+        this._ping = value;
     }
 
     onAddPlayer = (player: Shared.Player, color: string) => {
@@ -116,14 +118,8 @@ export class Game implements IGame {
         this._state.map[row][col] = entities;
     };
 
-    onPong = (data: any) => {
-        this._ping = Date.now() - data.t;
-        this._delay = this._ping + Shared.SERVER_SOCKET_PATCH_RATE;
-
-        this._dispatch(action_game_set_ping(this._ping));
-    };
-
     private _sendInputKeysToServer() {
+        // not good. Nagle's algorithm? (will be less responsive)
         if (this._keys.length) {
             const data = { keys: this._keys, tick: this._tick };
             this._room.send(Shared.SocketChannels.BATTLE_ON_SEND_INPUT_KEYS, data);
@@ -131,16 +127,18 @@ export class Game implements IGame {
     }
 
     private _insertSnapshotToBuffer(color: number, changes: Shared.IStateChanges) {
-        if (!this._snapshots[color])
-            this._snapshots[color] = { snapshots: [] };
-
-        this._snapshots[color].snapshots.push({ timestamp: performance.now(), changes });
+        this._snapshots[color].snapshots.push({ 
+            timestamp: performance.now(), 
+            changes 
+        });
     }
 
     private _moveEnemies(then: number) {
     	const alpha = Math.min((performance.now() - then) / 100, 1);
     
         for (let color in this._snapshots) {
+            if (!this._state.players[color]) continue;
+
             const snapshots = this._snapshots[color].snapshots;
             const enemy = this._state.players[color];
 
@@ -160,17 +158,17 @@ export class Game implements IGame {
                 enemy.y = Shared.lerp(enemy.y, enemy.toY, alpha);
         }
     }
- 
-    startPing() {
-        this._room.send(Shared.SocketChannels.BATTLE_ON_PING, { t: Date.now() });
-
-        this._pingInterval = setInterval(() => {
-            this._room.send(Shared.SocketChannels.BATTLE_ON_PING, { t: Date.now() })
-        }, 5000);
-    }
 
     init(data: Shared.IGameInitialData) {
         this._color = data.color;
+
+        for (let color of COLORS) {
+            if (color === data.color) continue;
+
+            this._snapshots[color] = { 
+                snapshots: [] 
+            };
+        }
 
         document.getElementById(Shared.GAME_VIEW_CANVAS_ID).appendChild(this._app.view);
     }
@@ -191,10 +189,6 @@ export class Game implements IGame {
             this._clock.tick();
             this._update(this._clock.deltaTime);
         }, 1000 / Shared.GAME_CLIENT_TICK_RATE);
-    }
-
-    over() {
-        clearInterval(this._pingInterval);
     }
 
     private _handleInputs() {
