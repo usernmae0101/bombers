@@ -1,18 +1,21 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import { select_game_ping } from "../../../redux/selectors/game-selectors";
+import * as GameSelectors from "../../../redux/selectors/game-selectors";
 import styles from "./hud.module.scss";
 
 const HUD = () => {
-    const ping = useSelector(select_game_ping);
+    const ping = useSelector(GameSelectors.select_game_ping);
+    const bombs = useSelector(GameSelectors.select_game_bombs);
+    const speed = useSelector(GameSelectors.select_game_speed);
+    const radius = useSelector(GameSelectors.select_game_radius);
 
     return (
         <div className={styles.hud}>
-            <div>бомбы: 1</div>
-            <div>cкорость: 1</div>
-            <div>радиус: 1</div>
-            <div>пинг: { ping }</div>
+            <div data-item={"bombs"}>бомбы: {bombs}</div>
+            <div data-item={"speed"}>cкорость: {speed}</div>
+            <div data-item={"radius"}>радиус: {radius}</div>
+            <div>пинг: {ping}</div>
         </div>
     );
 };

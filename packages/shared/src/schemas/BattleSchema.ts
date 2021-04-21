@@ -11,16 +11,16 @@ export class Player extends Schema {
     y: number;
 
     @type("number")
-    bombs: number = 3;
+    bombs: number = 1;
 
     @type("number")
-    radius: number = 2;
+    radius: number = 1;
 
     @type("number")
     health: number = 3;
 
     @type("number")
-    speed: number = 9;
+    speed: number = 1;
 
     @type("number")
     direction: number;

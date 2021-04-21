@@ -99,4 +99,7 @@ export interface IStateChanges {
     tick?: number;
     y?: number;
     direction?: number;
+    speed?: number;
+    radius?: number;
+    bombs?: number;
 }

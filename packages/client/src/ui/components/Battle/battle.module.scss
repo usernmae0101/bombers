@@ -9,9 +9,7 @@
     grid-gap: 10px;
 
     grid-template-columns: 1fr 7fr;
-    grid-template-rows: 0.5fr 8fr 0.7fr;
+    grid-template-rows: 0.3fr 8fr 0.5fr;
 
-	grid-template-areas: "bar bar"
-						 "slots game"
-						 "slots hud";
+    grid-template-areas: "bar bar" "slots game" "slots hud";
 }

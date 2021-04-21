@@ -10,6 +10,7 @@ import GrassContainer from "./containers/GrassContainer";
 import ItemsContainer from "./containers/ItemsContainer";
 import PlayersContainer from "./containers/PlayersContainer";
 import RocksContainer from "./containers/RocksContainer";
+import * as GameActions from "./../ui/redux/actions/game-actions";
 import Inputs from "./core/Inputs";
 import { IRenderer, Renderer } from "./core/Renderer";
 import { Room } from "colyseus.js";
@@ -19,11 +20,6 @@ export interface IGame {
     init: (data: Shared.IGameInitialData) => void;
     run: () => void;
 }
-
-const COLORS = [
-    Shared.PlayerColors.BLUE, Shared.PlayerColors.PURPLE,
-    Shared.PlayerColors.RED, Shared.PlayerColors.YELLOW
-];
 
 export class Game implements IGame {
     private _app: Application;
@@ -100,6 +96,20 @@ export class Game implements IGame {
                 return;
             }
 
+            // update bombs of the local player in ui 
+            if (_changes.bombs !== undefined) 
+                this._dispatch(GameActions.action_game_set_bombs(_changes.bombs));
+
+            // update speed of the local player in ui and game
+            if (_changes.speed !== undefined) {
+                this._dispatch(GameActions.action_game_set_speed(_changes.speed));
+                this._state.players[this._color].speed = _changes.speed;
+            }
+
+            // update radius of the local player in ui 
+            if (_changes.radius !== undefined) 
+                this._dispatch(GameActions.action_game_set_radius(_changes.radius));
+
             if ((_changes.x !== undefined || _changes.y !== undefined) && player.tick)
                 Shared.reconciliation(this._state.players[this._color], this._buffer, player.tick, _changes);
         };
@@ -162,7 +172,8 @@ export class Game implements IGame {
     init(data: Shared.IGameInitialData) {
         this._color = data.color;
 
-        for (let color of COLORS) {
+        // init snapshot buffer for all players except the local player
+        for (let color of Shared.COLORS) {
             if (color === data.color) continue;
 
             this._snapshots[color] = { 

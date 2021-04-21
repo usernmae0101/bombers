@@ -89,7 +89,7 @@ function alignPlayer(buffer: IPredictBuffer, field: "toX" | "toY", player: IGame
 }
 
 /*
-    Update map object to trigger the Proxy trap "set".
+    Updates map object to trigger the Proxy trap "set".
 */
 
 export function updateCellOnTheMap(map: ArraySchema<Cell>, indexOfCell: number, entity_id: number, action: "add" | "remove", doCheckDubs?: boolean) {

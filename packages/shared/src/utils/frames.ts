@@ -57,6 +57,11 @@ export const getBombByThePlayersColor = (color: number): number => {
     }
 };
 
+export const COLORS = [
+    PlayerColors.BLUE, PlayerColors.PURPLE,
+    PlayerColors.RED, PlayerColors.YELLOW
+];
+
 interface IFrames {
     static: {
         [color: number]: {

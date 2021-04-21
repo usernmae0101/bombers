@@ -11,7 +11,19 @@ export const select_game_ready = (state: AppStateType): boolean => {
 };
 
 export const select_game_ping = (state: AppStateType): number => {
-    return state.game.ping;
+    return state.game.HUD.ping;
+};
+
+export const select_game_speed = (state: AppStateType): number => {
+    return state.game.HUD.speed;
+};
+
+export const select_game_bombs = (state: AppStateType): number => {
+    return state.game.HUD.bombs;
+};
+
+export const select_game_radius = (state: AppStateType): number => {
+    return state.game.HUD.radius;
 };
 
 export const select_game_slots = (state: AppStateType): ISlots => {

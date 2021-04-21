@@ -10,13 +10,8 @@ interface IPlayers {
     }
 }
 
-const COLORS = [
-    Shared.PlayerColors.BLUE, Shared.PlayerColors.PURPLE,
-    Shared.PlayerColors.RED, Shared.PlayerColors.YELLOW
-];
-
 export default class Game extends Room<Shared.GameState> {
-    private _availableColors: number[] = COLORS;
+    private _availableColors: number[] = Shared.COLORS;
     protected isGameActive = false;
     protected slots: Shared.ISlots = Shared.slots;
     protected keysBuffer: IKeysBuffer = [];
@@ -45,7 +40,7 @@ export default class Game extends Room<Shared.GameState> {
         this.readyTimer = 5;
         this._tick = 0;
         this.keysBuffer = [];
-        this._availableColors = COLORS;
+        this._availableColors = Shared.COLORS;
     }
  
     protected tryToPlaceBomb(player: Shared.Player, color: number, keys: number[]) {
