@@ -6,7 +6,7 @@ import EntityFactory from "./EntityFactory";
 
 export default abstract class BaseContainer<T extends BaseEntity> extends Container {
     protected entities: T[][] = [];
-    private _current_entity_id: number[][] = [];
+    protected current_entity_id: number[][] = [];
     private _entity_ids: number[];
     private _priority_id: number;
 
@@ -23,56 +23,55 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
 
     abstract update(state?: IGameState): void;
 
-    private _addEntity(entity_id: number, row: number, col: number) {
+    protected addEntity(entity_id: number, row: number, col: number) {
         if (!this.entities[row][col]) {
             const entity: T = EntityFactory.create(entity_id);
 
             entity.setPosition(row, col);
             this.addChild(entity);
 
-            this._current_entity_id[row][col] = entity_id;
+            this.current_entity_id[row][col] = entity_id;
             this.entities[row][col] = entity;
         }
     }
 
-    private _removeEntity(row: number, col: number) {
+    protected removeEntity(row: number, col: number) {
         if (this.entities[row][col]) {
             this.entities[row][col].destroy();
-            this._current_entity_id[row][col] = null;
+            this.current_entity_id[row][col] = null;
             delete this.entities[row][col];
         }
     }
 
-    protected updateMap(map: number[][][], callbacks: { (entity: T): boolean }[] = []) {
+    protected updateMap(map: number[][][], callbacks: { (mapEntities: number[], row: number, col: number): boolean }[] = []) {
         for (let row = 0; row < map.length; row++) {
             if (!this.entities[row]) this.entities[row] = [];
-            if (!this._current_entity_id[row]) this._current_entity_id[row] = [];
+            if (!this.current_entity_id[row]) this.current_entity_id[row] = [];
 
             for (let col = 0; col < map[row].length; col++) {
-                // individual container logic for the current set of entiteis, flexible
+                // individual container logic for the current set of entiteis
                 let isContinue = false;
-                for (let callback of callbacks) {
-                    if (isContinue = callback(this.entities[row][col]))
+                for (let callback of callbacks) 
+                    if (isContinue = callback(map[row][col], row, col))
                         break;
-                }
                 if (isContinue) continue;
 
                 // overwrite sprite by highest priority, if it is set
                 if (map[row][col].includes(this._priority_id)) {
-                    if (this._priority_id === this._current_entity_id[row][col]) 
+                    if (this._priority_id === this.current_entity_id[row][col]) 
                         continue;
                     
-                    this._removeEntity(row, col);
-                    this._addEntity(this._priority_id, row, col);   
+                    this.removeEntity(row, col);
+                    this.addEntity(this._priority_id, row, col);   
                     continue; 
                 }
 
                 for (let entity_id of this._entity_ids) {
                     if (map[row][col].includes(entity_id)) {
-                        this._addEntity(entity_id, row, col);
+                        this.addEntity(entity_id, row, col);
                         break;
                     }
-                    this._removeEntity(row, col);
+                    this.removeEntity(row, col);
                 }
             } 
         }
