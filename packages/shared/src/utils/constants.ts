@@ -6,6 +6,8 @@ export const GAME_RESOLUTION_TILE_SIZE = 72;
 export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
 export const GAME_RESOLUTION_TILE_LENGTH_Y = 11;
 
+export const GAME_RESOLUTION_TILE_OFFSET = 4;
+
 export const GAME_CLIENT_TICK_RATE = 50;
 export const GAME_SERVER_TICK_RATE = 50;
 

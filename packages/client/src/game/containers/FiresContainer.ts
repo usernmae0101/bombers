@@ -15,7 +15,7 @@ export default class FiresContainer extends BaseContainer<FireEntity> {
         );
     }
 
-    private _replaceCrossFlamesByCenter(mapEntities: number[], row: number, col: number): boolean {
+    private _replaceCrossFlamesByCenter = (mapEntities: number[], row: number, col: number): boolean => {
         let counter = 0;
 
         const edges = [
@@ -44,6 +44,6 @@ export default class FiresContainer extends BaseContainer<FireEntity> {
     }
 
     update(state: IGameState) {
-        this.updateMap(state.map, [this._replaceCrossFlamesByCenter.bind(this)]);
+        this.updateMap(state.map, [this._replaceCrossFlamesByCenter]);
     }
 }

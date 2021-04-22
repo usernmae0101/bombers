@@ -45,16 +45,16 @@ export function tryToMovePlayer(player: IGameStatePlayer, keys: number[]): [bool
     switch (true) {
         case keys.includes(InputKeys.INPUT_KEY_W):
             tryToSetDirection(player, MoveDirections.UP);
-            return [true, "y", -player.speed * 2];
+            return [true, "y", -player.speed * 6];
         case keys.includes(InputKeys.INPUT_KEY_D):
             tryToSetDirection(player, MoveDirections.RIGHT);
-            return [true, "x", player.speed * 2];
+            return [true, "x", player.speed * 6];
         case keys.includes(InputKeys.INPUT_KEY_S):
             tryToSetDirection(player, MoveDirections.DOWN);
-            return [true, "y", player.speed * 2];
+            return [true, "y", player.speed * 6];
         case keys.includes(InputKeys.INPUT_KEY_A):
             tryToSetDirection(player, MoveDirections.LEFT);
-            return [true, "x", -player.speed * 2];
+            return [true, "x", -player.speed * 6];
     }
 
     return [false, null, null];

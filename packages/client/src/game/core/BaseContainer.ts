@@ -25,6 +25,7 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
 
     protected addEntity(entity_id: number, row: number, col: number) {
         if (!this.entities[row][col]) {
+            console.log(entity_id, row, col); // debugger
             const entity: T = EntityFactory.create(entity_id);
 
             entity.setPosition(row, col);
@@ -66,13 +67,19 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
                     continue; 
                 }
 
-                for (let entity_id of this._entity_ids) {
-                    if (map[row][col].includes(entity_id)) {
-                        this.addEntity(entity_id, row, col);
+                let entity_id = undefined;
+
+                // try to find one of these entities on the map
+                for (let _entity_id of this._entity_ids) {
+                    if (map[row][col].includes(_entity_id)) {
+                        entity_id = _entity_id;
                         break;
                     }
-                    this.removeEntity(row, col);
                 }
+
+                if (entity_id !== undefined) 
+                    this.addEntity(entity_id, row, col); 
+                else this.removeEntity(row, col);
             } 
         }
     }

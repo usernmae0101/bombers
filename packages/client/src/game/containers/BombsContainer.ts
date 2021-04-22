@@ -13,13 +13,13 @@ export default class BombsContainer extends BaseContainer<BombEntity> {
         );
     }
 
-    private _tickBomb(_: any, row: number, col: number): boolean {
+    private _tickBomb = (_: any, row: number, col: number): boolean => {
         this.entities[row][col] && this.entities[row][col].tick();
 
         return false;
     }
 
     update(state: IGameState) {
-        this.updateMap(state.map, [this._tickBomb.bind(this)]);
+        this.updateMap(state.map, [this._tickBomb]);
     }
 }

@@ -1,6 +1,6 @@
 import { Rectangle } from "@pixi/math";
 
-import { ContainterLayers, GAME_RESOLUTION_TILE_SIZE, IGameState, IGameStatePlayers } from "@bombers/shared/src/idnex";
+import { ContainterLayers, GAME_RESOLUTION_TILE_OFFSET, GAME_RESOLUTION_TILE_SIZE, IGameState, IGameStatePlayers } from "@bombers/shared/src/idnex";
 import BaseContainer from "../core/BaseContainer";
 import Cache from "../core/Cache";
 import PlayerEntity from "../entities/PlayerEntity";
