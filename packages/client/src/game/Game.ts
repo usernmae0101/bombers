@@ -10,11 +10,11 @@ import GrassContainer from "./containers/GrassContainer";
 import ItemsContainer from "./containers/ItemsContainer";
 import PlayersContainer from "./containers/PlayersContainer";
 import RocksContainer from "./containers/RocksContainer";
-import * as GameActions from "./../ui/redux/actions/game-actions";
 import Inputs from "./core/Inputs";
 import { IRenderer, Renderer } from "./core/Renderer";
 import { Room } from "colyseus.js";
 import { Dispatch } from "redux";
+import * as Handlers from "../helpers/handlers/socket-game-handler";
 
 export interface IGame {
     init: (data: Shared.IGameInitialData) => void;
@@ -94,26 +94,21 @@ export class Game implements IGame {
                 if (_changes.direction !== undefined || _changes.x !== undefined || _changes.y !== undefined)
                     this._insertSnapshotToBuffer(+color, _changes);
                 return;
-            }
+            } 
 
-            // update bombs of the local player in ui and game
-            if (_changes.bombs !== undefined && _changes.bombs > this._state.players[this._color].bombs) {
-                this._dispatch(GameActions.action_game_set_bombs(_changes.bombs));
-                this._state.players[this._color].bombs = _changes.bombs;
-            }
+            const localPlayer = this._state.players[this._color];
 
-            // update speed of the local player in ui and game
-            if (_changes.speed !== undefined) {
-                this._dispatch(GameActions.action_game_set_speed(_changes.speed));
-                this._state.players[this._color].speed = _changes.speed;
-            }
+            if (_changes.bombs !== undefined) 
+                Handlers.handle_socket_game_on_change_bombs(this._dispatch, _changes.bombs, localPlayer);
 
-            // update radius of the local player in ui 
+            if (_changes.speed !== undefined) 
+                Handlers.handle_socket_game_on_change_speed(this._dispatch, _changes.speed, localPlayer)
+
             if (_changes.radius !== undefined) 
-                this._dispatch(GameActions.action_game_set_radius(_changes.radius));
+                Handlers.handle_socket_game_on_change_radius(this._dispatch, _changes.radius);
 
             if ((_changes.x !== undefined || _changes.y !== undefined) && player.tick)
-                Shared.reconciliation(this._state.players[this._color], this._buffer, player.tick, _changes);
+                Shared.reconciliation(localPlayer, this._buffer, player.tick, _changes);
         };
     };
 

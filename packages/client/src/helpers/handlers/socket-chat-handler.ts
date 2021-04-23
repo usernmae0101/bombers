@@ -6,12 +6,7 @@ import {
 import { ChatMemberType, ChatMessageType, ChatStateType } from "../../ui/redux/types/chat-types";
 
 export const handle_socket_chat_on_message = (dispatch: Dispatch, message: ChatMessageType) => {
-    dispatch(action_chat_add_message({
-        author: message.author,
-        avatar: message.avatar,
-        date: message.date,
-        message: message.message
-    }));
+    dispatch(action_chat_add_message({ ...message }));
 };
 
 export const handle_socket_chat_on_set_state = (dispatch: Dispatch, chat: ChatStateType) => {
