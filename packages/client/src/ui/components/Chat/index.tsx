@@ -8,7 +8,7 @@ import Message from "./Message";
 import styles from "./chat.module.scss";
 import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import { ChatMemberType, ChatStateType } from "../../redux/types/chat-types";
-import * as ChatHandler from "../../../handlers/socket-chat-handler";
+import * as ChatHandler from "../../../helpers/handlers/socket-chat-handler";
 import { Room } from "colyseus.js";
 import Form from "./Form";
 import Loader from "../Loader";
@@ -19,7 +19,6 @@ const Chat = () => {
 
     const [chatRoom, setChatRoom] = React.useState<Room>(null);
 
-    const appRoom = useSelector(UserSelectors.select_user_socket_room_app);
     const nickname = useSelector(UserSelectors.select_user_data_nickname);
     const socket = useSelector(UserSelectors.select_user_socket_instance);
     const messages = useSelector(ChatSelectors.select_chat_messages_all);

@@ -2,8 +2,8 @@ import { Dispatch } from "redux";
 import {
     action_chat_add_member, action_chat_add_message,
     action_chat_delete_member, action_chat_set_members, action_chat_set_messages
-} from "../ui/redux/actions/chat-actions";
-import { ChatMemberType, ChatMessageType, ChatStateType } from "../ui/redux/types/chat-types";
+} from "../../ui/redux/actions/chat-actions";
+import { ChatMemberType, ChatMessageType, ChatStateType } from "../../ui/redux/types/chat-types";
 
 export const handle_socket_chat_on_message = (dispatch: Dispatch, message: ChatMessageType) => {
     dispatch(action_chat_add_message({

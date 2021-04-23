@@ -3,6 +3,7 @@ export interface IGameStatePlayer {
     x: number;
     y: number;
     speed: number;
+    bombs: number;
     direction: number;
     toX?: number;
     toY?: number;

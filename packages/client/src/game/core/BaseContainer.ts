@@ -25,7 +25,6 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
 
     protected addEntity(entity_id: number, row: number, col: number) {
         if (!this.entities[row][col]) {
-            console.log(entity_id, row, col); // debugger
             const entity: T = EntityFactory.create(entity_id);
 
             entity.setPosition(row, col);

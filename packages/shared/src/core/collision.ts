@@ -69,7 +69,7 @@ function hasDetectOverlap(player: IPlayer, block: IBlock): boolean {
     return (cornerDistanceSq <= Math.pow(player.r, 2));
 }
 
-function parseEntitiesFromMap(map: Cell[] | number[][][], row: number, col: number): number[] {
+export function parseEntitiesFromMap(map: Cell[] | number[][][], row: number, col: number): number[] {
     if (map[0] instanceof Cell)
         return (map[row * GAME_RESOLUTION_TILE_LENGTH_X + col] as Cell).entinies.toArray();
 
@@ -166,12 +166,19 @@ export function detectOverlap(player: IPlayer, map: number[][][] | Cell[]): IOve
     return overlapData;
 }
 
+export function doesCollidedEntityExistInList(list: number[]): boolean {
+    for (let entity_id of COLLIDED_ENTITIES) {
+        if (list.includes(entity_id))
+           return true;
+    }
+
+    return false;
+}
+
 export function detectCollision(overlapData: IOverlapData[]): [boolean, number, number] {
     for (let {row, col, entities} of overlapData) {
-        for (let entity_id of COLLIDED_ENTITIES) {
-            if (entities.includes(entity_id))
-                return [true, row, col];
-        }
+        if (doesCollidedEntityExistInList(entities))
+            return [true, row, col];
     }
 
     return [false, null, null];

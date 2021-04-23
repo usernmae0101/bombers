@@ -96,9 +96,11 @@ export class Game implements IGame {
                 return;
             }
 
-            // update bombs of the local player in ui 
-            if (_changes.bombs !== undefined) 
+            // update bombs of the local player in ui and game
+            if (_changes.bombs !== undefined && _changes.bombs > this._state.players[this._color].bombs) {
                 this._dispatch(GameActions.action_game_set_bombs(_changes.bombs));
+                this._state.players[this._color].bombs = _changes.bombs;
+            }
 
             // update speed of the local player in ui and game
             if (_changes.speed !== undefined) {

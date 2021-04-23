@@ -1,8 +1,8 @@
 import { GAME_RESOLUTION_TILE_LENGTH_X, Cell, IGameStatePlayer, IPredictBuffer, isOutOfBorder, align, detectOverlap } from "../idnex";
-import { GAME_STATE_BUFFER_CLIENT_MAX_SIZE } from "../utils/constants";
+import { GAME_RESOLUTION_TILE_OFFSET, GAME_RESOLUTION_TILE_SIZE, GAME_STATE_BUFFER_CLIENT_MAX_SIZE } from "../utils/constants";
 import { InputKeys, MoveDirections } from "../utils/enums";
 import { IOverlapData, IStateChanges } from "../utils/interfaces";
-import { detectCollision } from "./collision";
+import { detectCollision, doesCollidedEntityExistInList, getCurrentTilePos, parseEntitiesFromMap } from "./collision";
 import { ArraySchema } from "@colyseus/schema";
 
 /*
@@ -60,7 +60,7 @@ export function tryToMovePlayer(player: IGameStatePlayer, keys: number[]): [bool
     return [false, null, null];
 }
 
-export function reconciliation(player: IGameStatePlayer, buffer: IPredictBuffer, tick: number, changes: IStateChanges) {    
+export function reconciliation(player: IGameStatePlayer, buffer: IPredictBuffer, tick: number, changes: IStateChanges) {
     if (!buffer[tick]) {
         if (GAME_STATE_BUFFER_CLIENT_MAX_SIZE <= Object.keys(buffer).length)
             clearPredictBuffer(buffer, tick);
@@ -74,13 +74,13 @@ export function reconciliation(player: IGameStatePlayer, buffer: IPredictBuffer,
     clearPredictBuffer(buffer, tick);
 }
 
-function alignPlayer(buffer: IPredictBuffer, field: "toX" | "toY", player: IGameStatePlayer, tick: number, value: number) {    
+function alignPlayer(buffer: IPredictBuffer, field: "toX" | "toY", player: IGameStatePlayer, tick: number, value: number) {
     if (buffer[tick][field] !== value) {
         const max = Math.max(...Object.keys(buffer).map(key => +key));
         const difference = value - buffer[tick][field];
 
         for (let i = tick; i <= max; i++) {
-            // not good
+            // not good. replay keys is better way, but more expensive. make it sense?
             (buffer[i][field] !== undefined) && (buffer[i][field] += difference);
         }
 
@@ -108,32 +108,44 @@ export function updateCellOnTheMap(map: ArraySchema<Cell>, indexOfCell: number, 
     map[indexOfCell] = new Cell(entities);
 }
 
+// TODO: calculate distance before checking
 export function filterOverlap(player: IGameStatePlayer, overlapData: IOverlapData[], map: Cell[]) {
     for (let { row, col, entities } of overlapData) {
         for (let entity_id of entities) {
-            switch(entity_id) {
+            switch (entity_id) {
 
             }
         }
     }
 }
 
-export function movePlayer(player: IGameStatePlayer, field: "x"| "y", offset: number, map: number[][][] | Cell[]): IOverlapData[] | undefined {
+export function movePlayer(player: IGameStatePlayer, field: "x" | "y", offset: number, map: number[][][] | Cell[]): IOverlapData[] | undefined {
     const _player = { x: player.x, y: player.y, direction: player.direction };
 
     _player[field] += offset;
-    
+
     if (isOutOfBorder(_player)) {
         player[field] = align(_player[field]);
         return;
-    } 
-    
+    }
+
     const overlapData: IOverlapData[] = detectOverlap(_player, map);
     if (overlapData.length) {
         const [isCollide, row, col] = detectCollision(overlapData);
         if (isCollide) {
             player[field] = align(_player[field]);
-            // sliding?
+
+            const trunAlignField = field === "x" ? "y" : "x";
+            const [_, __, playerRoundTile] = getCurrentTilePos(player[trunAlignField]);
+            const entities = parseEntitiesFromMap(map, field === "x" ? playerRoundTile : row, field === "x" ? col : playerRoundTile);
+            const orientation = (field === "x" ? row : col);
+
+            if (!doesCollidedEntityExistInList(entities)) {
+                const offset = orientation < playerRoundTile ? GAME_RESOLUTION_TILE_SIZE : -GAME_RESOLUTION_TILE_SIZE;
+
+                if (((orientation * GAME_RESOLUTION_TILE_SIZE) + offset) - player[trunAlignField] <= GAME_RESOLUTION_TILE_OFFSET * 2)
+                    player[trunAlignField] = align(player[trunAlignField]);
+            }
             return;
         }
     }

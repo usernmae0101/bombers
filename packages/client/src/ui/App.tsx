@@ -7,7 +7,7 @@ import store from "./redux/store";
 import * as UserSelectors from "./redux/selectors/user-selecrots";
 import * as UserActions from "./redux/actions/user-actions";
 import { ApiResponseCodes, SocketChannels } from "@bombers/shared/src/idnex";
-import { handle_socket_app_online, IOnline } from "../handlers/socket-app-handler";
+import { handle_socket_app_online, IOnline } from "../helpers/handlers/socket-app-handler";
 import Loader from "./components/Loader";
 
 const Main = () => {

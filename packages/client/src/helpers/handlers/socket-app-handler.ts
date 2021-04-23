@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { action_dashboard_set_online_chat, action_dashboard_set_online_game } from "../ui/redux/actions/dashboard-actions";
+import { action_dashboard_set_online_chat, action_dashboard_set_online_game } from "../../ui/redux/actions/dashboard-actions";
 
 export interface IOnline {
     game: number;
