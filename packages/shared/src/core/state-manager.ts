@@ -112,9 +112,7 @@ export function updateCellOnTheMap(map: ArraySchema<Cell>, indexOfCell: number, 
 export function filterOverlap(player: IGameStatePlayer, overlapData: IOverlapData[], map: Cell[]) {
     for (let { row, col, entities } of overlapData) {
         for (let entity_id of entities) {
-            switch (entity_id) {
-
-            }
+            console.log(entity_id, row, col); // debugger
         }
     }
 }
@@ -135,16 +133,16 @@ export function movePlayer(player: IGameStatePlayer, field: "x" | "y", offset: n
         if (isCollide) {
             player[field] = align(_player[field]);
 
-            const trunAlignField = field === "x" ? "y" : "x";
-            const [_, __, playerRoundTile] = getCurrentTilePos(player[trunAlignField]);
+            const turnAlignField = field === "x" ? "y" : "x";
+            const [_, __, playerRoundTile] = getCurrentTilePos(player[turnAlignField]);
             const entities = parseEntitiesFromMap(map, field === "x" ? playerRoundTile : row, field === "x" ? col : playerRoundTile);
-            const orientation = (field === "x" ? row : col);
 
             if (!doesCollidedEntityExistInList(entities)) {
+            	const orientation = (field === "x" ? row : col);
                 const offset = orientation < playerRoundTile ? GAME_RESOLUTION_TILE_SIZE : -GAME_RESOLUTION_TILE_SIZE;
 
-                if (((orientation * GAME_RESOLUTION_TILE_SIZE) + offset) - player[trunAlignField] <= GAME_RESOLUTION_TILE_OFFSET * 2)
-                    player[trunAlignField] = align(player[trunAlignField]);
+                if (((orientation * GAME_RESOLUTION_TILE_SIZE) + offset) - player[turnAlignField] <= GAME_RESOLUTION_TILE_OFFSET * 2)
+                    player[turnAlignField] = align(player[turnAlignField]);
             }
             return;
         }
