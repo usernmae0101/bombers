@@ -2,6 +2,9 @@ export interface IGameStatePlayer {
     tick: number;
     x: number;
     y: number;
+    health: number;
+    radius: number;
+    isImmortal: boolean;
     speed: number;
     bombs: number;
     direction: number;

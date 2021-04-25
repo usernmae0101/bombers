@@ -1,6 +1,6 @@
 import { GAME_RESOLUTION_TILE_LENGTH_X, Cell, IGameStatePlayer, IPredictBuffer, isOutOfBorder, align, detectOverlap } from "../idnex";
 import { GAME_RESOLUTION_TILE_OFFSET, GAME_RESOLUTION_TILE_SIZE, GAME_STATE_BUFFER_CLIENT_MAX_SIZE } from "../utils/constants";
-import { InputKeys, MoveDirections } from "../utils/enums";
+import { EntityNumbers, InputKeys, MoveDirections } from "../utils/enums";
 import { IOverlapData, IStateChanges } from "../utils/interfaces";
 import { detectCollision, doesCollidedEntityExistInList, getCurrentTilePos, parseEntitiesFromMap } from "./collision";
 import { ArraySchema } from "@colyseus/schema";
@@ -108,13 +108,73 @@ export function updateCellOnTheMap(map: ArraySchema<Cell>, indexOfCell: number, 
     map[indexOfCell] = new Cell(entities);
 }
 
-// TODO: calculate distance before checking
-export function filterOverlap(player: IGameStatePlayer, overlapData: IOverlapData[], map: Cell[]) {
+export function filterOverlap(player: IGameStatePlayer, overlapData: IOverlapData[], map: ArraySchema<Cell>) {
     for (let { row, col, entities } of overlapData) {
+
+        let tileX: number, tileY: number;
+
+        // calculate the distance based on the offset
+        switch (player.direction) {
+            case MoveDirections.UP:
+                tileY = row * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_SIZE;
+                if (tileY - player.y < (GAME_RESOLUTION_TILE_OFFSET * 2)) continue;
+                break;
+            case MoveDirections.DOWN:
+                tileY = row * GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_SIZE;
+                if (player.y - tileY < (GAME_RESOLUTION_TILE_OFFSET * 2)) continue;
+                break;
+            case MoveDirections.RIGHT:
+                tileX = col * GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_SIZE;
+                if (player.x - tileX < (GAME_RESOLUTION_TILE_OFFSET * 2)) continue;
+                break;
+            case MoveDirections.LEFT:
+                tileX = col * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_SIZE;
+                if (tileX - player.x < (GAME_RESOLUTION_TILE_OFFSET * 2)) continue;
+                break;
+        }
+
+        const cellIndex = row * GAME_RESOLUTION_TILE_LENGTH_X + col;
+
         for (let entity_id of entities) {
-            console.log(entity_id, row, col); // debugger
+            switch (entity_id) {
+                case EntityNumbers.ITEM_BOMB:
+                    player.bombs < 11 && ++player.bombs;
+                    updateCellOnTheMap(map, cellIndex, entity_id, "remove");
+                    break;
+                case EntityNumbers.ITEM_HEALTH:
+                    player.health < 4 && ++player.health;
+                    updateCellOnTheMap(map, cellIndex, entity_id, "remove");
+                    break;
+                case EntityNumbers.ITEM_RADIUS:
+                    player.radius < 11 && ++player.radius;
+                    updateCellOnTheMap(map, cellIndex, entity_id, "remove");
+                    break;
+                case EntityNumbers.ITEM_SPEED:
+                    player.speed < 11 && ++player.speed;
+                    updateCellOnTheMap(map, cellIndex, entity_id, "remove");
+                    break;
+            }
+
+            [
+                EntityNumbers.FIRE_BOTTOM,
+                EntityNumbers.FIRE_CENTER,
+                EntityNumbers.FIRE_LEFT,
+                EntityNumbers.FIRE_RIGHT,
+                EntityNumbers.FIRE_TOP
+            ].includes(entity_id) && tryToDamagePlayer(player);
         }
     }
+}
+
+export function tryToDamagePlayer(player: IGameStatePlayer): boolean {
+    if (!player.isImmortal) {
+        --player.health;
+
+        player.isImmortal = true;
+        setTimeout(() => { player.isImmortal = false; }, 1000);
+    }
+
+    return player.health < 1;
 }
 
 export function movePlayer(player: IGameStatePlayer, field: "x" | "y", offset: number, map: number[][][] | Cell[]): IOverlapData[] | undefined {
@@ -138,7 +198,7 @@ export function movePlayer(player: IGameStatePlayer, field: "x" | "y", offset: n
             const entities = parseEntitiesFromMap(map, field === "x" ? playerRoundTile : row, field === "x" ? col : playerRoundTile);
 
             if (!doesCollidedEntityExistInList(entities)) {
-            	const orientation = (field === "x" ? row : col);
+                const orientation = (field === "x" ? row : col);
                 const offset = orientation < playerRoundTile ? GAME_RESOLUTION_TILE_SIZE : -GAME_RESOLUTION_TILE_SIZE;
 
                 if (((orientation * GAME_RESOLUTION_TILE_SIZE) + offset) - player[turnAlignField] <= GAME_RESOLUTION_TILE_OFFSET * 2)

@@ -86,6 +86,7 @@ export function parseEntitiesFromMap(map: Cell[] | number[][][], row: number, co
    |_|_|_|_|_|_|
 */
 
+// TODO: simplify it
 export function detectOverlap(player: IPlayer, map: number[][][] | Cell[]): IOverlapData[] {
     let overlapData: IOverlapData[] = [];
 

@@ -5,7 +5,7 @@ import BaseEntity from "../core/BaseEntity";
 
 export default class BombEntity extends BaseEntity {
     private _frame: number = 0;
-    private _counter: number = 30;
+    private _counter: number = 60;
     private _makeItBigger: boolean = true;
 
     constructor(frameX: number, frameY: number) {
@@ -22,7 +22,7 @@ export default class BombEntity extends BaseEntity {
 
     tick() {
         if (++this._frame > this._counter) {
-            const scale = 6;
+            const scale = GAME_RESOLUTION_TILE_OFFSET;
 
             this.width += this._makeItBigger ? scale : -scale;
             this.x += this._makeItBigger ? -(scale / 2): (scale / 2);
@@ -32,7 +32,7 @@ export default class BombEntity extends BaseEntity {
 
             this._frame = 0;
             this._makeItBigger = !this._makeItBigger;
-            this._counter -= 5;
+            this._counter -= 10;
         }
     }
 }
