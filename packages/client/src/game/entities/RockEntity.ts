@@ -8,9 +8,9 @@ export default class RockEntity extends BaseEntity {
         super(
             RESOURCE_IMAGE_PATH_TILEMAP,
             new Rectangle(
-            	frameX, 
-            	frameY, 
-                GAME_RESOLUTION_TILE_SIZE, 
+                frameX,
+                frameY,
+                GAME_RESOLUTION_TILE_SIZE,
                 GAME_RESOLUTION_TILE_SIZE
             ),
             GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_OFFSET,
