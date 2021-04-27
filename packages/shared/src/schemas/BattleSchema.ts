@@ -14,7 +14,7 @@ export class Player extends Schema {
     bombs: number = 1;
 
     @type("number")
-    radius: number = 1;
+    radius: number = 2;
 
     @type("number")
     health: number = 3;

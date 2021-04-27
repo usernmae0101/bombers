@@ -7,7 +7,7 @@ import EntityFactory from "./EntityFactory";
 export default abstract class BaseContainer<T extends BaseEntity> extends Container {
     protected entities: T[][] = [];
     protected current_entity_id: number[][] = [];
-    private _entity_ids: number[];
+    protected entity_ids: number[];
     private _priority_id: number;
 
     constructor(layer: number, entity_ids: number[] = [], priority_id?: number) {
@@ -17,7 +17,7 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
         super.height = GAME_RESOLUTION_HEIGHT;
 
         this.zIndex = layer;
-        this._entity_ids = entity_ids;
+        this.entity_ids = entity_ids;
         this._priority_id = priority_id;
     }
 
@@ -28,6 +28,7 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
             const entity: T = EntityFactory.create(entity_id);
 
             entity.setPosition(row, col);
+            entity.configurate();
             this.addChild(entity);
 
             this.current_entity_id[row][col] = entity_id;
@@ -69,7 +70,7 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
                 let entity_id = undefined;
 
                 // try to find one of these entities on the map
-                for (let _entity_id of this._entity_ids) {
+                for (let _entity_id of this.entity_ids) {
                     if (map[row][col].includes(_entity_id)) {
                         entity_id = _entity_id;
                         break;

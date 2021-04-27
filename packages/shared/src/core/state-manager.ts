@@ -160,7 +160,9 @@ export function filterOverlap(player: IGameStatePlayer, overlapData: IOverlapDat
                 EntityNumbers.FIRE_CENTER,
                 EntityNumbers.FIRE_LEFT,
                 EntityNumbers.FIRE_RIGHT,
-                EntityNumbers.FIRE_TOP
+                EntityNumbers.FIRE_TOP,
+                EntityNumbers.FIRE_MIDDLE_Y,
+                EntityNumbers.FIRE_MIDDLE_X,
             ].includes(entity_id) && tryToDamagePlayer(player);
         }
     }
@@ -171,7 +173,7 @@ export function tryToDamagePlayer(player: IGameStatePlayer): boolean {
         --player.health;
 
         player.isImmortal = true;
-        setTimeout(() => { player.isImmortal = false; }, 1000);
+        setTimeout(() => { player.isImmortal = false; }, 3000);
     }
 
     return player.health < 1;

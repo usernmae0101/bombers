@@ -18,15 +18,19 @@ export default class EntityFactory {
             case EntityNumbers.CRATER:
                 return new CraterEntity(frameX, frameY);
             case EntityNumbers.FIRE_RIGHT:
-                return new FireEntity(frameX, frameY);
-            case EntityNumbers.FIRE_CENTER:
-                return new FireEntity(frameX, frameY);
+                return new FireEntity(frameX, frameY, entity_id, 90);
             case EntityNumbers.FIRE_BOTTOM:
-                return new FireEntity(frameX, frameY);
+                return new FireEntity(frameX, frameY, entity_id, 180);
             case EntityNumbers.FIRE_LEFT:
-                return new FireEntity(frameX, frameY);
+                return new FireEntity(frameX, frameY, entity_id, 270);
+            case EntityNumbers.FIRE_CENTER:
+                return new FireEntity(frameX, frameY, entity_id);
+            case EntityNumbers.FIRE_MIDDLE_Y:
+                return new FireEntity(frameX, frameY, entity_id);
+            case EntityNumbers.FIRE_MIDDLE_X:
+                return new FireEntity(frameX, frameY, entity_id);
             case EntityNumbers.FIRE_TOP:
-                return new FireEntity(frameX, frameY);
+                return new FireEntity(frameX, frameY, entity_id);
             case EntityNumbers.BOMB_BLUE:
                 return new BombEntity(frameX, frameY);
             case EntityNumbers.BOMB_YELLOW:

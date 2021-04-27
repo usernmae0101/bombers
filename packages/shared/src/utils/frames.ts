@@ -2,6 +2,18 @@ import { GAME_RESOLUTION_TILE_SIZE } from "./../idnex";
 import { EntityNumbers, MoveDirections, PlayerColors } from "./../idnex";
 
 export const getEntityFrame = (entity: number, color?: number, direction?: number): { x: number, y: number } => {
+    if([
+        EntityNumbers.FIRE_TOP,
+        EntityNumbers.FIRE_BOTTOM,
+        EntityNumbers.FIRE_LEFT,
+        EntityNumbers.FIRE_RIGHT,
+    ].includes(entity)) return frames.static[EntityNumbers.FIRE_EDGE];
+    
+    if ([
+        EntityNumbers.FIRE_MIDDLE_X,
+        EntityNumbers.FIRE_MIDDLE_Y
+    ].includes(entity)) return frames.static[EntityNumbers.FIRE_CENTER];
+
     switch (entity) {
         case EntityNumbers.PLAYER:
             return frames.dynamic.player[color][direction];
@@ -88,12 +100,12 @@ const frames: IFrames = {
             y: 5 * GAME_RESOLUTION_TILE_SIZE
         },
         [EntityNumbers.BOX]: {
-            x: 0,
-            y: 6 * GAME_RESOLUTION_TILE_SIZE
+            x: 2 * GAME_RESOLUTION_TILE_SIZE,
+            y: 4 * GAME_RESOLUTION_TILE_SIZE
         },
         [EntityNumbers.ROCK]: {
-            x: 1 * GAME_RESOLUTION_TILE_SIZE,
-            y: 6 * GAME_RESOLUTION_TILE_SIZE
+            x: 3 * GAME_RESOLUTION_TILE_SIZE,
+            y: 4 * GAME_RESOLUTION_TILE_SIZE
         },
         [EntityNumbers.BOMB_BLUE]: {
             x: 4 * GAME_RESOLUTION_TILE_SIZE,
@@ -131,20 +143,8 @@ const frames: IFrames = {
             x: 0,
             y: 4 * GAME_RESOLUTION_TILE_SIZE
         },
-        [EntityNumbers.FIRE_TOP]: {
+        [EntityNumbers.FIRE_EDGE]: {
             x: 1 * GAME_RESOLUTION_TILE_SIZE,
-            y: 4 * GAME_RESOLUTION_TILE_SIZE
-        },
-        [EntityNumbers.FIRE_RIGHT]: {
-            x: 2 * GAME_RESOLUTION_TILE_SIZE,
-            y: 4 * GAME_RESOLUTION_TILE_SIZE
-        },
-        [EntityNumbers.FIRE_BOTTOM]: {
-            x: 3 * GAME_RESOLUTION_TILE_SIZE,
-            y: 4 * GAME_RESOLUTION_TILE_SIZE
-        },
-        [EntityNumbers.FIRE_LEFT]: {
-            x: 4 * GAME_RESOLUTION_TILE_SIZE,
             y: 4 * GAME_RESOLUTION_TILE_SIZE
         }
     },

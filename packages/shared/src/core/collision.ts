@@ -10,8 +10,12 @@ import {
 } from "./../idnex";
 
 const COLLIDED_ENTITIES = [
-    EntityNumbers.ROCK, EntityNumbers.BOX, EntityNumbers.BOMB_YELLOW,
-    EntityNumbers.BOMB_BLUE, EntityNumbers.BOMB_RED, EntityNumbers.BOMB_PURPLE
+    EntityNumbers.ROCK, 
+    EntityNumbers.BOX, 
+    EntityNumbers.BOMB_YELLOW,
+    EntityNumbers.BOMB_BLUE, 
+    EntityNumbers.BOMB_RED, 
+    EntityNumbers.BOMB_PURPLE
 ];
 
 export function align(position: number): number {
@@ -53,6 +57,7 @@ function getBlockPos(tileX: number, tileY: number): IBlock {
     }
 }
 
+// TODO: change detection by rect & rect
 function hasDetectOverlap(player: IPlayer, block: IBlock): boolean {
     const playerDistanceX = Math.abs(player.x - block.x);
     const playerDistanceY = Math.abs(player.y - block.y);
@@ -89,7 +94,10 @@ export function parseEntitiesFromMap(map: Cell[] | number[][][], row: number, co
 // TODO: simplify it
 export function detectOverlap(player: IPlayer, map: number[][][] | Cell[]): IOverlapData[] {
     let overlapData: IOverlapData[] = [];
-
+	
+	const playersPos = getPlayerPos(player.x, player.y);
+	const isY = [MoveDirections.DOWN, MoveDirections.UP].includes(player.direction);
+	
     let tileXCeil, tileXFloor, tileYRound, _, __, tileYCeil, tileYFloor, tileXRound, isSameLine;
 
     if ([MoveDirections.DOWN, MoveDirections.UP].includes(player.direction)) {
@@ -103,8 +111,6 @@ export function detectOverlap(player: IPlayer, map: number[][][] | Cell[]): IOve
         [_, __, tileXRound] = getCurrentTilePos(player.x);
         isSameLine = tileYCeil === tileYFloor;
     }
-
-    const playersPos = getPlayerPos(player.x, player.y);
 
     switch (player.direction) {
         case MoveDirections.UP: {

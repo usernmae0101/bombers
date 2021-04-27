@@ -18,4 +18,6 @@ export default abstract class BaseEntity extends Sprite {
         this.x = (col * GAME_RESOLUTION_TILE_SIZE) + GAME_RESOLUTION_TILE_OFFSET / 2;
         this.y = (row * GAME_RESOLUTION_TILE_SIZE) + GAME_RESOLUTION_TILE_OFFSET / 2;
     }
+
+    configurate(): void {};
 }

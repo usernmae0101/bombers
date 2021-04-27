@@ -7,7 +7,9 @@ export default class RockEntity extends BaseEntity {
     constructor(frameX: number, frameY: number) {
         super(
             RESOURCE_IMAGE_PATH_TILEMAP,
-            new Rectangle(frameX, frameY, 
+            new Rectangle(
+            	frameX, 
+            	frameY, 
                 GAME_RESOLUTION_TILE_SIZE, 
                 GAME_RESOLUTION_TILE_SIZE
             ),

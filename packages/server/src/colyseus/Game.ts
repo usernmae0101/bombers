@@ -42,7 +42,7 @@ export default class Game extends Room<Shared.GameState> {
         this.keysBuffer = [];
         this._availableColors = Shared.COLORS;
     }
- 
+
     protected tryToPlaceBomb(player: Shared.Player, color: number, keys: number[]) {
         if (!keys.includes(Shared.InputKeys.INPUT_KEY_SPACE)) return;
         if (!player.bombs) return;
@@ -83,7 +83,8 @@ export default class Game extends Room<Shared.GameState> {
         epicenterRow: number,
         epicenterCol: number,
         radius: number,
-        isEndOfRadius: boolean
+        isEndOfRadius: boolean,
+        isRow: boolean
     ): boolean {
         let isStop = false, cellIndex: number, fire: number, isBorder: boolean;
 
@@ -115,7 +116,8 @@ export default class Game extends Room<Shared.GameState> {
             this._dropRandomItem(cellIndex);
         }
 
-        fire = isStop || isEndOfRadius ? frame : Shared.EntityNumbers.FIRE_CENTER;
+        const middleFlame = isRow ? Shared.EntityNumbers.FIRE_MIDDLE_Y : Shared.EntityNumbers.FIRE_MIDDLE_X;
+        fire = (isStop || isEndOfRadius || isBorder) ? frame : middleFlame;
         blaze.push({ id: fire, index: cellIndex });
 
         return isStop;
@@ -127,7 +129,7 @@ export default class Game extends Room<Shared.GameState> {
         const [epicenterRow, epicenterCol] = epicenter;
 
         const blaze = [{ id: Shared.EntityNumbers.FIRE_CENTER, index: indexOfEpicenterCell }];
-
+        
         let isStopRight, isStopDown, isStopUp, isStopLeft = false;
 
         for (let radius = 1; radius <= player.radius; radius++) {
@@ -139,7 +141,13 @@ export default class Game extends Room<Shared.GameState> {
                 isStopRight = this._spreadFlame(
                     indexOfEpicenterCell,
                     Shared.EntityNumbers.FIRE_RIGHT,
-                    blaze, epicenterRow, epicenterCol, radius, isEndOfRadius);
+                    blaze,
+                    epicenterRow,
+                    epicenterCol,
+                    radius,
+                    isEndOfRadius,
+                    false
+                );
 
             // spread left
             if (!isStopLeft && epicenterCol - radius > -1
@@ -147,7 +155,13 @@ export default class Game extends Room<Shared.GameState> {
                 isStopLeft = this._spreadFlame(
                     indexOfEpicenterCell,
                     Shared.EntityNumbers.FIRE_LEFT,
-                    blaze, epicenterRow, epicenterCol, radius, isEndOfRadius);
+                    blaze,
+                    epicenterRow,
+                    epicenterCol,
+                    radius,
+                    isEndOfRadius,
+                    false
+                );
 
             // spread up
             if (!isStopUp && epicenterRow - radius > -1
@@ -155,7 +169,13 @@ export default class Game extends Room<Shared.GameState> {
                 isStopUp = this._spreadFlame(
                     indexOfEpicenterCell,
                     Shared.EntityNumbers.FIRE_TOP,
-                    blaze, epicenterRow, epicenterCol, radius, isEndOfRadius);
+                    blaze,
+                    epicenterRow,
+                    epicenterCol,
+                    radius,
+                    isEndOfRadius,
+                    true
+                );
 
             // spread down
             if (!isStopDown && epicenterRow + radius < Shared.GAME_RESOLUTION_TILE_LENGTH_Y
@@ -163,7 +183,13 @@ export default class Game extends Room<Shared.GameState> {
                 isStopDown = this._spreadFlame(
                     indexOfEpicenterCell,
                     Shared.EntityNumbers.FIRE_BOTTOM,
-                    blaze, epicenterRow, epicenterCol, radius, isEndOfRadius);
+                    blaze, 
+                    epicenterRow, 
+                    epicenterCol, 
+                    radius, 
+                    isEndOfRadius,
+                    true
+                );        
         }
 
         const changeVisionOfBlaze = (action: "add" | "remove") => {

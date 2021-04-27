@@ -106,4 +106,5 @@ export interface IStateChanges {
     speed?: number;
     radius?: number;
     bombs?: number;
+    isImmortal?: boolean;
 }

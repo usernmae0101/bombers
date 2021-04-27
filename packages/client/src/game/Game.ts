@@ -107,6 +107,9 @@ export class Game implements IGame {
             if (_changes.radius !== undefined) 
                 Handlers.handle_socket_game_on_change_radius(this._dispatch, _changes.radius);
 
+            if (_changes.isImmortal !== undefined)
+                localPlayer.isImmortal = _changes.isImmortal;
+
             if ((_changes.x !== undefined || _changes.y !== undefined) && player.tick)
                 Shared.reconciliation(localPlayer, this._buffer, player.tick, _changes);
         };
