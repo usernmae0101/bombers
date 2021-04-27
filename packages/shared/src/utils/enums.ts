@@ -19,7 +19,8 @@ export enum EntityNumbers {
     ITEM_HEALTH,
     ITEM_RADIUS,
     ITEM_BOMB,
-    ITEM_SPEED
+    ITEM_SPEED,
+    ARROW
 }
 
 export enum InputKeys {

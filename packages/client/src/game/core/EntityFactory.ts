@@ -1,4 +1,5 @@
 import { EntityNumbers, getEntityFrame } from "@bombers/shared/src/idnex";
+import ArrowEntity from "../entities/ArrowEntity";
 import BombEntity from "../entities/BombEntity";
 import BoxEntity from "../entities/BoxEntity";
 import CraterEntity from "../entities/CraterEntity";
@@ -33,6 +34,8 @@ export default class EntityFactory {
                 return new FireEntity(frameX, frameY, entity_id);
             case EntityNumbers.BOMB_BLUE:
                 return new BombEntity(frameX, frameY);
+            case EntityNumbers.ARROW:
+                return new ArrowEntity(frameX, frameY);
             case EntityNumbers.BOMB_YELLOW:
                 return new BombEntity(frameX, frameY);
             case EntityNumbers.BOMB_PURPLE:

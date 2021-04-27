@@ -10,6 +10,7 @@ export interface IGameStatePlayer {
     direction: number;
     toX?: number;
     toY?: number;
+    isLocal?: boolean;
 }
 
 export interface IGameStatePlayers {
@@ -47,6 +48,8 @@ export interface ISnapshot {
         x?: number;
         y?: number;
         direction?: number;
+        health?: number;
+        isImmortal?: boolean;
     };
 }
 
@@ -106,5 +109,6 @@ export interface IStateChanges {
     speed?: number;
     radius?: number;
     bombs?: number;
+    health?: number;
     isImmortal?: boolean;
 }

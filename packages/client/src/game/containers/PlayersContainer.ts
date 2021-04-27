@@ -16,7 +16,7 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
         super(ContainterLayers.PLAYER);
     }
 
-    update(state: IGameState) {
+    update(state: IGameState) { 
         this._addPlayers(state.players);
         this._removePlayers(state.players);
         this._updatePlayers(state.players);
@@ -52,6 +52,19 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
                 y: null,
                 direction: null
             });
+
+            if (players[color].isImmortal) 
+                this._players[color].blink();
+            else {
+                if (this._players[color].alpha !== 1)
+                    this._players[color].alpha = 1;
+                this._players[color].tick = 0;
+            }
+
+            if (players[color].isLocal)
+                this._players[color].updateArrow(players[color].tick);
+
+            this._players[color].setHealthbar(players[color].health);
 
             if (Cache.player[color].x !== players[color].x || Cache.player[color].y !== players[color].y) {
                 this._players[color].setPosition(

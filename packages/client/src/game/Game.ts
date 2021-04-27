@@ -84,6 +84,9 @@ export class Game implements IGame {
     onAddPlayer = (player: Shared.Player, color: string) => {
         this._state.players[Number(color)] = player.toJSON() as Shared.IGameStatePlayer;
 
+        if (this._color === +color)
+            this._state.players[+color].isLocal = true;
+
         player.onChange = changes => {
             const _changes: Shared.IStateChanges = {};
 
@@ -109,6 +112,12 @@ export class Game implements IGame {
 
             if (_changes.isImmortal !== undefined)
                 localPlayer.isImmortal = _changes.isImmortal;
+
+            if (_changes.health !== undefined)
+                localPlayer.health = _changes.health;
+            
+            if (_changes.tick !== undefined)
+                localPlayer.tick = _changes.tick;
 
             if ((_changes.x !== undefined || _changes.y !== undefined) && player.tick)
                 Shared.reconciliation(localPlayer, this._buffer, player.tick, _changes);
@@ -155,7 +164,14 @@ export class Game implements IGame {
             if (snapshots.length && 100 <= (performance.now() - snapshots[0].timestamp)) {
                 const snapshot = snapshots.shift();
 
-                snapshot.changes.direction !== undefined && (enemy.direction = snapshot.changes.direction);
+                if (snapshot.changes.direction !== undefined)
+                    enemy.direction = snapshot.changes.direction;
+
+                if (snapshot.changes.health !== undefined)
+                    enemy.health = snapshot.changes.health;
+
+                if (snapshot.changes.isImmortal !== undefined)
+                    enemy.isImmortal = snapshot.changes.isImmortal;
 
                 snapshot.changes.x !== undefined && (enemy.toX = snapshot.changes.x);
                 snapshot.changes.y !== undefined && (enemy.toY = snapshot.changes.y);

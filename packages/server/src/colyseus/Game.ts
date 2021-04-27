@@ -232,7 +232,7 @@ export default class Game extends Room<Shared.GameState> {
                     if (overlapData && overlapData.length)
                         Shared.filterOverlap(player, overlapData, this.state.map);
                 }
-            }
+            } 
         }
     }
 

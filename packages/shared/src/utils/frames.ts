@@ -103,6 +103,10 @@ const frames: IFrames = {
             x: 2 * GAME_RESOLUTION_TILE_SIZE,
             y: 4 * GAME_RESOLUTION_TILE_SIZE
         },
+        [EntityNumbers.ARROW]: {
+            x: 4 * GAME_RESOLUTION_TILE_SIZE,
+            y: 4 * GAME_RESOLUTION_TILE_SIZE
+        },
         [EntityNumbers.ROCK]: {
             x: 3 * GAME_RESOLUTION_TILE_SIZE,
             y: 4 * GAME_RESOLUTION_TILE_SIZE
