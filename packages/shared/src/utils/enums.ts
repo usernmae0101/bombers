@@ -56,3 +56,13 @@ export enum ApiResponseCodes {
      */
     USER_NOT_EXISTS_SOCIAL
 }
+
+/**
+ * Цвета игроков.
+ */
+export enum PlayerColors {
+    RED,
+    PURPLE,
+    BLUE,
+    YELLOW
+}

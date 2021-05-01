@@ -22,6 +22,10 @@ export interface IChatMessage {
      * Текст сообщения.
      */
     message: string;
+    /**
+     * Время, когда сообщение было отправлено. Unix-время.
+     */
+    date: number;
 }
 
 export interface IServerAppState {
@@ -33,4 +37,26 @@ export interface IServerAppState {
      * Сообщения в чате, сохраненные в буфере.
      */
     messages: IChatMessage[];
+}
+
+export interface IGameSlot {
+    /**
+     * Данные игрока.
+     */
+    user: IUser,
+    /**
+     * Статус подключения к игровому северу.
+     */
+    isDisconnected: boolean;
+    /**
+     * Статус готовности к игре.
+     */
+    isReady: boolean;
+}
+
+export interface IGameSlots {
+    /**
+     * Игровой слот. Ключ - цвет.
+     */
+    [color: number]: IGameSlot;
 }
