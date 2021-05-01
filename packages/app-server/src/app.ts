@@ -29,7 +29,6 @@ app.use("*", (_, res) => {
 const server = createServer(app);
 
 const io = new Server(server);
-SocketManager.handle(io);
 
 mongoose.connect(`mongodb://${mongoHostname}:27017/bombers`, {
     useNewUrlParser: true,

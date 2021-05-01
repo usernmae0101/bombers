@@ -8,7 +8,7 @@
         ]
     },
     "jest": {
-        "rootDir": "__tests__",
+        "rootDir": "tests",
         "transform": {
             ".+\\.(css|styl|less|sass|scss)$": "jest-css-modules-transform",
             ".(ts|tsx)": "ts-jest"

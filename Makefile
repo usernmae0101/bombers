@@ -2,7 +2,7 @@ OS := $(shell uname)
 
 # TARGET
 # ------------------------------
-# run-dev: [client|server|mongo]
+# run-dev: [client|app-server|game-server|mongo]
 # build: [application|game-server]
 # ------------------------------
 
@@ -19,4 +19,4 @@ install:
 	yarn && yarn install
 	
 build:
-	docker-compose -f docker-compose-$(TARGET).yml up -d --build
+	docker-compose -f docker-compose.$(TARGET).yml up -d --build
