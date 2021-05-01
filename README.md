@@ -57,7 +57,7 @@ docker-compose up -d --build
 - [webpack](https://webpack.js.org/) - сборщик приложения
 - [react](https://reactjs.org/) - библиотека для разработки пользовательского интерфейса
 - [pixijs](https://www.pixijs.com/) - обвёртка над 2d и WebGL контекстами для отрисовки графики
-- [colyseus](https://www.colyseus.io/) - контроль игрового состояния, широковещание, сериализация данных
+- [socketio](https://socket.io/) - WebSocket (TCP)
 - [express](https://expressjs.com/ru/) - REST API
 - [mongoose](https://mongoosejs.com/) - ORM к mongo (СУБД)
 - [redux](https://redux.js.org/) - менеджер состояния приложения
