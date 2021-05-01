@@ -1,8 +1,5 @@
 {
   "name": "@bombers/shared",
   "version": "0.1.0",
-  "main": "src/index.ts",
-  "dependencies": {
-    "colyseus": "^0.14.13"
-  }
+  "main": "src/index.ts"
 }
