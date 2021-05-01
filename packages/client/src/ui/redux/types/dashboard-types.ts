@@ -1,21 +1,12 @@
-export const ACTION_TYPE_DASHBOARD_SET_ONLINE_GAME = "DASHBOARD/SET_ONLINE_GAME";
-export const ACTION_TYPE_DASHBOARD_SET_ONLINE_CHAT = "DASHBOARD/SET_ONLINE_CHAT";
+export const ACTION_TYPE_DASHBOARD_SET_ONLINE = "DASHBOARD/SET_ONLINE";
 
 export type DashboardStateType = {
-    online: {
-        game: number;
-        chat: number;
-    }
+    online: number;
 };
 
-export type DashboardSetOnlineGameActionType = {
-    type: typeof ACTION_TYPE_DASHBOARD_SET_ONLINE_GAME,
+export type DashboardSetOnlineActionType = {
+    type: typeof ACTION_TYPE_DASHBOARD_SET_ONLINE,
     payload: number;
 };
 
-export type DashboardSetOnlineChatActionType = {
-    type: typeof ACTION_TYPE_DASHBOARD_SET_ONLINE_CHAT,
-    payload: number;
-};
-
-export type DashboardActionsType = DashboardSetOnlineChatActionType | DashboardSetOnlineGameActionType;
+export type DashboardActionsType = DashboardSetOnlineActionType;

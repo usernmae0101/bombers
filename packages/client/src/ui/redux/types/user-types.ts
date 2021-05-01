@@ -1,5 +1,6 @@
-import { AppState, GameState } from "@bombers/shared/src/idnex";
-import {Client, Room} from "colyseus.js";
+import { Socket } from "socket.io-client";
+
+import * as Shared from "@bombers/shared/src/idnex";
 
 export const ACTION_TYPE_USER_CREATE_SOCIAL = "USER/CREATE_SOCIAL";
 export const ACTION_TYPE_USER_SET_DATA = "USER/SET_DATA";
@@ -12,14 +13,6 @@ export const ACTION_TYPE_USER_SET_ERROR_MESSAGE = "USER/SET_ERROR_MESSAGE";
 export const ACTION_TYPE_USER_FETCH_DATA_SOCIAL = "USER/FETCH_DATA_SOCIAL";
 export const ACTION_TYPE_USER_SET_AUTH = "USER/SET_AUTH";
 export const ACTION_TYPE_USER_SET_SOCKET_INSTANCE = "USER/SET_SOCKET_INSTANCE";
-export const ACTION_TYPE_USER_SET_SOCKET_APP_ROOM = "USER/SET_SOCKET_APP_ROOM";
-export const ACTION_TYPE_USER_SET_SOCKET_BATTLE_ROOM = "USER/SET_SOCKET_BATTLE_ROOM";
-
-export type UserStateDataType = {
-    nickname: string;
-    avatar: string;
-    rating: number;
-};
 
 export type UserSocialDataType = {
     uid: number;
@@ -42,33 +35,19 @@ export type UserStateType = {
     error: UserErrorType;
     social: UserSocialDataType;
     socket: {
-        isnstance: Client | null;
-        rooms: {
-            app: Room<AppState> | null;
-            battle: Room<GameState> | null;
-        }
+        isnstance: Socket | null;
     };
-    data: UserStateDataType;
+    data: Shared.Interfaces.IUser;
 };
 
 export type UserSetDataActionType = {
     type: typeof ACTION_TYPE_USER_SET_DATA;
-    payload: UserStateDataType;
+    payload: Shared.Interfaces.IUser;
 };
 
 export type UserSetSocketInstanceActionType = {
     type: typeof ACTION_TYPE_USER_SET_SOCKET_INSTANCE;
-    payload: Client;
-};
-
-export type UserSetSocetAppRoomActionType = {
-    type: typeof ACTION_TYPE_USER_SET_SOCKET_APP_ROOM;
-    payload: Room;
-};
-
-export type UserSetSocetBattleRoomActionType = {
-    type: typeof ACTION_TYPE_USER_SET_SOCKET_BATTLE_ROOM;
-    payload: Room;
+    payload: Socket;
 };
 
 export type UserSetAuthActionType = {
@@ -120,4 +99,4 @@ export type UserSetAuthTypeActionType = {
 
 export type UserActionsType = UserSetSocialUidActionType | UserSetSocialTypeActionType | UserSetErrorCodeActionType
     | UserSetAuthActionType | UserSetDataActionType | UserSetAuthTokenActionType | UserSetAuthTypeActionType |
-    UserSetSocetBattleRoomActionType | UserSetSocketInstanceActionType | UserSetSocetAppRoomActionType | UserSetErrorMessageActionType;
+    UserSetSocketInstanceActionType | UserSetErrorMessageActionType;

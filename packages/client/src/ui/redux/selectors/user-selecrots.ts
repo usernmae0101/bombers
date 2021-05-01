@@ -1,22 +1,14 @@
-import {Client, Room} from "colyseus.js";
+import { Socket } from "socket.io-client";
 
-import {AppStateType} from "../store";
-import {UserStateDataType} from "../types/user-types";
+import * as Shared from "@bombers/shared/src/idnex";
+import { AppStateType } from "../store";
 
-export const select_user_data_all = (state: AppStateType): UserStateDataType => {
+export const select_user_data_all = (state: AppStateType): Shared.Interfaces.IUser => {
     return state.user.data;
 };
 
-export const select_user_socket_instance = (state: AppStateType): Client => {
+export const select_user_socket_instance = (state: AppStateType): Socket => {
     return state.user.socket.isnstance;
-};
-
-export const select_user_socket_room_app = (state: AppStateType): Room => {
-    return state.user.socket.rooms.app;
-};
-
-export const select_user_socket_room_battle = (state: AppStateType): Room => {
-    return state.user.socket.rooms.battle;
 };
 
 export const select_user_data_nickname = (state: AppStateType): string => {
