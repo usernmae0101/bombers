@@ -24,9 +24,9 @@
     "scripts": {
         "test": "jest",
         "dev:client": "yarn workspace @bombers/client dev",
-        "dev:server": "yarn workspace @bombers/server dev",
+        "dev:app-server": "yarn workspace @bombers/app-server dev",
         "prod:client": "yarn workspace @bombers/client build",
-        "prod:server": "yarn workspace @bombers/server serve"
+        "prod:app-server": "yarn workspace @bombers/app-server serve"
     },
     "devDependencies": {
         "@types/enzyme": "^3.10.8",

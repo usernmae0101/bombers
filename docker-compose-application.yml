@@ -11,10 +11,10 @@ services:
   server:
     build: 
       context: ./
-      dockerfile: packages/server/Dockerfile
+      dockerfile: packages/app-server/Dockerfile
       args: 
         - PORT=${HTTP_SERVER_PORT}
-    container_name: bombers_server
+    container_name: bombers_app-server
     restart: always
     depends_on: 
       - db
@@ -23,7 +23,7 @@ services:
     ports: 
       - ${HTTP_SERVER_PORT}:${HTTP_SERVER_PORT}
     volumes: 
-      - ./public:/server/packages/server/public
+      - ./public:/app-server/packages/app-server/public
   db:
     image: mongo
     container_name: bombers_mongodb

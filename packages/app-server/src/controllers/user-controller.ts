@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { ApiResponseCodes } from "@bombers/shared/src/idnex";
-import { SocialType, UserModel } from "../models/user.model";
+import { SocialType, UserModel } from "../models/user-model";
 
 interface IUser {
     nickname: string;

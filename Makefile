@@ -1,5 +1,11 @@
 OS := $(shell uname)
 
+# TARGET
+# ------------------------------
+# run-dev: [client|server|mongo]
+# build: [application|game-server]
+# ------------------------------
+
 run-dev:
 ifeq ($(TARGET), mongo)
 	docker run --rm --name mongo -p 27017:27017 mongo
@@ -9,11 +15,8 @@ endif
 
 install:
 	$(if $(findstring Linux,$(OS)), sudo) npm install --global yarn
-	
-	# cd pack... is not necessary
-	# idk why, but colyseus.js is not installed via yarn
-	# IDE bug maybe, but anyway
-	yarn && yarn install && cd packages/client && npm i colyseus.js
+
+	yarn && yarn install
 	
 build:
-	docker-compose up -d --build
+	docker-compose -f docker-compose-$(TARGET).yml up -d --build

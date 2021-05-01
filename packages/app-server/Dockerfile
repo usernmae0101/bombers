@@ -2,11 +2,11 @@ FROM node:12
 
 ARG PORT
 
-WORKDIR /server
+WORKDIR /app-server
 
 COPY ./package.json ./
 COPY ./yarn.lock ./
-COPY ./packages/server ./packages/server
+COPY ./packages/app-server ./packages/app-server
 COPY ./packages/shared ./packages/shared
 
 EXPOSE ${PORT}

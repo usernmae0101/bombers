@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { middleware_ok_auth } from "../middlewares/ok-auth.middleware";
-import { middleware_vk_auth } from "../middlewares/vk-auth.middleware";
+import { middleware_ok_auth } from "../middlewares/ok-auth-middleware";
+import { middleware_vk_auth } from "../middlewares/vk-auth-middleware";
 import userRouter from "./user.router";
 
 const apiRouter = Router();

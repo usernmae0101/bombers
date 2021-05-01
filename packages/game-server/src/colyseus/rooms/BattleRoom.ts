@@ -1,6 +1,6 @@
 import { Client, updateLobby } from "colyseus";
 import * as Shared from "@bombers/shared/src/idnex";
-import Game from "../Game";
+import Game from "../../Game";
 import { GAME_STATE_BUFFER_SERVER_MAX_SIZE } from "@bombers/shared/src/idnex";
 
 export default class BattleRoom extends Game {
