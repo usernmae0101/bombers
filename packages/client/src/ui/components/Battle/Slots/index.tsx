@@ -1,22 +1,22 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import { ISlot } from "@bombers/shared/src/idnex";
-import { select_game_slots } from "../../../redux/selectors/game-selectors";
+import * as Shared from "@bombers/shared/src/idnex";
+import * as GameSelectors from "../../../redux/selectors/game-selectors";
 import styles from "./slots.module.scss";
 
-const Slot: React.FC<{ slot: ISlot; color: number; }> = ({ slot, color }) => {
+const Slot: React.FC<{ slot: Shared.Interfaces.IGameSlot; color: number; }> = ({ slot, color }) => {
     return (
         <li className={styles.slot} data-color={color}>
-            <img src={slot.avatar} />
-            <span>{slot.nickname}</span>
-            <span>{slot.rating}</span>
+            <img src={slot.user.avatar} />
+            <span>{slot.user.nickname}</span>
+            <span>{slot.user.rating}</span>
         </li>
     );
 };
 
 const Slots = () => {
-    const slots = useSelector(select_game_slots);
+    const slots = useSelector(GameSelectors.select_game_slots);
 
     return (
         <ul className={styles.slots}>

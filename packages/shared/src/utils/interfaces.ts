@@ -56,7 +56,7 @@ export interface IGameSlot {
 
 export interface IGameSlots {
     /**
-     * Игровой слот. Ключ - цвет.
+     * Игровой слот. Ключ каждого слота - цвет.
      */
     [color: number]: IGameSlot;
 }

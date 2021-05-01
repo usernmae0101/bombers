@@ -14,7 +14,7 @@ export const emptySlot: Shared.Interfaces.IGameSlot = {
 };
 
 /**
- * Четыре игровых слота. Для каждого цвета.
+ * Четыре игровых слота, отдельный для каждого цвета.
  */
 export const slots: Shared.Interfaces.IGameSlots = {
     [Shared.Enums.PlayerColors.PURPLE]: emptySlot,

@@ -34,14 +34,6 @@ const Main = () => {
             dispatch(UserActions.action_uesr_set_social_uid(Math.round(Math.random() * 10_000)));
             dispatch(UserActions.action_user_set_auth_is_social(true));
         }
-
-        /*
-            TODO: 
-                1. проверить авторизацию: через соц.сеть или через сайт
-                2.1. если авторизованы через соц.сеть, определить через какую
-                2.2. если авторизованы через соц.сеть, получить uid
-                3. авторизация без соц.сети
-        */
     }, []);
 
     /*
@@ -58,7 +50,6 @@ const Main = () => {
             }));
         }
 
-        // TODO: если не соц.сеть, авторизация по JWT-токену?
         if (isAuthViaSocial === false) { }
     }, [isAuthViaSocial]);
 
@@ -74,8 +65,8 @@ const Main = () => {
                 dispatch(UserActions.action_user_create_social({
                     uid: userUid,
                     social: userSocialType,
-                    data: {
-                        nickname: `user${userUid}`
+                    data: { 
+                        nickname: `user${userUid}` 
                     }
                 }));
                 break;
@@ -89,13 +80,12 @@ const Main = () => {
         (async () => {
             if (isAuth) {
                 /*
-                 * Подключение к веб-сокету.
+                 * Подключение к веб-сокету по авторизационному токену.
                  */
 
-                // TODO: передавать авторизационный токен
                 const _socket = io({
-                    query: { 
-                        nickname 
+                    query: {
+                        nickname
                     }
                 });
 
