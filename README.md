@@ -46,7 +46,7 @@ make run-dev TARGET=[client|mongo|app-server|game-server]
 
 #### Зависимости
 
-- ?make
+- make?
 - docker
 - docker-compose
 
