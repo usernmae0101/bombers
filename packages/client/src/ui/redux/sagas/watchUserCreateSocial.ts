@@ -1,26 +1,33 @@
 import { call, takeEvery, put } from "@redux-saga/core/effects";
+
 import { api_user_create_social } from "../../../api/users";
 import { AuthUserDataRsponseType } from "../../../api/users/types";
-import { action_user_set_data, action_user_set_auth, action_user_set_error_message } from "../actions/user-actions";
-import { ACTION_TYPE_USER_CREATE_SOCIAL, UserCreateSocialActionType } from "../types/user-types";
+import * as UserActions from "../actions/user-actions";
+import * as UserTypes from "../types/user-types";
 
-function* userCreateSocial(action: UserCreateSocialActionType) {
+function* userCreateSocial(action: UserTypes.UserCreateSocialActionType) {
 	try {
-		const userData: AuthUserDataRsponseType = yield call(
+		const response: AuthUserDataRsponseType = yield call(
 			api_user_create_social,
 			action.payload.uid,
 			action.payload.social,
 			action.payload.data
 		);
 
-		yield put(action_user_set_data(userData));
-		yield put(action_user_set_auth(true));
+		const { nickname, rating, avatar, token } = response;
+
+        // Устанавливаем пользовательские данные.
+        yield put(UserActions.action_user_set_data({ nickname, rating, avatar }));
+        // Устанавливаем авторизационный токен.
+        yield put(UserActions.action_user_set_auth_token(token))
+        // Меняем статус авторизации на успешный.
+        yield put(UserActions.action_user_set_auth(true));
 	} catch (err) {
-		yield put(action_user_set_error_message(err.response.data.message));
+		yield put(UserActions.action_user_set_error_message(err.response.data.message));
 	}
 }
 
 export default function* watchUserCreateSocial() {
-	yield takeEvery(ACTION_TYPE_USER_CREATE_SOCIAL, userCreateSocial);
+	yield takeEvery(UserTypes.ACTION_TYPE_USER_CREATE_SOCIAL, userCreateSocial);
 }
 

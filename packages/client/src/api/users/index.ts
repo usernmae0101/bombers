@@ -29,7 +29,7 @@ export const api_user_auth_social = async (uid: number, social: string): Promise
 };
 
 export const api_user_create_social = async (uid: number, social: string, data = {}): Promise<AuthUserDataRsponseType> => {
-    const response = await axios.post(`${BASE_URN}/create/soсial`, data, {
+    const response = await axios.post(`${BASE_URN}/create/social`, data, {
         headers: createSocialHeaders(uid, social)
     });
 

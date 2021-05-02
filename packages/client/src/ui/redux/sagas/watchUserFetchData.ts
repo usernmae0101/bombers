@@ -2,24 +2,31 @@ import { call, put, takeEvery } from "@redux-saga/core/effects";
 
 import { api_user_auth_social } from "../../../api/users";
 import { AuthUserDataRsponseType } from "../../../api/users/types";
-import { action_user_set_data, action_user_set_auth, action_user_set_error_code } from "../actions/user-actions";
-import { ACTION_TYPE_USER_FETCH_DATA_SOCIAL, UserFetchDataSocialActionType } from "../types/user-types";
+import * as UserActions from "../actions/user-actions";
+import * as UserTypes from "../types/user-types";
 
-function* userFetchDataSocail(action: UserFetchDataSocialActionType) {
+function* userFetchDataSocail(action: UserTypes.UserFetchDataSocialActionType) {
     try {
-        const userData: AuthUserDataRsponseType = yield call(
+        const response: AuthUserDataRsponseType = yield call(
             api_user_auth_social,
             action.payload.uid,
             action.payload.social
         );
 
-        yield put(action_user_set_data(userData));
-        yield put(action_user_set_auth(true));
+        const { nickname, rating, avatar, token } = response;
+
+        // Устанавливаем пользовательские данные.
+        yield put(UserActions.action_user_set_data({ nickname, rating, avatar }));
+        // Устанавливаем авторизационный токен.
+        yield put(UserActions.action_user_set_auth_token(token))
+        // Меняем статус авторизации на успешный.
+        yield put(UserActions.action_user_set_auth(true));
     } catch (err) {
-        yield put(action_user_set_error_code(err.response.data.code));
+        // Сервер вернул код в диапазоне 300-599. Диспатчим код ошибки в стор.
+        yield put(UserActions.action_user_set_error_code(err.response.data.code));
     }
 };
 
 export default function* watchUserFetchData() {
-    yield takeEvery(ACTION_TYPE_USER_FETCH_DATA_SOCIAL, userFetchDataSocail);
+    yield takeEvery(UserTypes.ACTION_TYPE_USER_FETCH_DATA_SOCIAL, userFetchDataSocail);
 };

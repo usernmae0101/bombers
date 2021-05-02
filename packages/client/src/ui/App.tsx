@@ -15,11 +15,11 @@ const Main = () => {
     const dispatch = useDispatch();
 
     const isAuthViaSocial = useSelector(UserSelectors.select_user_auth_is_social);
+    const authToken = useSelector(UserSelectors.select_user_auth_token);
     const userUid = useSelector(UserSelectors.select_user_social_uid);
     const userSocialType = useSelector(UserSelectors.select_user_social_type);
     const errorCode = useSelector(UserSelectors.select_user_error_code);
     const isAuth = useSelector(UserSelectors.select_user_auth);
-    const nickname = useSelector(UserSelectors.select_user_data_nickname);
     const socket = useSelector(UserSelectors.select_user_socket_instance);
 
     /*
@@ -84,10 +84,10 @@ const Main = () => {
                  */
                 const _socket = io({
                     query: {
-                        nickname
+                        authToken
                     }
                 });
-
+                
                 _socket.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), (online: number) => {
                     SocketAppHandler.handle_socket_app_online(dispatch, online);
                 });

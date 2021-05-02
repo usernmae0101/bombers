@@ -5,4 +5,6 @@ export type AuthUserDataRsponseType = {
     avatar: string;
     /** Рейтинг пользователя. */
     rating: number;
+    /** Пользовательский токен. Используетя для аутентификации к веб-сокету. */
+    token: string;
 };

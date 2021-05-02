@@ -1,21 +1,17 @@
 ![License](https://img.shields.io/github/license/bombers0/bombers)
-![Process](https://img.shields.io/static/v1?label=process&message=development&color=blueviolet)
+![Process](https://img.shields.io/static/v1?label=status&message=development&color=blueviolet)
 ![Lines of code](https://img.shields.io/tokei/lines/github/bombers0/bombers)
 ![Github Open Issues](https://img.shields.io/github/issues/bombers0/bombers)
-![Github Repository Size](https://img.shields.io/github/repo-size/bombers0/bombers)
 ![GitHub contributors](https://img.shields.io/github/contributors/bombers0/bombers)
 ![GitHub stars](https://img.shields.io/github/stars/bombers0/bombers?style=social)
 
 # :boom: Бомберы: Перерождение
 
-![boom](https://i.ibb.co/d26hL1Z/screen.jpg)
+<p align="center">
+  <img src="https://i.ibb.co/d26hL1Z/screen.jpg" alt="boom">
+</p>
 
 Если желаете принять участие в разработке, пожалуйста, [ознакомьтесь](CONTRIBUTING.md).
-
-## :pushpin: Задачи
-
-- ### [v0.1.0](docs/v0.1.0/list.md)
-- ### [v0.2.0](docs/v0.2.0/list.md)
 
 ## :cd: Установка
 

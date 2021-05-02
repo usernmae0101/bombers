@@ -26,7 +26,8 @@ export const auth_user_social = (req: Request, res: Response) => {
                 res.status(200).json({
                     nickname: user.nickname,
                     rating: user.rating,
-                    avatar: user.avatar
+                    avatar: user.avatar,
+                    token: user._id
                 })
         });
 };
@@ -58,7 +59,8 @@ export const create_user_social = (req: Request, res: Response) => {
         res.status(201).json({
             nickname: user.nickname,
             avatar: user.avatar,
-            rating: user.rating
+            rating: user.rating,
+            token: user._id
         })
     })
     .catch(error => {
