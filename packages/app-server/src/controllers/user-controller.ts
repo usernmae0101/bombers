@@ -1,59 +1,71 @@
 import { Request, Response } from "express";
 
-import { ApiResponseCodes } from "@bombers/shared/src/idnex";
-import { SocialType, UserModel } from "../models/user-model";
+import * as Shared from "@bombers/shared/src/idnex";
+import { UserModel } from "../models/user-model";
 
-interface IUser {
-    nickname: string;
-    uid?: number;
-    social?: SocialType;
-}
-
+/**
+ * Авторизация через социальную сеть. 
+ * Получаем данные пользователя из базы данных.
+ */
 export const auth_user_social = (req: Request, res: Response) => {
+    /**
+     * Идентификатор пользователя в социальной сети.
+     */
     const uid = Number(req.params.uid);
 
-    UserModel.exists({ uid })
-        .then(doesUserExist => {
-            if (doesUserExist) {
-                UserModel.findBySocialVk(uid)
-                    .then(user => {
-                        res.status(200).json({
-                            nickname: user.nickname,
-                            rating: user.rating,
-                            avatar: user.avatar
-                        })
-                    });
-            } else {
-            	res.status(404).json({
-                	code: ApiResponseCodes.USER_NOT_EXISTS_SOCIAL
-            	});
-            }
+    // Поиск пользователя в базе данных по идентификатору.
+    UserModel.findOne({ uid })
+        .then(user => {
+            // Если user === null, значит пользователь не найден. Возвращаем 404 (not found).
+            if (!user)
+                res.status(404).json({
+                    code: Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL
+                });
+            // Если пользователь найден, возвращаем нужные данные.    
+            else
+                res.status(200).json({
+                    nickname: user.nickname,
+                    rating: user.rating,
+                    avatar: user.avatar
+                })
         });
 };
 
-export const create_user = (req: Request, res: Response) => {
-    const social = req.header("X-Social");
-    const uid = req.header("X-Uid");
-
-    const userData: IUser = {
-        nickname: req.body.nickname,
-    }
-
-    uid && (userData.uid = Number(uid));
-    social && (userData.social = social as SocialType);
-
-    const user = new UserModel(userData);
-    user.save()
-        .then(user => {
-            res.status(201).json({
-                nickname: user.nickname,
-                avatar: user.avatar,
-                rating: user.rating
-            })
+/**
+ * Создание пользователя в базе данных через социальную сеть.
+ */
+export const create_user_social = (req: Request, res: Response) => {
+    /**
+     * Тип социальной сети: "vk" | "ok" | "fb".
+     */
+    const social: string = req.header("X-Social");
+    /**
+     * Идентификатор пользователя в социальной сети.
+     */
+    const uid: string = req.header("X-Uid");
+    /**
+     * Никнейм пользователя.
+     */
+    const nickname: string = req.body.nickname;
+    
+    UserModel.create({
+        nickname,
+        uid,
+        social
+    })
+    .then(user => {
+        // Если пользователь создался успешно - возвращем нужные данные со статусом 201 (created).
+        res.status(201).json({
+            nickname: user.nickname,
+            avatar: user.avatar,
+            rating: user.rating
         })
-        .catch(error => {
-            res.status(401).json({
-                message: error.message
-            });
-        })
+    })
+    .catch(error => {
+        // Если мы попали в этот блок, значит пользователь не создался. 
+        // Возможно, не пройдена валидация.
+        res.status(401).json({
+            message: error.message
+        });
+    });
 };

@@ -82,7 +82,6 @@ const Main = () => {
                 /*
                  * Подключение к веб-сокету по авторизационному токену.
                  */
-
                 const _socket = io({
                     query: {
                         nickname

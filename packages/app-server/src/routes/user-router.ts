@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { create_user, auth_user_social } from "../controllers/user-controller";
+import * as UserControllers from "../controllers/user-controller";
 
 const userRouter = Router();
 
-userRouter.post("/", create_user);
-userRouter.get("/auth/social/:uid", auth_user_social);
+// routes
+userRouter.post("/create/soсial", UserControllers.create_user_social);
+userRouter.get("/auth/social/:uid", UserControllers.auth_user_social);
 
 export default userRouter;

@@ -1,7 +1,16 @@
-# :boom: Бомберы: Перерождение
-Мотивация - создать версию Бомберов с открытым исходным кодом, дальнейшую разработку и поддержку которой будет осуществлять сообщество. Без монетизации.
+![License](https://img.shields.io/github/license/bombers0/bombers)
+![Process](https://img.shields.io/static/v1?label=process&message=development&color=blueviolet)
+![Lines of code](https://img.shields.io/tokei/lines/github/bombers0/bombers)
+![Github Open Issues](https://img.shields.io/github/issues/bombers0/bombers)
+![Github Repository Size](https://img.shields.io/github/repo-size/bombers0/bombers)
+![GitHub contributors](https://img.shields.io/github/contributors/bombers0/bombers)
+![GitHub stars](https://img.shields.io/github/stars/bombers0/bombers?style=social)
 
-По мере закрытия актуальных задач, список будет пополняться.
+# :boom: Бомберы: Перерождение
+
+![boom](https://i.ibb.co/d26hL1Z/screen.jpg)
+
+Если желаете принять участие в разработке, пожалуйста, [ознакомьтесь](CONTRIBUTING.md).
 
 ## :pushpin: Задачи
 
@@ -29,10 +38,10 @@ make install
 - docker
 
 ```bash
-make run-dev TARGET=[client|mongo|server]
+make run-dev TARGET=[client|mongo|app-server|game-server]
 ```
 
->client, mongo и server запускать в отдельных терминалах.
+>client, mongo, game-server и app-server запускать в отдельных терминалах.
 
 ![banner](docs/assets/run-dev.gif "Режим разработки")
 
@@ -41,11 +50,20 @@ make run-dev TARGET=[client|mongo|server]
 
 #### Зависимости
 
+- ?make
 - docker
 - docker-compose
 
+с make:
+
 ```bash
-docker-compose up -d --build
+make build TARGET=[application|game-server]
+```
+
+или без make:
+
+```bash
+docker-compose -f [application|game-server].yml up -d --build
 ```
 
 ## :hammer: Инструменты

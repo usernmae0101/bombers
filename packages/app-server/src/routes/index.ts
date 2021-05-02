@@ -1,13 +1,15 @@
 import { Router } from "express";
 
-import { middleware_ok_auth } from "../middlewares/ok-auth-middleware";
-import { middleware_vk_auth } from "../middlewares/vk-auth-middleware";
+import * as Middlewares from "../middlewares/";
 import userRouter from "./user-router";
 
 const apiRouter = Router();
 
-apiRouter.use(middleware_vk_auth);
-apiRouter.use(middleware_ok_auth);
+// middlewares
+apiRouter.use(Middlewares.middleware_vk_auth);
+apiRouter.use(Middlewares.middleware_ok_auth);
+
+// routes
 apiRouter.use('/users', userRouter);
 
 export default apiRouter;
