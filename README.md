@@ -52,14 +52,14 @@ make run-dev TARGET=[client|mongo|app-server|game-server]
 
 с make:
 
-```bash
+```
 make build TARGET=[application|game-server]
 ```
 
 или без make:
 
-```bash
-docker-compose -f [application|game-server].yml up -d --build
+```
+docker-compose -f ./docker/[application|game-server].yml up -d --build
 ```
 
 ## :hammer: Инструменты
@@ -70,8 +70,8 @@ docker-compose -f [application|game-server].yml up -d --build
 - [jest](https://jestjs.io/) - тестирование приложения
 - [webpack](https://webpack.js.org/) - сборщик приложения
 - [react](https://reactjs.org/) - библиотека для разработки пользовательского интерфейса
-- [pixijs](https://www.pixijs.com/) - обвёртка над 2d и WebGL контекстами для отрисовки графики
-- [socketio](https://socket.io/) - WebSocket (TCP)
+- [pixijs](https://www.pixijs.com/) - обёртка над 2d и WebGL контекстами для отрисовки графики
+- [socketio](https://socket.io/) - обёртка над WebSocket (TCP)
 - [express](https://expressjs.com/ru/) - REST API
 - [mongoose](https://mongoosejs.com/) - ORM к mongo (СУБД)
 - [redux](https://redux.js.org/) - менеджер состояния приложения

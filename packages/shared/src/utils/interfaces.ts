@@ -16,11 +16,18 @@ export interface IChatMessage {
     date: number;
 }
 
+export interface IServerAppChat {
+    /** Сообщения в чате, сохраненные в буфере. */
+    messages: IChatMessage[];
+    /** Подключенные к чату пользователи. */
+    members: IUser[];
+}
+
 export interface IServerAppState {
     /** Количество подключенных пользователей. */
     online: number;
-    /**  Сообщения в чате, сохраненные в буфере. */
-    messages: IChatMessage[];
+    /** Состояние чата на сервере. */
+    chat: IServerAppChat;
 }
 
 export interface IGameSlot {

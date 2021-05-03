@@ -43,7 +43,7 @@ export const create_user_social = (req: Request, res: Response) => {
     /**
      * Идентификатор пользователя в социальной сети.
      */
-    const uid: string = req.header("X-Uid");
+    const uid: number = Number(req.header("X-Uid"));
     /**
      * Никнейм пользователя.
      */

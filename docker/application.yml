@@ -3,14 +3,14 @@ version: '3'
 services: 
   client:
     build: 
-      context: ./
+      context: ./../
       dockerfile: packages/client/Dockerfile
     container_name: bombers_client
     volumes: 
       - ./public:/client/packages/client/dist
   server:
     build: 
-      context: ./
+      context: ./../
       dockerfile: packages/app-server/Dockerfile
       args: 
         - PORT=${HTTP_SERVER_PORT}
@@ -19,11 +19,11 @@ services:
     depends_on: 
       - db
     env_file: 
-      - .env
+      - ./../.env
     ports: 
       - ${HTTP_SERVER_PORT}:${HTTP_SERVER_PORT}
     volumes: 
-      - ./public:/app-server/packages/app-server/public
+      - ./../public:/app-server/packages/app-server/public
   db:
     image: mongo
     container_name: bombers_mongodb
@@ -31,4 +31,4 @@ services:
     ports: 
       - 27017:27017
     volumes: 
-      - ./database:/data/db
+      - ./../database:/data/db

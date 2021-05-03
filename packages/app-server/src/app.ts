@@ -7,6 +7,7 @@ import { config } from "dotenv";
 import { Server } from "socket.io";
 
 import apiRouter from "./routes";
+import SocketManager from "./sockets/SocketManager";
 
 // parse .env
 config();
@@ -38,6 +39,7 @@ const server = createServer(app);
 
 // websocket-server
 const io = new Server(server);
+SocketManager.handle(io);
 
 // mongoose connection
 mongoose.connect(`mongodb://${mongoHostname}:27017/bombers`, {
