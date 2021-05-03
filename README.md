@@ -7,7 +7,7 @@
 
 # :boom: Бомберы: Перерождение
 
-<img src="https://i.ibb.co/d26hL1Z/screen.jpg" align="right" width="50%" alt="boom">
+<img src="https://i.ibb.co/d26hL1Z/screen.jpg" align="right" width="40%" alt="boom">
 
 Если желаете принять участие в разработке, пожалуйста, [ознакомьтесь](CONTRIBUTING.md).
 
