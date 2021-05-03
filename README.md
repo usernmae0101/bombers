@@ -7,9 +7,7 @@
 
 # :boom: Бомберы: Перерождение
 
-<p align="center">
-  <img src="https://i.ibb.co/d26hL1Z/screen.jpg" alt="boom">
-</p>
+<img src="https://i.ibb.co/d26hL1Z/screen.jpg" align="right" width="50%" alt="boom">
 
 Если желаете принять участие в разработке, пожалуйста, [ознакомьтесь](CONTRIBUTING.md).
 
@@ -33,7 +31,7 @@ make install
 - nodejs
 - docker
 
-```bash
+```
 make run-dev TARGET=[client|mongo|app-server|game-server]
 ```
 

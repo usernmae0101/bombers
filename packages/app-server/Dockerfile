@@ -13,4 +13,4 @@ EXPOSE ${PORT}
 
 RUN yarn && yarn install
 
-CMD ["npm", "run", "prod:server"]
+CMD ["npm", "run", "prod:app-server"]
