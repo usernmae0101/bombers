@@ -3,13 +3,14 @@
 ![Lines of code](https://img.shields.io/tokei/lines/github/bombers0/bombers)
 ![Github Open Issues](https://img.shields.io/github/issues/bombers0/bombers)
 ![GitHub contributors](https://img.shields.io/github/contributors/bombers0/bombers)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bombers0/bombers/CI)
 ![GitHub stars](https://img.shields.io/github/stars/bombers0/bombers?style=social)
 
 # :boom: Бомберы: Перерождение
 
 <img src="https://i.ibb.co/d26hL1Z/screen.jpg" align="right" width="40%" alt="boom">
 
-Если желаете принять участие в разработке, пожалуйста, [ознакомьтесь](CONTRIBUTING.md).
+В этом репозитории создаётся ремейк Бомберов. Если желаете принять участие в разработке, пожалуйста, [ознакомьтесь](CONTRIBUTING.md).
 
 ## :cd: Установка
 

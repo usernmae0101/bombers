@@ -6,7 +6,7 @@ import React from "react";
 import * as Shared from "@bombers/shared/src/idnex";
 import Slots from "@bombers/client/src/ui/components/Battle/Slots";
 
-describe("Slots component should renders correctly", () => {
+describe("Slots component should render correctly", () => {
     const mockStore = configurateStore();
     let wrapper: cheerio.Cheerio;
 
@@ -21,7 +21,7 @@ describe("Slots component should renders correctly", () => {
         expect(wrapper.find("li")).toHaveLength(4);
     });
 
-    it("should renders 1 slot with the nickname John Doe", () => {
+    it("should render 1 slot with the nickname John Doe", () => {
         const store = mockStore({
             game: {
                 slots: {

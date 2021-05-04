@@ -8,9 +8,6 @@ import { UserModel } from "../models/user-model";
  * Получаем данные пользователя из базы данных.
  */
 export const auth_user_social = (req: Request, res: Response) => {
-    /**
-     * Идентификатор пользователя в социальной сети.
-     */
     const uid = Number(req.params.uid);
 
     UserModel.findOne({ uid })
@@ -30,20 +27,12 @@ export const auth_user_social = (req: Request, res: Response) => {
 };
 
 /**
- * Создание пользователя в базе данных через социальную сеть.
+ * Создание пользователя в базе данных.
+ * Для пользователя, подключенного через социальную сеть.
  */
 export const create_user_social = (req: Request, res: Response) => {
-    /**
-     * Тип социальной сети: "vk" | "ok" | "fb".
-     */
     const social: string = req.header("X-Social");
-    /**
-     * Идентификатор пользователя в социальной сети.
-     */
     const uid: number = Number(req.header("X-Uid"));
-    /**
-     * Никнейм пользователя.
-     */
     const nickname: string = req.body.nickname;
     
     UserModel.create({
