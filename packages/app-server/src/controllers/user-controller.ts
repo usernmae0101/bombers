@@ -5,7 +5,6 @@ import { UserModel } from "../models/user-model";
 
 /**
  * Авторизация через социальную сеть. 
- * Получаем данные пользователя из базы данных.
  */
 export const auth_user_social = (req: Request, res: Response) => {
     const uid = Number(req.params.uid);
@@ -27,8 +26,7 @@ export const auth_user_social = (req: Request, res: Response) => {
 };
 
 /**
- * Создание пользователя в базе данных.
- * Для пользователя, подключенного через социальную сеть.
+ * Создание пользователя, подключенного через социальную сеть.
  */
 export const create_user_social = (req: Request, res: Response) => {
     const social: string = req.header("X-Social");
