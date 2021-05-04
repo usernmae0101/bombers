@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { json, urlencoded } from "body-parser";
 import { config } from "dotenv";
 import { Server } from "socket.io";
+import rateLimit from "express-rate-limit";
 
 import apiRouter from "./routes";
 import SocketManager from "./sockets/SocketManager";
@@ -24,9 +25,15 @@ const mongoHostname = (isDevMode ? "localhost" : process.env.MONGO_DB_HOSTNAME);
 const staticPath = isDevMode ? "../client/dist" : "public";
 
 // middlewares
+app.use(rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 5
+}));
 app.use(express.static(path.resolve(staticPath)));
 app.use(json());
-app.use(urlencoded({ extended: true }));
+app.use(urlencoded({
+    extended: true
+}));
 
 // routes
 app.use("/api", apiRouter);
