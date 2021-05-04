@@ -18,7 +18,7 @@
             "enzyme-to-json/serializer"
         ],
         "setupFilesAfterEnv": [
-            "<rootDir>/tests/setupEnzyme.ts"
+            "<rootDir>/tests/ui/setupEnzyme.ts"
         ]
     },
     "scripts": {

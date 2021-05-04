@@ -15,7 +15,7 @@ export const auth_user_social = (req: Request, res: Response) => {
                 res.status(404).json({
                     code: Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL
                 });
-            else
+            else 
                 res.status(200).json({
                     nickname: user.nickname,
                     rating: user.rating,
