@@ -1,8 +1,6 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import * as Shared from "@bombers/shared/src/idnex";
-import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import styles from "./battle.module.scss";
 import Loader from "../Loader";
 import Bar from "./Bar";
@@ -11,12 +9,10 @@ import GameComponent from "./Game";
 import HUD from "./HUD";
 
 const Battle: React.FC<{ id: string; }> = ({ id }) => {
-    const dispatch = useDispatch();
-
     const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
-        
+        setIsLoading(true);
     }, []);
 
     if (isLoading) return <Loader />

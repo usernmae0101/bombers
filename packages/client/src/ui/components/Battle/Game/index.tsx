@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 
 import styles from "./game.module.scss";
 
 const Game = () => {
-    const dispatch = useDispatch();
-
     return (
         <div className={styles.game}>
             <div className={styles.menu}>

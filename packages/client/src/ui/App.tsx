@@ -65,8 +65,8 @@ const Main = () => {
                 dispatch(UserActions.action_user_create_social({
                     uid: userUid,
                     social: userSocialType,
-                    data: { 
-                        nickname: `user${userUid}` 
+                    data: {
+                        nickname: `user${userUid}`
                     }
                 }));
                 break;
@@ -87,7 +87,7 @@ const Main = () => {
                         authToken
                     }
                 });
-                
+
                 _socket.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), (online: number) => {
                     SocketAppHandler.handle_socket_app_online(dispatch, online);
                 });
@@ -97,7 +97,7 @@ const Main = () => {
         })();
     }, [isAuth]);
 
-    if (!isAuth || !socket) return <Loader />
+    if (!isAuth || !socket) return (<Loader />);
 
     return (
         <BrowserRouter>

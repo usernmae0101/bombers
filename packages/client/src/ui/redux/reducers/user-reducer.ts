@@ -46,7 +46,7 @@ export default function userReducer(
         case UserTypes.ACTION_TYPE_USER_SET_AUTH:
             return { ...state, isAuth: actions.payload };
         case UserTypes.ACTION_TYPE_USER_SET_ERROR_MESSAGE:
-            return { ...state, error: { ...state.error, message: actions.payload } }
+            return { ...state, error: { ...state.error, message: actions.payload } };
         case UserTypes.ACTION_TYPE_USER_SET_ERROR_CODE:
             return { ...state, error: { ...state.error, code: actions.payload } };
         case UserTypes.ACTION_TYPE_USER_SET_SOCKET_INSTANCE:
