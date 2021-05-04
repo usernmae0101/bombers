@@ -11,9 +11,6 @@
 	<a href="https://lgtm.com/projects/g/bombers0/bombers">
     	<img alt="Quality" src="https://img.shields.io/lgtm/grade/javascript/github/bombers0/bombers">
 	</a>
-	<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/bombers0/bombers">
-	<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/bombers0/bombers/CI">
-	<img alt="GitHub stars" src="https://img.shields.io/github/stars/bombers0/bombers?style=social">
 </p>
 
 # :boom: Бомберы: Перерождение
