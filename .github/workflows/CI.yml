@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v2
       
@@ -19,7 +20,7 @@ jobs:
         run: make install
         
       - name: Test
-        run: yarn test --coverage=true
+        run: yarn test --coverage
         
       - name: Upload coverage to Codecov  
   		uses: codecov/codecov-action@v1
