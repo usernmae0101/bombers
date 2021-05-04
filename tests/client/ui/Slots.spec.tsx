@@ -3,7 +3,7 @@ import { render } from "enzyme";
 import { Provider } from "react-redux";
 import React from "react";
 
-import { slots, PlayerColors } from "@bombers/shared/src/idnex";
+import * as Shared from "@bombers/shared/src/idnex";
 import Slots from "@bombers/client/src/ui/components/Battle/Slots";
 
 describe("Slots component should renders correctly", () => {
@@ -15,7 +15,7 @@ describe("Slots component should renders correctly", () => {
     };
 
     it("should renders 4 empty slots", () => {
-        const store = mockStore({ game: { slots } });
+        const store = mockStore({ game: { slots: Shared.Slots.slots } });
         setStore(store);
 
         expect(wrapper.find("li")).toHaveLength(4);
@@ -25,8 +25,10 @@ describe("Slots component should renders correctly", () => {
         const store = mockStore({
             game: {
                 slots: {
-                    [PlayerColors.PURPLE]: {
+                    [Shared.Enums.PlayerColors.PURPLE]: {
+                        user: {
                             nickname: "John Doe"
+                        }
                     }
                 }
             }

@@ -13,15 +13,12 @@ export const auth_user_social = (req: Request, res: Response) => {
      */
     const uid = Number(req.params.uid);
 
-    // Поиск пользователя в базе данных по идентификатору.
     UserModel.findOne({ uid })
         .then(user => {
-            // Если user === null, значит пользователь не найден. Возвращаем 404 (not found).
-            if (!user)
+            if (!user) // if user === null
                 res.status(404).json({
                     code: Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL
                 });
-            // Если пользователь найден, возвращаем нужные данные.    
             else
                 res.status(200).json({
                     nickname: user.nickname,
@@ -55,7 +52,6 @@ export const create_user_social = (req: Request, res: Response) => {
         social
     })
     .then(user => {
-        // Если пользователь создался успешно - возвращем нужные данные со статусом 201 (created).
         res.status(201).json({
             nickname: user.nickname,
             avatar: user.avatar,
@@ -64,8 +60,6 @@ export const create_user_social = (req: Request, res: Response) => {
         })
     })
     .catch(error => {
-        // Если мы попали в этот блок, значит пользователь не создался. 
-        // Возможно, не пройдена валидация.
         res.status(401).json({
             message: error.message
         });

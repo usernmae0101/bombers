@@ -21,22 +21,25 @@ export default class SocketManager {
         io.on("connection", socket => {
             const { authToken, secretKey } = socket.handshake.query;
 
-            // Если передан авторизционный токен, значит соединение иницировал клиент.
+            // Если передан авторизционный токен, значит соединение инициировал клиент.
             if (authToken) {
-                // Ищем пользователя в БД по переденному токену.
                 UserModel.findOne({ _id: authToken })
                     .then(user => {
                         // Если токен невалидный (пользователь не найден в БД) - отключаем пользователя.
                         if (!user) socket.disconnect(true);
-                        // В ином случае подключаем пользователя к серверу.
                         else {
+                            // TODO: добавить пользоватея, увеличить онлайн
+                            // добавить обработчик "disconnect" на сокет
+
                             const clientSocketHandler = new ClientSocketHandler(manager, socket);
                             clientSocketHandler.handle();
                         }
                     });
             } else if (secretKey && secretKey === process.env.WEBSOCKET_SECRET_KEY) {
-                // В этом случае соединение иницировал игровой сервер.
+                // В этом случае соединение инициировал игровой сервер.
+
                 // TODO: добавить сервер в стейт и сообщить пользователям.
+                
                 const gameServerSocketHandler = new GameServerSocketHandler(manager, socket);
                 gameServerSocketHandler.handle();
             } else socket.disconnect(true);

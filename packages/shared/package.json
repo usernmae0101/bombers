@@ -1,5 +1,4 @@
 {
   "name": "@bombers/shared",
-  "version": "0.1.0",
-  "main": "src/index.ts"
+  "version": "0.1.0"
 }

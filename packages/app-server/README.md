@@ -1,5 +1,7 @@
 # Центальный сервер
 
+<img src="https://i.ibb.co/vqNFdQM/connection-diagram.png" align="right" alt="connection">
+
 ```bash
 .
 └── src
@@ -10,7 +12,12 @@
     └── sockets
 ```
 
-<p align="center">
-	<img src="https://i.ibb.co/vqNFdQM/connection-diagram.png" alt="connection">
-</p>
+* Состояние приложения: чат, онлайн, список серверов;
 
+* Коммуникация по WebSocket'у с клиентом;
+
+* Коммуникация по WebSocket'у с игровым сервером;
+
+* REST API (СУБД mongodb);
+
+* HTTP сервер (будет проксироваться на nginx или apache).
