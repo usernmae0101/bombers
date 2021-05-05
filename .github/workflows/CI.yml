@@ -21,6 +21,11 @@ jobs:
       - name: Install
         run: make install
 
+      - name: Run Mongo
+        run: |
+          docker run -d --rm --name mongo -p 27017:27017 mongo
+          docker ps -a
+
       - name: Test
         run: yarn test --coverage
         env:
