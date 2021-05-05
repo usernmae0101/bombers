@@ -25,10 +25,10 @@ const mongoHostname = (isDevMode ? "localhost" : process.env.MONGO_DB_HOSTNAME);
 const staticPath = isDevMode ? "../client/dist" : "public";
 
 // middlewares
-app.use(rateLimit({
+const appRateLimiter = rateLimit({
     windowMs: 1 * 60 * 1000,
     max: 20
-}));
+});
 app.use(express.static(path.resolve(staticPath)));
 app.use(json());
 app.use(urlencoded({
@@ -37,7 +37,7 @@ app.use(urlencoded({
 
 // routes
 app.use("/api", apiRouter);
-app.use("*", (_, res) => {
+app.use("*", appRateLimiter, (_, res) => {
     res.sendFile(path.resolve(staticPath, "index.html"));
 });
 
