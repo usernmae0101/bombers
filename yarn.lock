@@ -314,13 +314,6 @@
   resolved "https://registry.yarnpkg.com/@gamestdio/clock/-/clock-1.1.9.tgz#77ec0c011391fbbfdcb4f32112429536fd8680cb"
   integrity sha1-d+wMAROR+7/ctPMhEkKVNv2GgMs=
 
-"@gamestdio/timer@^1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@gamestdio/timer/-/timer-1.3.2.tgz#9d4a6ce5b4823fd0fb8de1dce0b1c05467e3e073"
-  integrity sha512-l6Mrlibx8ScmEAbTKxtZ3QJD8z3htzl1wxSRopFyDwudq73nb+pYvRYERrj5+rZLjA6cX0Nt+OKTRXBi/BSejw==
-  dependencies:
-    "@gamestdio/clock" "^1.1.9"
-
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
