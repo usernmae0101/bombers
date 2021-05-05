@@ -4,13 +4,13 @@ import * as dbHandler from "./dbHandler";
 const describeif = condition => condition ? describe : describe.skip;
 
 describeif(process.env.CI)("User model", () => {
-    /** Подключаем базу перед тестами. */
+    /** Подключаемcя к базе перед тестами. */
     beforeAll(async () => await dbHandler.dbConnection());
 
     /** Чистим коллекции после каждого теста. */
     afterEach(async () => await dbHandler.clearDatabase());
 
-    /** Отключаем базу после всех тестов. */
+    /** Отключаемся от базы после всех тестов. */
     afterAll(async () => await dbHandler.closeDatabase());
 
     const commonUserData = {
