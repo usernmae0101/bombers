@@ -29,9 +29,9 @@ export const auth_user_social = (req: Request, res: Response) => {
  * Создание пользователя, подключенного через социальную сеть.
  */
 export const create_user_social = (req: Request, res: Response) => {
-    const social: string = req.header("X-Social");
-    const uid: number = Number(req.header("X-Uid"));
-    const nickname: string = req.body.nickname;
+    const social = req.header("X-Social");
+    const uid = Number(req.header("X-Uid"));
+    const nickname = req.body.nickname;
     
     UserModel.create({
         nickname,

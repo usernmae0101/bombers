@@ -27,7 +27,7 @@ const staticPath = isDevMode ? "../client/dist" : "public";
 // middlewares
 app.use(rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 5
+    max: 20
 }));
 app.use(express.static(path.resolve(staticPath)));
 app.use(json());
