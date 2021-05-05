@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-interface IDocumentUser extends mongoose.Document {
+export interface IDocumentUser extends mongoose.Document {
     /** Идентификатор пользователя в социальной сети. */
     uid?: number;
     /**  Никнейм пользователя. */
