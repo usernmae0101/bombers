@@ -1,7 +1,47 @@
+import { UserModel } from "../../packages/app-server/src/models";
+import * as dbHandler from "./dbHandler";
+
 const describeif = condition => condition ? describe : describe.skip;
 
-describeif(process.env.CI)("should ", () => {
-    it("should", () => {
-        console.log(1);
+describeif(process.env.CI)("User model", () => {
+    /** Подключаем базу перед тестами. */
+    beforeAll(async () => await dbHandler.dbConnection());
+
+    /** Чистим коллекции после каждого теста. */
+    afterEach(async () => await dbHandler.clearDatabase());
+
+    /** Отключаем базу после всех тестов. */
+    afterAll(async () => await dbHandler.closeDatabase());
+
+    const commonUserData = {
+        nickname: "John Doe",
+        uid: 1,
+        social: "vk"
+    };
+
+    it("should create a User document", async () => {
+        const user = await UserModel.create(commonUserData);
+
+        expect(user.nickname).toEqual(commonUserData.nickname);
+        expect(user.uid).toEqual(commonUserData.uid);
+        expect(user.social).toEqual(commonUserData.social);
+    });
+
+    it("should find a User document", async () => {
+        await UserModel.create(commonUserData);
+        const user = await UserModel.findOne({ uid: commonUserData.uid });
+
+        expect(user.nickname).toEqual(commonUserData.nickname);
+    });
+
+    it("should not create User document", async () => {
+        const create = async () => {
+            let notValidUserData = { ...commonUserData }
+            notValidUserData.social = "someNotValodSocial";
+
+            await UserModel.create(notValidUserData);
+        }
+
+        expect(create()).rejects.toThrow();
     });
 });

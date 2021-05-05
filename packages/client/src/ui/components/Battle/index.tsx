@@ -1,5 +1,4 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 
 import styles from "./battle.module.scss";
 import Loader from "../Loader";

@@ -22,7 +22,7 @@
         ]
     },
     "scripts": {
-        "test": "jest",
+        "test": "jest --testEnvironment=node",
         "dev:client": "yarn workspace @bombers/client dev",
         "dev:app-server": "yarn workspace @bombers/app-server dev",
         "prod:client": "yarn workspace @bombers/client build",

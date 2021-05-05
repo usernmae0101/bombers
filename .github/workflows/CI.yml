@@ -27,7 +27,7 @@ jobs:
           docker ps -a
 
       - name: Test
-        run: yarn test --coverage
+        run: yarn test --coverage --testEnvironment=node
         env:
           CI: true
         
