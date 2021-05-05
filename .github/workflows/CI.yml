@@ -21,9 +21,6 @@ jobs:
       - name: Install
         run: make install
 
-      - name: Run Mongo
-        run: make run-dev TARGET=mongo
-
       - name: Test
         run: yarn test --coverage
         env:
