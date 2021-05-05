@@ -19,4 +19,4 @@ install:
 	yarn && yarn install
 	
 build:
-	docker-compose -f ./docker/$(TARGET).yml up -d --build
+	docker-compose -f ./docker/docker-compose-$(TARGET).yml up -d --build
