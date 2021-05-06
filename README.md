@@ -5,9 +5,7 @@
 	<a href="https://codecov.io/gh/bombers0/bombers">
     	<img alt="Coverage" src="https://codecov.io/gh/bombers0/bombers/branch/main/graph/badge.svg">
 	</a>
-	<a href="https://lgtm.com/projects/g/bombers0/bombers">
-    	<img alt="Alerts" src="https://img.shields.io/lgtm/alerts/github/bombers0/bombers">
-	</a>
+	<img alt="Code Size" src="https://img.shields.io/github/languages/code-size/bombers0/bombers">
 	<a href="https://lgtm.com/projects/g/bombers0/bombers">
     	<img alt="Quality" src="https://img.shields.io/lgtm/grade/javascript/github/bombers0/bombers">
 	</a>
