@@ -25,8 +25,10 @@
         "test": "jest --testEnvironment=node",
         "dev:client": "yarn workspace @bombers/client dev",
         "dev:app-server": "yarn workspace @bombers/app-server dev",
+        "dev:game-server": "yarn workspace @bombers/game-server dev",
         "prod:client": "yarn workspace @bombers/client build",
-        "prod:app-server": "yarn workspace @bombers/app-server serve"
+        "prod:app-server": "yarn workspace @bombers/app-server serve",
+        "prod:game-server": "yarn workspace @bombers/game-server serve"
     },
     "devDependencies": {
         "@types/enzyme": "^3.10.8",

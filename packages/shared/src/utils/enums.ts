@@ -44,7 +44,11 @@ export enum SocketChannels {
     /**
      * Получение количества подключенных пользователей.
      */
-    APP_ON_SET_ONLINE
+    APP_ON_SET_ONLINE,
+    /**
+     * Добавление игровго сервера в список на центральном сервре.
+     */
+    GAME_ADD_NEW_SERVER
 }
 
 /**

@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "moduleResolution": "node"
+    },
+    "references": [
+        {
+            "path": "../shared"
+        }
+    ]
+}

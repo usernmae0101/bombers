@@ -19,7 +19,7 @@ export default class SocketManager {
         const manager = this.create(io);
 
         io.on("connection", socket => {
-            const { authToken, secretKey } = socket.handshake.query;
+            const { authToken, gameServer, secretKey } = socket.handshake.query;
 
             // Если передан авторизционный токен, значит соединение инициировал клиент.
             if (authToken) {
@@ -35,7 +35,7 @@ export default class SocketManager {
                             clientSocketHandler.handle();
                         }
                     });
-            } else if (secretKey && secretKey === process.env.WEBSOCKET_SECRET_KEY) {
+            } else if (gameServer && secretKey === process.env.WEBSOCKET_SECRET_KEY) {
                 // В этом случае соединение инициировал игровой сервер.
 
                 // TODO: добавить сервер в стейт и сообщить пользователям.

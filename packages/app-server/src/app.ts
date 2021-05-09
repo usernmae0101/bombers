@@ -18,7 +18,7 @@ const app = express();
 
 // set .env params
 const isDevMode = process.env.NODE_ENV === "development";
-const port = +process.env.HTTP_SERVER_PORT || 3000;
+const port = +process.env.APP_SERVER_PORT || 3000;
 const mongoHostname = (isDevMode ? "localhost" : process.env.MONGO_DB_HOSTNAME);
 
 // set static path
