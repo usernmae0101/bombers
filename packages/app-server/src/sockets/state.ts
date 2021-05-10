@@ -17,5 +17,9 @@ export const state: IServerAppState = {
          * Подключенные к чату пользователи.
          */
         members: []
-    }
+    },
+    /** 
+     * Список игровых серверов
+     */
+    lobby: []
 };

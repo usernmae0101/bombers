@@ -28,6 +28,17 @@ export interface IServerAppState {
     online: number;
     /** Состояние чата на сервере. */
     chat: IServerAppChat;
+    /** Список игровых серверов */
+    lobby: ILobbyServer[];
+}
+
+export interface ILobbyServer {
+    /** Порт сигнальнова HTTP-серверa. */
+    port: number;
+    /** Адрес сигнального HTTP-сервера. */
+    address: string;
+    /** Список ICE-серверов (необходим TURN). */
+    iceServers: any[];
 }
 
 export interface IGameSlot {
