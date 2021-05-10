@@ -19,17 +19,17 @@ export default class SocketManager {
      */
     public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
         this.state.lobby.push(server);
-        this.io.emit(Shared.Enums.SocketChannels.APP_ON_ADD_SERVER, server);
+        this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_ADD_GAME_SERVER), server);
     }
 
     public removeUserFromState(userData: Shared.Interfaces.IUser) {
         --this.state.online;
-        this.io.emit(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE, this.state.online);
+        this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), this.state.online);
    
         // обновляем список участников чата
         this.state.chat.members = this.state.chat.members.filter(member => {
             if (member.nickname === userData.nickname) {
-                this.io.emit(Shared.Enums.SocketChannels.APP_ON_REMOVE_CHAT_MEMBER, member.nickname);
+                this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_REMOVE_CHAT_MEMBER), member.nickname);
                 return false;
             } else return true;
         });
@@ -43,13 +43,13 @@ export default class SocketManager {
      */
     public addUserToState(user: Shared.Interfaces.IUser) {
         ++this.state.online;
-        this.emit(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE, this.state.online);
+        this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), this.state.online);
 
         // TODO: добавить проверку, в игре ли пользователь (вылетел)
         // если в игре, то переместить сразу в игровую команту
         if (true) {
             this.state.chat.members.push(user);
-            this.emit(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER, user);
+            this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER), user);
         }
     }
 
@@ -69,12 +69,15 @@ export default class SocketManager {
                         // Если токен невалидный (пользователь не найден в БД) - отключаем пользователя.
                         if (!user) socket.disconnect(true);
                         else {
-                            const userData = this.parseUserData(user);
+                            const currentSocketUserData = this.parseUserData(user);
 
-                            manager.addUserToState(userData);
+                            manager.addUserToState(currentSocketUserData);
 
+                            // отправляем подключенному пользователю текущее состояние приложения
+                            socket.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_STATE), manager.state);
+ 
                             const clientSocketHandler = new ClientSocketHandler(manager, socket);
-                            clientSocketHandler.handle();
+                            clientSocketHandler.handle(currentSocketUserData);
                         }
                     });
             } else if (gameServer !== undefined && String(secretKey) === String(process.env.WEBSOCKET_SECRET_KEY)) {

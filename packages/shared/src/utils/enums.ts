@@ -48,7 +48,7 @@ export enum SocketChannels {
     /**
      * Добавление игровго сервера в лобби. 
      */
-    APP_ON_ADD_NEW_SERVER,
+    APP_ON_ADD_GAME_SERVER,
     /**
      * Синхронизация состояния на клиенте при первом подключении.
      */

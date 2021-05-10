@@ -12,7 +12,7 @@ export default class ClientSocketHandler extends BaseSocketHandler {
         super(manager, socket);
     }
 
-    public handle(curretSocketUserData: Shared.Interfaces.IUser) {
+    public handle(currentSocketUserData: Shared.Interfaces.IUser) {
         // обновляем состояние приложения, если пользователь отключился
         this.socket.on("disconnect", () => { 
             this.manager.removeUserFromState(currentSocketUserData);

@@ -73,8 +73,11 @@ const Main = () => {
                     }
                 });
 
-                _socket.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), (online: number) => {
+                _socket.on(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), (online: number) => {
                     SocketAppHandler.handle_socket_app_online(dispatch, online);
+                });
+                
+                _socket.on(String(Shared.Enums.SocketChannels.APP_ON_SET_STATE, (state: Shared.Interfaces.IServerAppState) => {
                 });
 
                 dispatch(UserActions.action_user_set_socket_instance(_socket));
