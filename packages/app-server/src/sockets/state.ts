@@ -19,7 +19,7 @@ export const state: IServerAppState = {
         members: []
     },
     /** 
-     * Список игровых серверов
+     * Список игровых серверов.
      */
     lobby: []
 };

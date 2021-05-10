@@ -13,19 +13,44 @@ export default class SocketManager {
     ) { }
 
     /**
-     * Добавляет игровой сервер в общее состояние на центральном сервре. 
+     * Добавляет игровой сервер в лобби на центральном сервре. 
      * 
      * @param server - игровой сервер
      */
     public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
         this.state.lobby.push(server);
-        // TODO: проинформировать пользователей
+        this.io.emit(Shared.Enums.SocketChannels.APP_ON_ADD_SERVER, server);
     }
 
+    public removeUserFromState(userData: Shared.Interfaces.IUser) {
+        --this.state.online;
+        this.io.emit(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE, this.state.online);
+   
+        // обновляем список участников чата
+        this.state.chat.members = this.state.chat.members.filter(member => {
+            if (member.nickname === userData.nickname) {
+                this.io.emit(Shared.Enums.SocketChannels.APP_ON_REMOVE_CHAT_MEMBER, member.nickname);
+                return false;
+            } else return true;
+        });
+    }
+
+    /**
+     * Добавляет пользователя в список участников чата
+     * и увеличивает онлайн в стейте приложения.
+     *
+     * @param user - добавляемый пользователь
+     */
     public addUserToState(user: Shared.Interfaces.IUser) {
-        // TODO: добавить пользователя в список участников чата
-        // увеличить онлайн, проинформировать пользователей
-        // добавиь текущего пользователя в менеджер
+        ++this.state.online;
+        this.emit(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE, this.state.online);
+
+        // TODO: добавить проверку, в игре ли пользователь (вылетел)
+        // если в игре, то переместить сразу в игровую команту
+        if (true) {
+            this.state.chat.members.push(user);
+            this.emit(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER, user);
+        }
     }
 
     /**
@@ -47,7 +72,6 @@ export default class SocketManager {
                             const userData = this.parseUserData(user);
 
                             manager.addUserToState(userData);
-                            // TODO: добавить обработчик "disconnect" на сокет 
 
                             const clientSocketHandler = new ClientSocketHandler(manager, socket);
                             clientSocketHandler.handle();

@@ -13,6 +13,7 @@ const gameServerPort = isDevMode ? 3001 : +process.env.GAME_SERVER_PORT;
 const gameServerAddress = isDevMode ? "127.0.0.1" : process.env.GAME_SERVER_ADDRESS;
 const iceServers = isDevMode ? [] : JSON.parse(process.env.GAME_SERVER_ICE_LIST);
 
+// TODO: переподключать сокет, если центральный сервер упал?
 // socket-соединение (TCP) с центарльным сервером
 const socket = io(`http://${appServerAddress}:${appServerPort}`, {
     query: {

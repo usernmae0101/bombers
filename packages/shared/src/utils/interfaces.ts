@@ -33,7 +33,7 @@ export interface IServerAppState {
 }
 
 export interface ILobbyServer {
-    /** Порт сигнальнова HTTP-серверa. */
+    /** Порт сигнального HTTP-серверa. */
     port: number;
     /** Адрес сигнального HTTP-сервера. */
     address: string;

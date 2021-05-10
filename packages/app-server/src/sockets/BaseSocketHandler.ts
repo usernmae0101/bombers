@@ -8,5 +8,5 @@ export default abstract class BaseSocketHandler {
         protected socket: Socket
     ) {}
     
-    abstract handle(): void;
+    abstract handle(data?: any): void;
 }
