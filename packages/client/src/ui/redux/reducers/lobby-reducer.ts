@@ -1,7 +1,13 @@
 import * as LobbyTypes from "../types/lobby-types"; 
 
 const initialState: LobbyTypes.LobbyStateType = {
-    servers: []
+    servers: [],
+    pagination: {
+        page: 1,
+        items: 10
+    },
+    totalServers: null,
+    isLoading: true
 };
 
 export default function lobbyReducer(
@@ -9,8 +15,12 @@ export default function lobbyReducer(
     action: LobbyTypes.LobbyActionsType
 ): LobbyTypes.LobbyStateType {
     switch (action.type) {
-        case LobbyTypes.ACTION_TYPE_LOBBY_ADD_SERVER:
-            return { ...state, servers: [ ...state.servers, action.payload ]};
+        case LobbyTypes.ACTION_TYPE_LOBBY_SET_TOTAL_SERVERS:
+            return { ...state, totalServers: action.payload };
+        case LobbyTypes.ACTION_TYPE_LOBBY_SET_LOADING:
+            return { ...state, isLoading: action.payload };
+        case LobbyTypes.ACTION_TYPE_LOBBY_SET_SERVERS:
+            return { ...state, servers: action.payload };
         default: return state;
     }
 }

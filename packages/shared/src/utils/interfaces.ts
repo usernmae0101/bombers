@@ -32,12 +32,23 @@ export interface IServerAppState {
     lobby: ILobbyServer[];
 }
 
+export interface IGameRoom {
+    /** Уникальный идентификатор комнаты (в контексте игрового сервера). */
+    id: string;
+    /** Открыта ли комната (можно ли занять игровой слот). */
+    isLocked: boolean; 
+    /** Количество занятых игровых слотов. */
+    activeSlots: number;
+    /** Общее количество игровых слотов. */
+    totalSlots: number;
+}
+
 export interface ILobbyServer {
     /** Порт сигнального HTTP-серверa. */
     port: number;
     /** Адрес сигнального HTTP-сервера. */
     address: string;
-    /** Список ICE-серверов (необходим TURN). */
+    /** Список ICE-серверов (p2p необходим TURN). */
     iceServers: any[];
 }
 

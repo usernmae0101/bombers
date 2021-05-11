@@ -12,7 +12,6 @@ export default class SocketManager {
         public state: Shared.Interfaces.IServerAppState
     ) { }
 
-  
     public removeUserFromState(userData: Shared.Interfaces.IUser) {
         --this.state.online;
         this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), this.state.online);
@@ -29,28 +28,16 @@ export default class SocketManager {
     public addMessageToState(message: Shared.Interfaces.IChatMessage) {
         // циклический буфер
         const circularBuffer = (this.state.chat.messages.length + 1) % (Shared.Constants.CHAT_MESSAGES_BUFFER_SIZE + 1);
-        this.state.chat.messages[
-            circularBuffer === 0 ? 0 : circularBuffer - 1
-        ] = message;
+       
+        this.state.chat.messages[circularBuffer === 0 ? 0 : circularBuffer - 1] = message;
         this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE), message);
     }
     
-    /**
-     * Добавляет игровой сервер в лобби на центральном сервре. 
-     * 
-     * @param server - игровой сервер
-     */
     public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
         this.state.lobby.push(server);
-        this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_ADD_GAME_SERVER), server);
+        this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_GAME_SERVERS_COUNT), this.state.lobby.length);
     }
 
-    /**
-     * Добавляет пользователя в список участников чата
-     * и увеличивает онлайн в стейте приложения.
-     *
-     * @param user - добавляемый пользователь
-     */
     public addUserToState(user: Shared.Interfaces.IUser) {
         ++this.state.online;
         this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), this.state.online);
@@ -84,14 +71,18 @@ export default class SocketManager {
                             manager.addUserToState(currentSocketUserData);
 
                             // отправляем подключенному пользователю текущее состояние приложения
-                            socket.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_STATE), manager.state);
+                            socket.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_STATE), {
+                                online: manager.state.online,
+                                chat: manager.state.chat,
+                                totalServers: manager.state.lobby.length
+                            });
  
                             const clientSocketHandler = new ClientSocketHandler(manager, socket);
                             clientSocketHandler.handle(currentSocketUserData);
                         }
                     });
+            // В этом случае соединение инициировал игровой сервер.
             } else if (gameServer !== undefined && String(secretKey) === String(process.env.WEBSOCKET_SECRET_KEY)) {
-                // В этом случае соединение инициировал игровой сервер.
                 manager.addGameServerToState(JSON.parse(gameServer as string));
 
                 const gameServerSocketHandler = new GameServerSocketHandler(manager, socket);
@@ -103,7 +94,7 @@ export default class SocketManager {
     /**
      * Извлекает из документа пользователя необходимию для состояния информацию.
      *
-     * @param user - документ пользователя
+     * @param user - mongoose-документ пользователя
      * @returns объект с данными о пользоввателе
      */
     public static parseUserData(user: IDocumentUser): Shared.Interfaces.IUser {

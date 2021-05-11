@@ -46,9 +46,13 @@ export enum SocketChannels {
      */
     APP_ON_SET_ONLINE,
     /**
-     * Добавление игровго сервера в лобби. 
+     * Получение части игровых серверов.
      */
-    APP_ON_ADD_GAME_SERVER,
+    APP_ON_GET_PORTION_GAME_SERVERS,
+    /**
+     * Обновление количества доступных серверов.
+     */
+    APP_ON_SET_GAME_SERVERS_COUNT,
     /**
      * Синхронизация состояния на клиенте при первом подключении.
      */

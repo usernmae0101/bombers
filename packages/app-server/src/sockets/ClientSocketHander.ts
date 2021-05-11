@@ -4,6 +4,11 @@ import SocketManager from "./SocketManager";
 import BaseSocketHandler from "./BaseSocketHandler";
 import * as Shared from "@bombers/shared/src/idnex";
 
+interface IPaginationData {
+    paginationPage: number;
+    paginationItems: number;
+}
+
 /**
  * Обрабатывает сообщения клиента по веб-сокету.
  */
@@ -16,7 +21,24 @@ export default class ClientSocketHandler extends BaseSocketHandler {
         // обновляем состояние приложения, если пользователь отключился
         this.socket.on("disconnect", () => { 
             this.manager.removeUserFromState(currentSocketUserData);
-        }); 
+        });
+
+        // получение серверов
+        this.socket.on(String(Shared.Enums.SocketChannels.APP_ON_GET_PORTION_GAME_SERVERS), (data: IPaginationData) => {
+            const { paginationPage, paginationItems } = data;
+
+            const sliceFrom = paginationPage * paginationItems - paginationItems;
+            const sliceTo = paginationPage * paginationItems;
+
+            let servers: Shared.Interfaces.ILobbyServer[] = [];
+
+            if (this.manager.state.lobby.length < sliceTo)
+                servers = this.manager.state.lobby.slice(-paginationItems);                    
+            else 
+                servers = this.manager.state.lobby.slice(sliceFrom, sliceTo);
+
+            this.socket.emit(String(Shared.Enums.SocketChannels.APP_ON_GET_PORTION_GAME_SERVERS), servers);
+        });
 
         // обрабатываем сообщение, которое пользователь отправил из чата
         this.socket.on(String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE), (message: string) => {
