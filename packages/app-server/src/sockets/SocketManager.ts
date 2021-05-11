@@ -12,16 +12,7 @@ export default class SocketManager {
         public state: Shared.Interfaces.IServerAppState
     ) { }
 
-    /**
-     * Добавляет игровой сервер в лобби на центральном сервре. 
-     * 
-     * @param server - игровой сервер
-     */
-    public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
-        this.state.lobby.push(server);
-        this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_ADD_GAME_SERVER), server);
-    }
-
+  
     public removeUserFromState(userData: Shared.Interfaces.IUser) {
         --this.state.online;
         this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), this.state.online);
@@ -33,6 +24,25 @@ export default class SocketManager {
                 return false;
             } else return true;
         });
+    }
+    
+    public addMessageToState(message: Shared.Interfaces.IChatMessage) {
+        // циклический буфер
+        const circularBuffer = (this.state.chat.messages.length + 1) % (Shared.Constants.CHAT_MESSAGES_BUFFER_SIZE + 1);
+        this.state.chat.messages[
+            circularBuffer === 0 ? 0 : circularBuffer - 1
+        ] = message;
+        this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE), message);
+    }
+    
+    /**
+     * Добавляет игровой сервер в лобби на центральном сервре. 
+     * 
+     * @param server - игровой сервер
+     */
+    public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
+        this.state.lobby.push(server);
+        this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_ADD_GAME_SERVER), server);
     }
 
     /**
@@ -82,10 +92,7 @@ export default class SocketManager {
                     });
             } else if (gameServer !== undefined && String(secretKey) === String(process.env.WEBSOCKET_SECRET_KEY)) {
                 // В этом случае соединение инициировал игровой сервер.
-
-                // FIXME: неправильно определяет тип
-                // @ts-ignore
-                manager.addGameServerToState(JSON.parse(gameServer));
+                manager.addGameServerToState(JSON.parse(gameServer as string));
 
                 const gameServerSocketHandler = new GameServerSocketHandler(manager, socket);
                 gameServerSocketHandler.handle();

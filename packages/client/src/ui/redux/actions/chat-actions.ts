@@ -7,6 +7,13 @@ export const action_chat_set_members = (
     payload: members
 });
 
+export const action_chat_set_ready = (
+    isReady: boolean,
+): ChatTypes.ChatSetReadyActionType => ({
+    type: ChatTypes.ACTION_TYPE_CHAT_SET_READY,
+    payload: isReady
+});
+
 export const action_chat_set_messages = (
     messages: ChatTypes.ChatMessageType[]
 ): ChatTypes.ChatSetMessagesActionType => ({

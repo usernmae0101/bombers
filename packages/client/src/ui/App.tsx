@@ -8,7 +8,7 @@ import store from "./redux/store";
 import * as UserSelectors from "./redux/selectors/user-selecrots";
 import * as UserActions from "./redux/actions/user-actions";
 import * as Shared from "@bombers/shared/src/idnex";
-import * as SocketAppHandler from "../helpers/handlers/socket-app-handler";
+import { startHandlingAppSocket } from "../helpers/handlers/socket-app-handler";
 import Loader from "./components/Loader";
 
 const Main = () => {
@@ -31,7 +31,6 @@ const Main = () => {
             dispatch(UserActions.action_user_set_auth_is_social(true));
         }
     }, []);
-
     
     // Подписка на изменение свойства "isAuthViaSocial".
     React.useEffect(() => {
@@ -73,12 +72,7 @@ const Main = () => {
                     }
                 });
 
-                _socket.on(String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), (online: number) => {
-                    SocketAppHandler.handle_socket_app_online(dispatch, online);
-                });
-                
-                _socket.on(String(Shared.Enums.SocketChannels.APP_ON_SET_STATE, (state: Shared.Interfaces.IServerAppState) => {
-                });
+                startHandlingAppSocket(_socket, dispatch);
 
                 dispatch(UserActions.action_user_set_socket_instance(_socket));
             }

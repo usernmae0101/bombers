@@ -6,8 +6,8 @@ const Message: React.FC<{ message: ChatMessageType }> = ({ message }) => {
     return (
         <li>
 			<div>
-				<img src={message.avatar}/>
-				<span>{message.author}</span>
+				<img src={message.author.avatar}/>
+				<span>{message.author.nickname}</span>
 				<p>{message.message}</p>
 			</div>
         </li>

@@ -16,6 +16,15 @@ export default class ClientSocketHandler extends BaseSocketHandler {
         // обновляем состояние приложения, если пользователь отключился
         this.socket.on("disconnect", () => { 
             this.manager.removeUserFromState(currentSocketUserData);
-        });        
+        }); 
+
+        // обрабатываем сообщение, которое пользователь отправил из чата
+        this.socket.on(String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE), (message: string) => {
+            this.manager.addMessageToState({
+                author: currentSocketUserData,
+                message: message.slice(0, Shared.Constants.CHAT_MAX_MESSAGE_LENGTH),
+                date: Date.now()
+            });
+        });
     }
 }

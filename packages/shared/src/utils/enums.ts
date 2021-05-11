@@ -60,7 +60,11 @@ export enum SocketChannels {
     /**
      * Удаление пользователя из списка участников чата.
      */
-    APP_ON_REMOVE_CHAT_MEMBER
+    APP_ON_REMOVE_CHAT_MEMBER,
+    /**
+     * Добавление сообщения в чат.
+     */
+    APP_ON_ADD_CHAT_MESSAGE
 }
 
 /**
