@@ -35,7 +35,7 @@ const geckoServerUDP = geckos({
 });
 
 geckoServerUDP.onConnection(channel => {
-    console.log(channel); // debugger
+    console.log(3); // debugger
 });
 
 geckoServerUDP.listen(gameServerPort);

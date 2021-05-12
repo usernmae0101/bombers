@@ -7,7 +7,7 @@ import { config } from "dotenv";
 import { Server } from "socket.io";
 import rateLimit from "express-rate-limit";
 
-import apiRouter from "./routes";
+import apiRouter from "./api/routes";
 import SocketManager from "./sockets/SocketManager";
 
 // parse .env

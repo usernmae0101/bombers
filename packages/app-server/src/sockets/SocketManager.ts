@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import { state } from "./state";
-import { UserModel, IDocumentUser } from "../models";
+import { UserModel, IDocumentUser } from "../api/models";
 import ClientSocketHandler from "./ClientSocketHander";
 import GameServerSocketHandler from "./GameSeverSocketHander";
 
@@ -29,7 +29,9 @@ export default class SocketManager {
         // циклический буфер
         const circularBuffer = (this.state.chat.messages.length + 1) % (Shared.Constants.CHAT_MESSAGES_BUFFER_SIZE + 1);
        
-        this.state.chat.messages[circularBuffer === 0 ? 0 : circularBuffer - 1] = message;
+        this.state.chat.messages[
+            circularBuffer === 0 ? 0 : circularBuffer - 1
+        ] = message;
         this.io.emit(String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE), message);
     }
     
@@ -91,12 +93,6 @@ export default class SocketManager {
         });
     }
    
-    /**
-     * Извлекает из документа пользователя необходимию для состояния информацию.
-     *
-     * @param user - mongoose-документ пользователя
-     * @returns объект с данными о пользоввателе
-     */
     public static parseUserData(user: IDocumentUser): Shared.Interfaces.IUser {
         return {
             nickname: user.nickname,

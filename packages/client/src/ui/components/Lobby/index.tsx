@@ -29,7 +29,7 @@ const Lobby = () => {
             <ul>
                 {
                     servers.map(server => {
-                        return <Server key={ server.address } { ...server } />
+                        return <Server key={server.address} {...server} />
                     }) 
                 }
             </ul>

@@ -1,10 +1,6 @@
 import { AppStateType } from "../store";
 import * as LobbyTypes from "../types/lobby-types";
 
-export const select_lobby_total_servers = (state: AppStateType): number => {
-    return state.lobby.totalServers;
-};
-
 export const select_lobby_loading = (state: AppStateType): boolean => {
     return state.lobby.isLoading;
 };

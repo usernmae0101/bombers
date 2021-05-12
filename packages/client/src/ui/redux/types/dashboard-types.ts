@@ -1,7 +1,9 @@
 export const ACTION_TYPE_DASHBOARD_SET_ONLINE = "DASHBOARD/SET_ONLINE";
+export const ACTION_TYPE_DASHBOARD_SET_TOTAL_SERVERS = "DASHBOARD/SET_TOTAL_SERVERS"; 
 
 export type DashboardStateType = {
     online: number;
+	totalServers: number;
 };
 
 export type DashboardSetOnlineActionType = {
@@ -9,4 +11,9 @@ export type DashboardSetOnlineActionType = {
     payload: number;
 };
 
-export type DashboardActionsType = DashboardSetOnlineActionType;
+export type DashboardSetTotalServersActionType = {
+	type: typeof ACTION_TYPE_DASHBOARD_SET_TOTAL_SERVERS;
+	payload: number;
+};
+
+export type DashboardActionsType = DashboardSetOnlineActionType | DashboardSetTotalServersActionType;

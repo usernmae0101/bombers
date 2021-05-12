@@ -30,12 +30,11 @@ export default class ClientSocketHandler extends BaseSocketHandler {
             const sliceFrom = paginationPage * paginationItems - paginationItems;
             const sliceTo = paginationPage * paginationItems;
 
-            let servers: Shared.Interfaces.ILobbyServer[] = [];
-
-            if (this.manager.state.lobby.length < sliceTo)
-                servers = this.manager.state.lobby.slice(-paginationItems);                    
-            else 
-                servers = this.manager.state.lobby.slice(sliceFrom, sliceTo);
+            let servers: Shared.Interfaces.ILobbyServer[] = this.manager.state.lobby.slice(
+                ...(
+                    this.manager.state.lobby.length < sliceTo ? [-paginationItems] : [sliceFrom, sliceTo]
+                )
+            );
 
             this.socket.emit(String(Shared.Enums.SocketChannels.APP_ON_GET_PORTION_GAME_SERVERS), servers);
         });

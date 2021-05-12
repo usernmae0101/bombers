@@ -6,7 +6,6 @@ const initialState: LobbyTypes.LobbyStateType = {
         page: 1,
         items: 10
     },
-    totalServers: null,
     isLoading: true
 };
 
@@ -14,9 +13,7 @@ export default function lobbyReducer(
     state = initialState,
     action: LobbyTypes.LobbyActionsType
 ): LobbyTypes.LobbyStateType {
-    switch (action.type) {
-        case LobbyTypes.ACTION_TYPE_LOBBY_SET_TOTAL_SERVERS:
-            return { ...state, totalServers: action.payload };
+    switch (action.type) { 
         case LobbyTypes.ACTION_TYPE_LOBBY_SET_LOADING:
             return { ...state, isLoading: action.payload };
         case LobbyTypes.ACTION_TYPE_LOBBY_SET_SERVERS:

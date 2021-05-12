@@ -21,12 +21,12 @@ export const startHandlingAppSocket = (socket: Socket, dispatch: Dispatch) => {
     
 	// установка состояния (синхронизация при подключении)
 	socket.on(String(Shared.Enums.SocketChannels.APP_ON_SET_STATE), (state: InitialStateType) => {
-		dispatch(LobbyActions.action_lobby_set_total_servers_count(state.totalServers));
+		dispatch(DashboardActions.action_dashboard_set_total_servers(state.totalServers));
 		
 		dispatch(ChatActions.action_chat_set_messages(state.chat.messages));
 		dispatch(ChatActions.action_chat_set_members(state.chat.members));
 		dispatch(ChatActions.action_chat_set_ready(true));
-    });
+	});
 
 	// добавление пользователя в список участников чата
 	socket.on(String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER), (member: Shared.Interfaces.IUser) => {
@@ -35,7 +35,7 @@ export const startHandlingAppSocket = (socket: Socket, dispatch: Dispatch) => {
 
 	// изменение количества игровых серверов
 	socket.on(String(Shared.Enums.SocketChannels.APP_ON_SET_GAME_SERVERS_COUNT), (count: number) => {
-		dispatch(LobbyActions.action_lobby_set_total_servers_count(count));
+		dispatch(DashboardActions.action_dashboard_set_total_servers(count));
 	});
 
 	// удаление пользователя из списка участников чата
