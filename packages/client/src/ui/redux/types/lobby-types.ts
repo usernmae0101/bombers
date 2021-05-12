@@ -4,8 +4,7 @@ export const ACTION_TYPE_LOBBY_SET_LOADING = "LOBBY/SET_LOADING";
 export const ACTION_TYPE_LOBBY_SET_SERVERS = "LOBBY/SET_SERVERS";
 export const ACTION_TYPE_LOBBY_SET_SERVER_PING = "LOBBY/SET_SERVER_PING";
 export const ACTION_TYPE_LOBBY_SET_SERVER_STATUS = "LOBBY/SET_SERVER_STATUS";
-export const ACTION_TYPE_LOBBY_SET_SERVER_ROOMS = "LOBBY/SET_SERVER_ROOMS";
-export const ACTION_TYPE_LOBBY_UPDATE_SERVER_ROOM = "LOBBY/UPDATE_SERVER_ROOM";
+export const ACTION_TYPE_LOBBY_SET_SERVER_ROOM = "LOBBY/SET_SERVER_ROOM";
 
 export type LobbyStateType = {
 	servers: LobbyServerType[];
@@ -20,23 +19,16 @@ export type LobbyPaginationType = {
 
 export type LobbyServerType = {
 	address: string;
-	port: number;
+	UDP_port: number;
+	TCP_port: number;
 	iceServers: any[];
 	isConnected: boolean;
 	ping: number;
-	rooms: Shared.Interfaces.IGameRoom[];
+	room: Shared.Interfaces.IGameRoom;
 };
 
-export type LobbySetServerRoomsActionType = {
+export type LobbySetServerRoomActionType = {
 	type: typeof ACTION_TYPE_LOBBY_SET_SERVER_ROOMS;
-	payload: {
-		address: string;
-		rooms: Shared.Interfaces.IGameRoom[];
-	};
-};
-
-export type LobbyUpdateServerRoomActionType = {
-	type: typeof ACTION_TYPE_LOBBY_UPDATE_SERVER_ROOM;
 	payload: {
 		address: string;
 		room: Shared.Interfaces.IGameRoom;
@@ -69,5 +61,5 @@ export type LobbySetServersActionType = {
 	payload: LobbyServerType[];
 };
 
-export type LobbyActionsType = LobbySetServerRoomsActionType | LobbyUpdateServerRoomActionType | 
-	LobbySetServerPingActionType | LobbySetServerConnectStatusActionType | LobbySetServersActionType | LobbySetLoadingActionType;
+export type LobbyActionsType = LobbySetServerRoomActionType | LobbySetServerPingActionType 
+	| LobbySetServerConnectStatusActionType | LobbySetServersActionType | LobbySetLoadingActionType;

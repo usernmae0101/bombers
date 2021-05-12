@@ -1,6 +1,10 @@
 import geckos from "@geckos.io/server";
+import { createServer } from "http";
+import { Server } from "socket.io";
 import { config } from "dotenv";
 import { io } from "socket.io-client";
+
+import SocketManager from "./sockets/SocketManager";
 
 // parse .env
 config();
@@ -9,34 +13,44 @@ config();
 const isDevMode = process.env.NODE_ENV === "development";
 const appServerPort = isDevMode ? 3000 : +process.env.APP_SERVER_PORT;
 const appServerAddress = isDevMode ? "127.0.0.1" : process.env.APP_SERVER_ADDRESS;
-const gameServerPort = isDevMode ? 3001 : +process.env.GAME_SERVER_PORT;
+const gameServerPortUDP = isDevMode ? 3001 : +process.env.GAME_SERVER_UDP_PORT;
+const gameServerPortTCP = isDevMode ? 3002 : +process.env.GAME_SERVER_TCP_PORT;
 const gameServerAddress = isDevMode ? "127.0.0.1" : process.env.GAME_SERVER_ADDRESS;
 const iceServers = isDevMode ? [] : JSON.parse(process.env.GAME_SERVER_ICE_LIST);
 
-// TODO: переподключать сокет, если центральный сервер упал?
-
 // socket-соединение (TCP) с центарльным сервером
-const socket = io(`http://${appServerAddress}:${appServerPort}`, {
+const clientSocketTCP = io(`http://${appServerAddress}:${appServerPort}`, {
     query: {
         secretKey: process.env.WEBSOCKET_SECRET_KEY,
         gameServer: JSON.stringify({ 
-            port: gameServerPort,
+            TCP_port: gameServerPortTCP,
+            UDP_port: gameServerPortUDP,
             address: gameServerAddress,
             iceServers 
         })
     }
 });
 
-// сигнальный (HTTP) и RTCPeer (UDP) сервер
-const geckoServerUDP = geckos({
+// UDP сервер (также сигнальный для WebRTC)
+const serverSocketUDP = geckos({
     // https://ru.wikipedia.org/wiki/Traversal_Using_Relay_NAT
     iceServers,
     ordered: false
 });
 
-geckoServerUDP.onConnection(channel => {
-    console.log(3); // debugger
-});
+// TCP сервер (socket.io)
+const serverSocketTCP = new Server(createServer(), {
+    maxHttpBufferSize: 1e8
+}); 
 
-geckoServerUDP.listen(gameServerPort);
-console.log(`game server handling as http://${gameServerAddress}:${gameServerPort}`);
+SocketManager.handle(
+    serverSocketTCP,
+    serverSocketUDP,
+    clientSocketTCP
+);
+
+serverSocketUDP.listen(gameServerPortUDP);
+console.log(`game server UDP handling as ${gameServerAddress}:${gameServerPortUDP}`);
+
+serverSocketTCP.listen(gameServerPortTCP);
+console.log(`game server TCP handling as ${gameServerAddress}:${gameServerPortTCP}`);

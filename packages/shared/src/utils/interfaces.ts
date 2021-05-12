@@ -44,9 +44,11 @@ export interface IGameRoom {
 }
 
 export interface ILobbyServer {
-    /** Порт сигнального HTTP-серверa. */
-    port: number;
-    /** Адрес сигнального HTTP-сервера. */
+    /** Порт сигнального HTTP-серверa и игрового UDP. */
+    UDP_port: number;
+    /** Порт TCP сокет-сервера. */
+    TCP_port: number;
+    /** Адрес сигнального HTTP-сервера и сокет-сервера. */
     address: string;
     /** Список ICE-серверов (p2p необходим TURN). */
     iceServers: any[];
