@@ -6,6 +6,8 @@ import AppSocketHandler from "./AppSocketHandler";
 import TCPClientSocketHandler from "./TCPClientSocketHandler";
 import UDPClientSocketHandler from "./UDPClientSocketHandler";
 
+const AVAILABLE_TCP_SOCKET_ROOMS = ["LOBBY", "BATTLE"];
+
 export default class SocketManager {
     constructor (
         public serverSocketTCP: Server,
@@ -14,10 +16,19 @@ export default class SocketManager {
     ) {}
 
     public handle() {
+        // соединение с центральным сервером (игровй сервер - клиент)
         AppSocketHandler.handle(this.clientSocketTCP, this);
         
         this.serverSocketTCP.on("connection", socket => {
-            TCPClientSocketHandler.handle(socket, this);
+            const { room } = socket.handshake.query;
+            
+            if (AVAILABLE_TCP_SOCKET_ROOMS.includes(room as string)) {
+                socket.join(room);
+
+                TCPClientSocketHandler.handleLobby(socket, this);
+                TCPClientSocketHandler.handleBattle(socket, this);
+            } else 
+                socket.disconnect(true);
         });
 
         this.serverSocketUDP.onConnection(socket => {

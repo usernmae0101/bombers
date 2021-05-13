@@ -18,8 +18,8 @@ const gameServerPortTCP = isDevMode ? 3002 : +process.env.GAME_SERVER_TCP_PORT;
 const gameServerAddress = isDevMode ? "127.0.0.1" : process.env.GAME_SERVER_ADDRESS;
 const iceServers = isDevMode ? [] : JSON.parse(process.env.GAME_SERVER_ICE_LIST);
 
-// socket-соединение (TCP) с центарльным сервером
-const clientSocketTCP = io(`http://${appServerAddress}:${appServerPort}`, {
+// socket-соединение (TCP) с центральным сервером
+const clientSocketTCP = io(`http://${appServerAddress}:${appServerPort}/game-server`, {
     query: {
         secretKey: process.env.WEBSOCKET_SECRET_KEY,
         gameServer: JSON.stringify({ 
@@ -43,11 +43,12 @@ const serverSocketTCP = new Server(createServer(), {
     maxHttpBufferSize: 1e8
 }); 
 
-SocketManager.handle(
+const manager = new SocketManager(
     serverSocketTCP,
     serverSocketUDP,
     clientSocketTCP
 );
+manager.handle();
 
 serverSocketUDP.listen(gameServerPortUDP);
 console.log(`game server UDP handling as ${gameServerAddress}:${gameServerPortUDP}`);

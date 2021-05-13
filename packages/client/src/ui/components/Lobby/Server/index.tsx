@@ -1,13 +1,15 @@
 import React from "react";
+import { io } from "socket.io-client";
 
 import { LobbyServerType } from "../../../redux/types/lobby-types";
 import Room from "./Room";
 
 const Server: React.FC<LobbyServerType> = (server) => {
     React.useEffect(() => {
-
+        const socket = io(`http://${server.address}:${server.TCP_port}`);
+        
         return () => {
-            
+            socket.disconnect();
         };
     }, []);
 

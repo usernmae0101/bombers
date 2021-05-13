@@ -1,4 +1,4 @@
-import { UserModel } from "../../packages/app-server/src/models";
+import { UserModel } from "../../packages/app-server/src/api/models";
 import * as dbHandler from "./dbHandler";
 
 const describeif = condition => condition ? describe : describe.skip;

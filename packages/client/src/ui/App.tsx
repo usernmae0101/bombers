@@ -66,7 +66,7 @@ const Main = () => {
         (async () => {
             if (isAuth) {
                 // Подключение к веб-сокету по авторизационному токену.
-                const _socket = io({
+                const _socket = io("/client", {
                     query: {
                         authToken
                     }

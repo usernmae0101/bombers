@@ -8,7 +8,7 @@ import { Server } from "socket.io";
 import rateLimit from "express-rate-limit";
 
 import apiRouter from "./api/routes";
-import SocketManager from "./sockets/SocketManager";
+import { state, SocketManager } from "./sockets";
 
 // parse .env
 config();
@@ -46,7 +46,8 @@ const server = createServer(app);
 
 // websocket-server
 const io = new Server(server);
-SocketManager.handle(io);
+const socketManager = new SocketManager(io, state);
+socketManager.handle();
 
 // mongoose connection
 mongoose.connect(`mongodb://${mongoHostname}:27017/bombers`, {
