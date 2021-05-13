@@ -2,14 +2,15 @@ import { Server } from "socket.io";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import { UserModel, IDocumentUser } from "../api/models";
-import ClientSocketHandler from "./ClientSocketHander";
-import GameServerSocketHandler from "./GameSeverSocketHander";
+import ClientSocketHandler from "./ClientSocketHandler";
+import GameServerSocketHandler from "./GameSeverSocketHandler";
 
-export class SocketManager {
-    constructor(
-        public io: Server,
-        public state: Shared.Interfaces.IServerAppState
-    ) { }
+export default class SocketManager {
+    /**
+     * @param io - socket.io instance 
+     * @param state - общее состояние приложения
+     */
+    constructor(public io: Server, public state: Shared.Interfaces.IServerAppState) { }
 
     /**
      * Меняет состояние приложения при отключении пользователя от сокета. 
@@ -21,7 +22,7 @@ export class SocketManager {
     public removeUserFromState(userData: Shared.Interfaces.IUser) {
         --this.state.online;
         this.io.of("client").emit(
-            String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), 
+            String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE),
             this.state.online
         );
 
@@ -29,7 +30,7 @@ export class SocketManager {
         this.state.chat.members = this.state.chat.members.filter(member => {
             if (member.nickname === userData.nickname) {
                 this.io.of("client").emit(
-                    String(Shared.Enums.SocketChannels.APP_ON_REMOVE_CHAT_MEMBER), 
+                    String(Shared.Enums.SocketChannels.APP_ON_REMOVE_CHAT_MEMBER),
                     member.nickname
                 );
                 return false;
@@ -52,7 +53,7 @@ export class SocketManager {
             circularBuffer === 0 ? 0 : circularBuffer - 1
         ] = message;
         this.io.of("client").emit(
-            String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE), 
+            String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE),
             message
         );
     }
@@ -67,25 +68,33 @@ export class SocketManager {
     public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
         this.state.lobby.push(server);
         this.io.of("client").emit(
-            String(Shared.Enums.SocketChannels.APP_ON_SET_GAME_SERVERS_COUNT), 
+            String(Shared.Enums.SocketChannels.APP_ON_SET_GAME_SERVERS_COUNT),
             this.state.lobby.length
         );
     }
 
-    public addUserToState(user: Shared.Interfaces.IUser) {
+    /**
+     * Меняет состояние приложения при подключении нового пользователя к сокету. 
+     * Увеличивает онлайн. Если пользователь не находится в игре, добавляет
+     * в список участников чата. Отправляет обновлённое состояние всем подключенным сокетам.
+     * 
+     * @param userData - данные подключеннного пользователя
+     */
+    public addUserToState(userData: Shared.Interfaces.IUser) {
         ++this.state.online;
         this.io.of("client").emit(
-            String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE), 
+            String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE),
             this.state.online
         );
 
         // TODO: добавить проверку, в игре ли пользователь (вылетел)
         // если в игре, то переместить сразу в игровую команту
+
         if (true) {
-            this.state.chat.members.push(user);
+            this.state.chat.members.push(userData);
             this.io.of("client").emit(
-                String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER), 
-                user
+                String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER),
+                userData
             );
         }
     }
@@ -133,11 +142,17 @@ export class SocketManager {
         });
     }
 
-    public parseUserData(user: IDocumentUser): Shared.Interfaces.IUser {
+    /**
+     * Извлекает из mongoose-документа данные пользователя.
+     * 
+     * @param userDocument - mongoose-документ пользователя
+     * @returns данные пользователя
+     */
+    public parseUserData(userDocument: IDocumentUser): Shared.Interfaces.IUser {
         return {
-            nickname: user.nickname,
-            rating: user.rating,
-            avatar: user.avatar
+            nickname: userDocument.nickname,
+            rating: userDocument.rating,
+            avatar: userDocument.avatar
         };
     }
 }

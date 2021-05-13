@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 
-import { SocketManager } from "./SocketManager";
+import SocketManager from "./SocketManager";
 
 /**
  * Обрабатывает сообщения игрового сервера по веб-сокету.

@@ -8,7 +8,8 @@ import { Server } from "socket.io";
 import rateLimit from "express-rate-limit";
 
 import apiRouter from "./api/routes";
-import { state, SocketManager } from "./sockets";
+import SocketManager from "./sockets/SocketManager";
+import { state } from "./sockets/state";
 
 // parse .env
 config();

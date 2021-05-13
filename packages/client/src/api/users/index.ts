@@ -2,17 +2,14 @@ import axios from "axios";
 
 import { AuthUserDataRsponseType } from "./types";
 
-/**
- * Базовый URN к API для этого модуля.
- */
 const BASE_URN = "/api/users";
 
 /**
  * Генерация HTTP-заголовков для пользователей, 
  * которые авторизованы через социальную суть.
  * 
- * @param {number} uid - идентификатор пользователя в социальной сети
- * @param {string} social - тип социальной сети: "vk" | "fb" | "ok" 
+ * @param uid - идентификатор пользователя в социальной сети
+ * @param social - тип социальной сети: "vk" | "fb" | "ok" 
  * @returns объект с HTTP-заголовками
  */
 const createSocialHeaders = (uid: number, social: string) => ({

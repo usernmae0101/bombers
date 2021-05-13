@@ -40,7 +40,11 @@ const serverSocketUDP = geckos({
 
 // TCP сервер (socket.io)
 const serverSocketTCP = new Server(createServer(), {
-    maxHttpBufferSize: 1e8
+    maxHttpBufferSize: 1e8,
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
 }); 
 
 const manager = new SocketManager(

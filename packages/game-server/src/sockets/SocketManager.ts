@@ -2,11 +2,11 @@ import { GeckosServer } from "@geckos.io/server";
 import { Server } from "socket.io";
 import { Socket } from "socket.io-client";
 
+import * as Shared from "@bombers/shared/src/idnex";
 import AppSocketHandler from "./AppSocketHandler";
-import TCPClientSocketHandler from "./TCPClientSocketHandler";
+import BattleTCPClientSocketHandler from "./BattleTCPClientSocketHandler";
+import LobbyTCPClientSocketHandler from "./LobbyTCPClientSocketHandler";
 import UDPClientSocketHandler from "./UDPClientSocketHandler";
-
-const AVAILABLE_TCP_SOCKET_ROOMS = ["LOBBY", "BATTLE"];
 
 export default class SocketManager {
     constructor (
@@ -15,24 +15,40 @@ export default class SocketManager {
         public clientSocketTCP: Socket
     ) {}
 
+    public pong(namespace: "battle" | "lobby" ) {
+        this.serverSocketTCP.of(namespace).emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_PING_PONG)
+        );
+    }
+
     public handle() {
         // соединение с центральным сервером (игровй сервер - клиент)
         AppSocketHandler.handle(this.clientSocketTCP, this);
         
-        this.serverSocketTCP.on("connection", socket => {
-            const { room } = socket.handshake.query;
+        this.serverSocketTCP.of("lobby").on("connection", socket => {
+            console.log("connected to lobby"); // debugger
             
-            if (AVAILABLE_TCP_SOCKET_ROOMS.includes(room as string)) {
-                socket.join(room);
+            // передаём состояние игровой комнаты подключенному сокету
+            socket.emit(String(Shared.Enums.SocketChannels.GAME_ON_SET_ROOM_STATE), this._getRoomState());
 
-                TCPClientSocketHandler.handleLobby(socket, this);
-                TCPClientSocketHandler.handleBattle(socket, this);
-            } else 
-                socket.disconnect(true);
+            LobbyTCPClientSocketHandler.handle(socket, this);
+        });
+
+        this.serverSocketTCP.of("battle").on("connection", socket => {
+            BattleTCPClientSocketHandler.handle(socket, this);
         });
 
         this.serverSocketUDP.onConnection(socket => {
             UDPClientSocketHandler.handle(socket, this);
         });
+    }
+
+    private _getRoomState(): Shared.Interfaces.IGameRoom {
+        return {
+            id: "123abc",
+            activeSlots: 2,
+            totalSlots: 4,
+            isLocked: false
+        }
     }
 }

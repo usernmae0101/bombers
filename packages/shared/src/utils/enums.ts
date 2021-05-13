@@ -42,6 +42,14 @@ export enum InputKeys {
  */
 export enum SocketChannels {
     /**
+     * Получение сетевой задержки между клинтом и игровым сервером.
+     */
+    GAME_ON_PING_PONG,
+    /**
+     * Получение состояния игровой комнаты на сервере.
+     */
+    GAME_ON_SET_ROOM_STATE,
+    /**
      * Обновление количества подключенных пользователей.
      */
     APP_ON_SET_ONLINE,

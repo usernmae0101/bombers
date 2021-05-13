@@ -48,7 +48,7 @@ export const startHandlingAppSocket = (socket: Socket, dispatch: Dispatch) => {
 		const lobbyServers: LobbyTypes.LobbyServerType[] = [];
 
 		for (let server of servers) 
-			lobbyServers.push({ ...server, isConnected: false, rooms: [], ping: null });
+			lobbyServers.push({ ...server, isConnected: false, room: null, ping: null });
 
 		dispatch(LobbyActions.action_lobby_set_servers(lobbyServers));
 		dispatch(LobbyActions.action_lobby_set_loading(false));

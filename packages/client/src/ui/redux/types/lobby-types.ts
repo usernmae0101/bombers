@@ -28,7 +28,7 @@ export type LobbyServerType = {
 };
 
 export type LobbySetServerRoomActionType = {
-	type: typeof ACTION_TYPE_LOBBY_SET_SERVER_ROOMS;
+	type: typeof ACTION_TYPE_LOBBY_SET_SERVER_ROOM;
 	payload: {
 		address: string;
 		room: Shared.Interfaces.IGameRoom;
