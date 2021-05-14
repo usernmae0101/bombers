@@ -7,13 +7,14 @@ import AppSocketHandler from "./AppSocketHandler";
 import BattleTCPClientSocketHandler from "./BattleTCPClientSocketHandler";
 import LobbyTCPClientSocketHandler from "./LobbyTCPClientSocketHandler";
 import UDPClientSocketHandler from "./UDPClientSocketHandler";
+import Room from "../core/Room";
 
 export default class SocketManager {
     constructor (
         public serverSocketTCP: Server,
         public serverSocketUDP: GeckosServer,
         public clientSocketTCP: Socket
-    ) {}
+    ) { }
 
     public pong(namespace: "battle" | "lobby" ) {
         this.serverSocketTCP.of(namespace).emit(
@@ -22,6 +23,8 @@ export default class SocketManager {
     }
 
     public handle() {
+        const room = new Room(this, Shared.Enums.GameMaps.MAP_1);
+
         // соединение с центральным сервером (игровй сервер - клиент)
         AppSocketHandler.handle(this.clientSocketTCP, this);
         
@@ -29,7 +32,7 @@ export default class SocketManager {
             console.log("connected to lobby"); // debugger
             
             // передаём состояние игровой комнаты подключенному сокету
-            socket.emit(String(Shared.Enums.SocketChannels.GAME_ON_SET_ROOM_STATE), this._getRoomState());
+            socket.emit(String(Shared.Enums.SocketChannels.GAME_ON_SET_ROOM_STATE), room.state);
 
             LobbyTCPClientSocketHandler.handle(socket, this);
         });
@@ -41,14 +44,5 @@ export default class SocketManager {
         this.serverSocketUDP.onConnection(socket => {
             UDPClientSocketHandler.handle(socket, this);
         });
-    }
-
-    private _getRoomState(): Shared.Interfaces.IGameRoom {
-        return {
-            id: "123abc",
-            activeSlots: 2,
-            totalSlots: 4,
-            isLocked: false
-        }
     }
 }

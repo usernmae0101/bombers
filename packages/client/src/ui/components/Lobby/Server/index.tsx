@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 
 import { LobbyServerType } from "../../../redux/types/lobby-types";
 import Room from "./Room";
-import { startHandlingGameLobbySocket } from "../../../../helpers/handlers/socket-game-handler";
+import { startHandlingGameLobbySocket } from "../../../../helpers/handlers/socket-game-lobby-handler";
 
 const Server: React.FC<LobbyServerType> = (server) => {
     const dispatch = useDispatch();

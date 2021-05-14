@@ -9,7 +9,7 @@ import rateLimit from "express-rate-limit";
 
 import apiRouter from "./api/routes";
 import SocketManager from "./sockets/SocketManager";
-import { state } from "./sockets/state";
+import { state } from "./sockets/app-state";
 
 // parse .env
 config();

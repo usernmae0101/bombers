@@ -42,7 +42,7 @@ export enum InputKeys {
  */
 export enum SocketChannels {
     /**
-     * Получение сетевой задержки между клинтом и игровым сервером.
+     * Получение сетевой задержки между клиентом и игровым сервером.
      */
     GAME_ON_PING_PONG,
     /**
@@ -97,4 +97,21 @@ export enum PlayerColors {
     PURPLE,
     BLUE,
     YELLOW
+}
+
+/**
+ * Направления движения игрока.
+ */
+export enum MoveDirections {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+}
+
+/**
+ * Идентификаторы игровых карт.
+ */
+export enum GameMaps {
+    MAP_1
 }

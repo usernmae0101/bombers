@@ -1,3 +1,5 @@
+import * as Enums from "./enums";
+
 export interface IUser {
     /** Никнейм пользователя. */
     nickname: string;
@@ -32,9 +34,35 @@ export interface IServerAppState {
     lobby: ILobbyServer[];
 }
 
+export interface IGameState {
+    /** Игровая карта. */
+    map: number[][][];
+    /** Игроки. */
+    plyaers: {
+        [color: number]: IGameStatePlayer;
+    }
+}
+
+export interface IGameStatePlayer {
+    /** Здоровье игрока. */
+    health: number;
+    /** Направление движения игрока. */
+    direction: Enums.MoveDirections;
+    /** Скорость игрока. */
+    speed: number;
+    /** Радиус взрыва бомбы. */
+    radius: number;
+    /** Количество доступных бомб. */
+    bombs: number;
+    /** Позиция игрока по X на карте. */
+    x: number;
+    /** Позиция игрока по Y на карте. */
+    y: number;
+}
+
 export interface IGameRoom {
-    /** Уникальный идентификатор комнаты (в контексте игрового сервера). */
-    id: string;
+    /** Идентификатор карты. */
+    mapId: Enums.GameMaps;
     /** Открыта ли комната (можно ли занять игровой слот). */
     isLocked: boolean; 
     /** Количество занятых игровых слотов. */

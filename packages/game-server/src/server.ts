@@ -47,12 +47,12 @@ const serverSocketTCP = new Server(createServer(), {
     }
 }); 
 
-const manager = new SocketManager(
+const socketManager = new SocketManager(
     serverSocketTCP,
     serverSocketUDP,
     clientSocketTCP
 );
-manager.handle();
+socketManager.handle();
 
 serverSocketUDP.listen(gameServerPortUDP);
 console.log(`game server UDP handling as ${gameServerAddress}:${gameServerPortUDP}`);
