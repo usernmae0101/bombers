@@ -19,9 +19,7 @@ export type LobbyPaginationType = {
 
 export type LobbyServerType = {
 	address: string;
-	UDP_port: number;
 	TCP_port: number;
-	iceServers: any[];
 	isConnected: boolean;
 	ping: number;
 	room: Shared.Interfaces.IGameRoom;

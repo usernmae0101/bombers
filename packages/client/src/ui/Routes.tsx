@@ -9,7 +9,8 @@ import RoomPage from "./pages/RoomPage";
 export type RoutesPropsType = {
 	match: {
 		params: {
-			id: string;
+			address: string;
+			port: string;
 			nickname: string;
 		}
 	}
@@ -20,7 +21,7 @@ const Routes = () => (
 		<Route exact path="/" component={IndexPage} />
 		<Route exact path="/rating" component={RatingPage} />
 		<Route path="/profile/:nickname" component={ProfilePage} />
-		<Route path="/room/:id" component={RoomPage} />
+		<Route path="/room/:address/:port" component={RoomPage} />
 	</Switch>
 );
 

@@ -6,26 +6,33 @@ import { LobbyServerType } from "../../../redux/types/lobby-types";
 import Room from "./Room";
 import { startHandlingGameLobbySocket } from "../../../../helpers/handlers/socket-game-lobby-handler";
 
-const Server: React.FC<LobbyServerType> = (server) => {
+const Server: React.FC<LobbyServerType> = (props) => {
     const dispatch = useDispatch();
 
     React.useEffect(() => {
-        const lobbySocket = io(`http://${server.address}:${server.TCP_port}/lobby`);
-
-        // замыкаем setInterval, чтобы отсановить пинг сервера при демонтировании компонента
-        const getPingInterval = startHandlingGameLobbySocket(server.address, lobbySocket, dispatch);
+        const lobbySocket = io(`http://${props.address}:${props.TCP_port}/lobby`);
+        
+        startHandlingGameLobbySocket(props.address, lobbySocket, dispatch);
 
         return () => {
             lobbySocket.disconnect();
-            clearInterval(getPingInterval());
         };
     }, []);
 
     return (
         <li>
             <div>
-                {server.isConnected ? <Room {...server.room} /> : <div>connecting..</div>}
-                {server.isConnected ? <div>{server.ping}</div> : null}
+                {
+                    !props.isConnected ? <div>connecting..</div> :
+                        <div>
+                            <Room 
+                                address={props.address} 
+                                port={props.TCP_port} 
+                                {...props.room}
+                            />
+                            <span>{props.ping}</span>
+                        </div>
+                }
             </div>
         </li>
     );

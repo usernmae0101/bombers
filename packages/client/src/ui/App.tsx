@@ -71,7 +71,7 @@ const Main = () => {
                         authToken
                     }
                 });
-
+                
                 startHandlingAppSocket(_socket, dispatch);
 
                 dispatch(UserActions.action_user_set_socket_instance(_socket));

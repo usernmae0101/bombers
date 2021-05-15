@@ -24,9 +24,7 @@ const clientSocketTCP = io(`http://${appServerAddress}:${appServerPort}/game-ser
         secretKey: process.env.WEBSOCKET_SECRET_KEY,
         gameServer: JSON.stringify({ 
             TCP_port: gameServerPortTCP,
-            UDP_port: gameServerPortUDP,
             address: gameServerAddress,
-            iceServers 
         })
     }
 });
@@ -52,7 +50,7 @@ const socketManager = new SocketManager(
     serverSocketUDP,
     clientSocketTCP
 );
-socketManager.handle();
+socketManager.handle(gameServerPortUDP, iceServers);
 
 serverSocketUDP.listen(gameServerPortUDP);
 console.log(`game server UDP handling as ${gameServerAddress}:${gameServerPortUDP}`);

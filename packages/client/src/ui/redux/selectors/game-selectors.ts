@@ -1,12 +1,12 @@
 import * as Shared from "@bombers/shared/src/idnex";
 import { AppStateType } from "../store";
 
-export const select_game_ready = (state: AppStateType): boolean => {
-    return state.game.isReady;
-};
-
 export const select_game_ping = (state: AppStateType): number => {
     return state.game.HUD.ping;
+};
+
+export const select_game_loading = (state: AppStateType): boolean => {
+    return state.game.isLoading;
 };
 
 export const select_game_speed = (state: AppStateType): number => {

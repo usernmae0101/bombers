@@ -1,14 +1,14 @@
 import * as Shared from "@bombers/shared/src/idnex";
 
-export const ACTION_TYPE_GAME_SET_READY = "GAME/SET_READY";
 export const ACTION_TYPE_GAME_SET_PING = "GAME/SET_PING";
 export const ACTION_TYPE_GAME_SET_BOMBS = "GAME/SET_BOMBS";
 export const ACTION_TYPE_GAME_SET_SPEED = "GAME/SET_SPEED";
 export const ACTION_TYPE_GAME_SET_RADIUS = "GAME/SET_RADIUS";
 export const ACTION_TYPE_GAME_SET_SLOTS = "GAME/SET_SLOTS";
+export const ACTION_TYPE_GAME_SET_LOADING = "GAME/SET_LOADING";
 
 export type GameStateType = {
-    isReady: boolean;
+    isLoading: boolean;
     HUD: {
         ping: number;
         bombs: number;
@@ -18,8 +18,8 @@ export type GameStateType = {
     slots: Shared.Interfaces.IGameSlots;
 }
 
-export type GameSetReadyActionType = {
-    type: typeof ACTION_TYPE_GAME_SET_READY;
+export type GameSetLoadingActionType = {
+    type: typeof ACTION_TYPE_GAME_SET_LOADING,
     payload: boolean;
 };
 
@@ -49,4 +49,4 @@ export type GameSetSlotsActionType = {
 };
 
 export type GameActionsType = GameSetRadiusActionType | GameSetSpeedActionType | GameSetBombsActionType |
-GameSetSlotsActionType | GameSetReadyActionType | GameSetPingActionType;
+    GameSetSlotsActionType | GameSetPingActionType | GameSetLoadingActionType;

@@ -71,15 +71,21 @@ export interface IGameRoom {
     totalSlots: number;
 }
 
+export interface IRoomUser {
+    /** Цвет игрока пользователя. */
+    color: Enums.PlayerColors;
+}
+
+export interface IRoomUsers {
+    /** Подключенные к комнате пользователи. */
+    [token: string]: IRoomUser;
+}
+
 export interface ILobbyServer {
-    /** Порт сигнального HTTP-серверa и игрового UDP. */
-    UDP_port: number;
     /** Порт TCP сокет-сервера. */
     TCP_port: number;
     /** Адрес сигнального HTTP-сервера и сокет-сервера. */
     address: string;
-    /** Список ICE-серверов (p2p необходим TURN). */
-    iceServers: any[];
 }
 
 export interface IGameSlot {

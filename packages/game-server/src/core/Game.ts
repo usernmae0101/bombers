@@ -1,9 +1,15 @@
 import * as Shared from "@bombers/shared/src/idnex";
+import { createState } from "./game-state";
 
 export default class Game {
+    /** Игровое состояние. */
     private _state: Shared.Interfaces.IGameState;
 
-    set state(value: Shared.Interfaces.IGameState) {
-        this._state = value;
+    constructor(map: number[][][]) {
+        this._state = createState(map);
+    }
+
+    get state(): Shared.Interfaces.IGameState {
+        return this._state;
     }
 }

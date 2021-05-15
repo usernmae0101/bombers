@@ -1,7 +1,7 @@
 import * as Shared from "@bombers/shared/src/idnex";
 
 /**
- * Создаёт игровое состояние для комнаты.
+ * Создаёт игровое состояние.
  * 
  * @param map - игровая карта
  * @returns игровое состояние

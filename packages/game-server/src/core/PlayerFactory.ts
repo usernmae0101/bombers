@@ -3,7 +3,7 @@ import { createPlayer } from "./game-state";
 
 export default class PlayerFactory {
     /**
-     * Создаёт игрока, задавая начальные координаты на карте по переданному цвету.
+     * Создаёт игрока, задавая начальные координаты на карте.
      * 
      * @param color - цвет игрока
      * @returns игрок

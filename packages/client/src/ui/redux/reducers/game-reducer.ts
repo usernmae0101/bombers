@@ -2,7 +2,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import * as GameTypes from "../types/game-types";
 
 const initialState: GameTypes.GameStateType = {
-    isReady: false,
+    isLoading: true,
     HUD: {
         ping: null,
         bombs: 1,
@@ -17,8 +17,8 @@ export default function gameReducer(
     action: GameTypes.GameActionsType
 ): GameTypes.GameStateType {
     switch (action.type) {
-        case GameTypes.ACTION_TYPE_GAME_SET_READY:
-            return { ...state, isReady: action.payload };
+        case GameTypes.ACTION_TYPE_GAME_SET_LOADING:
+            return { ...state, isLoading: action.payload };
         case GameTypes.ACTION_TYPE_GAME_SET_PING:
             return { ...state, HUD: { ...state.HUD, ping: action.payload } };
         case GameTypes.ACTION_TYPE_GAME_SET_BOMBS:

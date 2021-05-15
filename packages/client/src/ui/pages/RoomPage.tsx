@@ -6,9 +6,12 @@ import { RoutesPropsType } from "../Routes";
 const RoomPage: React.FC<RoutesPropsType> = ({ match }) => {
     return (
         <main>
-            <Battle id={match.params.id}/>
+            <Battle 
+                address={match.params.address}
+                port={match.params.port}
+            />
         </main>
     );
-};
+}; 
 
 export default RoomPage;
