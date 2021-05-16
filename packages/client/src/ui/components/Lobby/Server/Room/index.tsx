@@ -1,14 +1,14 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-import { IGameRoom } from "@bombers/shared/src/utils/interfaces";
+import { IStateLobbyGameRoom } from "@bombers/shared/src/utils/interfaces";
 
 type RoomPropsType = {
     address: string;
     port: number;
 };
 
-const Room: React.FC<IGameRoom & RoomPropsType> = (props) => {
+const Room: React.FC<IStateLobbyGameRoom & RoomPropsType> = (props) => {
     const history = useHistory();
 
     const joinRoom = () => {

@@ -3,7 +3,9 @@ import { Socket } from "socket.io-client";
 
 export default class Game {
     private _ping: number;
+    /** Соединение с игровым сервером по TCP. */
     private _TCPChann: Socket;
+    /** Соединение с игровым сервером по UDP. */
     private _UDPChann: ClientChannel;
 
     set TCPChann (value: Socket) {
@@ -17,8 +19,6 @@ export default class Game {
     set ping(value: number) {
         this._ping = value;
     }
-
-    public init() {}
 
     public start() {}
 }

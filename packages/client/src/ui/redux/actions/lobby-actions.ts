@@ -33,7 +33,7 @@ export const action_lobby_set_server_ping = (
 
 export const action_lobby_set_server_room = (
     address: string,
-    room: Shared.Interfaces.IGameRoom
+    room: Shared.Interfaces.IStateLobbyGameRoom
 ): LobbyTypes.LobbySetServerRoomActionType => ({
     type: LobbyTypes.ACTION_TYPE_LOBBY_SET_SERVER_ROOM,
     payload: { address, room }

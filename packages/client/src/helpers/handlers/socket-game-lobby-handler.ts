@@ -10,7 +10,7 @@ export const startHandlingGameLobbySocket = (address: string, socket: Socket, di
     // получаем состояние игровой комнаты
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_SET_ROOM_STATE),
-        (room: Shared.Interfaces.IGameRoom) => {
+        (room: Shared.Interfaces.IStateLobbyGameRoom) => {
             dispatch(LobbyActions.action_lobby_set_server_room(address, room));
             
             // пингуем сервер

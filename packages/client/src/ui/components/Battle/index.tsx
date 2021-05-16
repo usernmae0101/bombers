@@ -26,14 +26,20 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
 
     React.useEffect(() => {
         const game = new Game;
-
+   
         const gameSocketTCP = io(`http://${address}:${port}/battle`, {
-            query: {
+            auth: {
                 token: userToken
             }
         });
-        // замыкаем setInterval, чтобы престать пинговать сервер при демонтировании компонета
-        const getPingInterval = startHandlingGameBattleSocket(game, gameSocketTCP, dispatch);
+        // замыкаем setInterval, чтобы перестать пинговать сервер при демонтировании компонета
+        const getPingInterval = startHandlingGameBattleSocket(
+            userToken,
+            address,
+            game,
+            gameSocketTCP,
+            dispatch
+        );
 
         game.TCPChann = gameSocketTCP;
 

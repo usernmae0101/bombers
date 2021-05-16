@@ -18,6 +18,17 @@ export interface IChatMessage {
     date: number;
 }
 
+export interface IRoomAuthResponseData {
+    /** Статус аутентификации: успешна или нет. */
+    success?: boolean;
+    /** Идентификатор подключенного сокета на игровом сервере. */
+    socketId: string;
+    /** Авторизационный токен пользователя. */
+    token?: string;
+    /** Данные пользователя. */
+    userData?: IUser;
+};
+
 export interface IServerAppChat {
     /** Сообщения в чате, сохраненные в буфере. */
     messages: IChatMessage[];
@@ -60,7 +71,7 @@ export interface IGameStatePlayer {
     y: number;
 }
 
-export interface IGameRoom {
+export interface IStateLobbyGameRoom {
     /** Идентификатор карты. */
     mapId: Enums.GameMaps;
     /** Открыта ли комната (можно ли занять игровой слот). */

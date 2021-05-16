@@ -1,15 +1,17 @@
 import { GeckosServer } from "@geckos.io/server";
-import { Server } from "socket.io";
+import io, { Server } from "socket.io";
 import { Socket } from "socket.io-client";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import AppSocketHandler from "./AppSocketHandler";
-import BattleTCPClientSocketHandler from "./BattleTCPClientSocketHandler";
 import LobbyTCPClientSocketHandler from "./LobbyTCPClientSocketHandler";
 import UDPClientSocketHandler from "./UDPClientSocketHandler";
 import Room from "../core/Room";
 
 export default class SocketManager {
+    public UDP_port: number;
+    public iceServers: any;
+
     constructor(
         public serverSocketTCP: Server,
         public serverSocketUDP: GeckosServer,
@@ -22,12 +24,36 @@ export default class SocketManager {
         );
     }
 
+    /**
+     * Находит сокет по идентификатору из списка подключенных по TCP.
+     * 
+     * @param socketId - идентификатор сокета
+     * @returns сокет
+     */
+    public getTCPSocketById(socketId: string): io.Socket {
+        return this.serverSocketTCP.of("battle").sockets.get(socketId);
+    }
+
+    /**
+     * Отправляет игровые слоты всем подключенным к комнате сокетам.
+     * 
+     * @param slots - игровые слоты
+     */
+    public broadcastGameRoomSlots(slots: Shared.Interfaces.IGameSlots) {
+        this.serverSocketTCP.of("battle").to("room").emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_ROOM_SLOTS),
+            slots
+        );
+    }
+
     public handle(UDP_port: number, iceServers: any) {
+        this.UDP_port = UDP_port;
+        this.iceServers = iceServers;
+
         const room = new Room(this, Shared.Enums.GameMaps.MAP_1);
 
         // соединение с центральным сервером
-        // игровой сервер - инициатор соединения (клиент)
-        AppSocketHandler.handle(this.clientSocketTCP, this);
+        AppSocketHandler.handle(this.clientSocketTCP, this, room);
 
         // Срабатывает при подключении пользователя по TCP из игрового лобби.
         this.serverSocketTCP.of("lobby").on("connection", socket => {
@@ -42,10 +68,8 @@ export default class SocketManager {
 
         // Срабатывает при подключении пользователя по TCP из игровой комнаты.
         this.serverSocketTCP.of("battle").on("connection", socket => {
-            const { token } = socket.handshake.query;
-
-            BattleTCPClientSocketHandler.handle(socket, this);
-
+            const { token } = socket.handshake.auth;
+            
             // если пользователь переподключился (например, вылетел)
             if (token as string in room.users) {
                 // TODO: доделать
@@ -54,7 +78,7 @@ export default class SocketManager {
 
             // если игровая комната закрыта
             if (room.isLocked) {
-                socket.disconnect(true);
+                socket.disconnect();
                 return;
             }
 
@@ -63,7 +87,6 @@ export default class SocketManager {
                 String(Shared.Enums.SocketChannels.APP_ON_GAME_AUTH),
                 {
                     token,
-                    // передаём, чтобы вызвать .disconnect() при неудаче
                     socketId: socket.id
                 }
             );
@@ -71,6 +94,12 @@ export default class SocketManager {
 
         // Срабатывает при подключении пользователя по UDP из игровой комнаты.
         this.serverSocketUDP.onConnection(socket => {
+            // если подключенный пользователь не в комнате - отключаем
+            if (!(socket.userData.token in room.users)) {
+                socket.close();
+                return;
+            }
+
             UDPClientSocketHandler.handle(socket, this);
         });
     }

@@ -22,14 +22,14 @@ export type LobbyServerType = {
 	TCP_port: number;
 	isConnected: boolean;
 	ping: number;
-	room: Shared.Interfaces.IGameRoom;
+	room: Shared.Interfaces.IStateLobbyGameRoom;
 };
 
 export type LobbySetServerRoomActionType = {
 	type: typeof ACTION_TYPE_LOBBY_SET_SERVER_ROOM;
 	payload: {
 		address: string;
-		room: Shared.Interfaces.IGameRoom;
+		room: Shared.Interfaces.IStateLobbyGameRoom;
 	};
 };
 

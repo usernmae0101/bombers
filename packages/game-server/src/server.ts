@@ -22,7 +22,7 @@ const iceServers = isDevMode ? [] : JSON.parse(process.env.GAME_SERVER_ICE_LIST)
 const clientSocketTCP = io(`http://${appServerAddress}:${appServerPort}/game-server`, {
     query: {
         secretKey: process.env.WEBSOCKET_SECRET_KEY,
-        gameServer: JSON.stringify({ 
+        gameServer: JSON.stringify({
             TCP_port: gameServerPortTCP,
             address: gameServerAddress,
         })
@@ -33,7 +33,10 @@ const clientSocketTCP = io(`http://${appServerAddress}:${appServerPort}/game-ser
 const serverSocketUDP = geckos({
     // https://ru.wikipedia.org/wiki/Traversal_Using_Relay_NAT
     iceServers,
-    ordered: false
+    ordered: false,
+    authorization: async (auth) => {
+        return { token: auth };
+    }
 });
 
 // TCP сервер (socket.io)
@@ -43,7 +46,7 @@ const serverSocketTCP = new Server(createServer(), {
         origin: "*",
         methods: ["GET", "POST"]
     }
-}); 
+});
 
 const socketManager = new SocketManager(
     serverSocketTCP,

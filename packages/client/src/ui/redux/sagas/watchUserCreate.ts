@@ -19,11 +19,11 @@ function* userCreateSocial(action: UserTypes.UserCreateSocialActionType) {
 		// Устанавливаем пользовательские данные.
 		yield put(UserActions.action_user_set_data({ nickname, rating, avatar }));
 		// Устанавливаем авторизационный токен.
-		yield put(UserActions.action_user_set_auth_token(token))
+		yield put(UserActions.action_user_set_auth_token(token));
 		// Меняем статус авторизации на успешный.
 		yield put(UserActions.action_user_set_auth(true));
 	} catch (err) {
-		// Сервер вернул код в диапазоне 300-599. Диспатчим код ошибки в стор.
+		// Сервер вернул код в диапазоне 300-599. Диспатчим сообщение об ошибке в стор.
 		yield put(UserActions.action_user_set_error_message(err.response.data.message));
 	}
 }
