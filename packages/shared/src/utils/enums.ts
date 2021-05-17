@@ -54,6 +54,10 @@ export enum SocketChannels {
      */
     GAME_ON_UPDATE_GAME_ROOM_SLOTS,
     /**
+     * Подтверждение готовности к игре.
+     */
+    GAME_OM_READY_TO_PLAY,
+    /**
      * Отправление данных пользователю при подключении к комнате.
      */
     GAME_ON_CONNECT_ROOM_DATA,

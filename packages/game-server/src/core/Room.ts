@@ -1,6 +1,8 @@
 import Game from "./Game";
 import * as Shared from "@bombers/shared/src/idnex";
 import SocketManager from "../sockets/SocketManager";
+import { createState } from "./game-state";
+import { createMapById } from "@bombers/shared/src/core";
 
 export default class Room {
     /** Общее количество игровых слотов. */
@@ -14,15 +16,19 @@ export default class Room {
     /** Игровые слоты. */
     private _slots: Shared.Interfaces.IGameSlots = Shared.Slots.slots;
     private _availableColors: Shared.Enums.PlayerColors[];
+    /** Количество готовых к игре пользователей. */
+    private _readyCounter: number = 0;
     private _users: Shared.Interfaces.IRoomUsers = {};
     private _socketManager: SocketManager;
+    private _updateInterval: NodeJS.Timeout = null;
     private _game: Game;
 
     constructor(socketManager: SocketManager, mapId: Shared.Enums.GameMaps) {
         this._socketManager = socketManager;
         this._mapId = mapId;
-        this._game = new Game(Shared.Core.createMapById(mapId));
-        this._setAvailableColors();
+        this._game = new Game;
+
+        this._configurate();
     }
 
     /**
@@ -45,13 +51,38 @@ export default class Room {
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
-    public onLeave() { }
+    public onLeave() { 
+        
+    }
 
-    public onReady() { }
+    /**
+     * Меняет статус готовности пользователя к игре.
+     * 
+     * @param token - токен пользователя
+     */
+    public onReady(token: string) {
+        this._slots[this._users[token].color].isReady = true;
 
-    private _startGame() { }
+        if (++this._readyCounter > 1 && !this._game.isStarted) 
+            this._startGame();
 
-    private _endGame() { }
+        // FIXME: передавать только изменение (статус готовности) 
+        this._socketManager.broadcastGameRoomSlots(this._slots);
+    }
+
+    private _startGame() { 
+        this._game.isStarted = true;
+
+        this._updateInterval = setInterval(() => {
+            this._game.update();
+        }, 1000 / Shared.Constants.GAME_SERVER_TICK_RATE);
+    }
+
+    private _endGame() { 
+        this._game.isStarted = false;
+
+        clearInterval(this._updateInterval);
+    }
 
     /**
      * Выбирает случайный цвет игрока из списка доступных. 
@@ -107,6 +138,13 @@ export default class Room {
     get users(): Shared.Interfaces.IRoomUsers {
         return this._users;
     } 
+
+    private _configurate() {
+        this._setAvailableColors();
+        this._game.state = createState(
+            createMapById(this._mapId)
+        );
+    }
 
     /**
      * Возвращает текущее состояние игровой комнаты для лобби.

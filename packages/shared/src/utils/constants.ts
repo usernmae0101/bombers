@@ -22,3 +22,8 @@ export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
  * Количество игровых тайлов на карте в высоту.
  */
 export const GAME_RESOLUTION_TILE_LENGTH_Y = 11;
+
+/**
+ * Частота обновления игрового состояния на сервере в секунду.
+ */
+export const GAME_SERVER_TICK_RATE = 45;

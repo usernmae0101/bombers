@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import { Socket } from "socket.io-client";
-import geckos from '@geckos.io/client'
+import geckos, { ClientChannel } from '@geckos.io/client'
 
 import * as Shared from "@bombers/shared/src/idnex";
 import Game from "../../game/Game";
@@ -31,7 +31,8 @@ export const startHandlingGameBattleSocket = (
     game: Game, 
     socket: Socket, 
     dispatch: Dispatch
-): () => NodeJS.Timeout => {
+): () => [NodeJS.Timeout, ClientChannel] => {
+    let gameSocketUDP: ClientChannel;
     let isConnected: boolean = false;
     let pingInterval: NodeJS.Timeout = null;
 
@@ -40,6 +41,7 @@ export const startHandlingGameBattleSocket = (
         String(Shared.Enums.SocketChannels.GAME_ON_CONNECT_ROOM_DATA),
         (data: IJoinRoomData) => {
             dispatch(GameActions.action_game_set_slots(data.slots));
+            dispatch(GameActions.action_game_set_color(data.color));
 
             // открываем UDP-соединение
             const UDPChann = geckos({
@@ -49,6 +51,7 @@ export const startHandlingGameBattleSocket = (
                 authorization: userToken
             });
 
+            game.color = data.color;
             game.UDPChann = UDPChann;
 
             UDPChann.onConnect(() => {
@@ -74,7 +77,15 @@ export const startHandlingGameBattleSocket = (
         }
     );
 
+    // обновляем игровые слоты
+    socket.on(
+        String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_ROOM_SLOTS),
+        (slots: Shared.Interfaces.IGameSlots) => {
+            dispatch(GameActions.action_game_set_slots(slots));
+        }
+    )
+
     return function() {
-        return pingInterval;
+        return [pingInterval, gameSocketUDP];
     }
 };

@@ -1,3 +1,5 @@
+import { Socket } from "socket.io-client";
+
 import * as Shared from "@bombers/shared/src/idnex";
 import * as GameTypes from "../types/game-types";
 
@@ -13,6 +15,20 @@ export const action_game_set_loading = (
 ): GameTypes.GameSetLoadingActionType => ({
     type: GameTypes.ACTION_TYPE_GAME_SET_LOADING,
     payload: isLoading
+});
+
+export const action_game_set_tcp_socket = (
+    socket: Socket
+): GameTypes.GameSetTCPSocketActionType => ({
+    type: GameTypes.ACTION_TYPE_GAME_SET_TCP_SOCKET,
+    payload: socket
+});
+
+export const action_game_set_color = (
+    color: Shared.Enums.PlayerColors
+): GameTypes.GameSetColorActionType => ({
+    type: GameTypes.ACTION_TYPE_GAME_SET_COLOR,
+    payload: color
 });
 
 export const action_game_set_bombs = (

@@ -4,7 +4,7 @@ import SocketManager from "./SocketManager";
 import * as Shared from "@bombers/shared/src/idnex";
 
 /**
- * Обрабатыает сообщения, подключенного к лобби, клиента по веб-сокету.
+ * Обрабатыает сообщения клиента по веб-сокету (подключенного к лобби).
  */
 export default class LobbyTCPClientSocketHandler {
     public static handle(socket: Socket, manager: SocketManager) {

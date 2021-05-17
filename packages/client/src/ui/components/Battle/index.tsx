@@ -12,6 +12,7 @@ import * as GameSelectors from "../../redux/selectors/game-selectors";
 import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import Game from "../../../game/Game";
 import { startHandlingGameBattleSocket } from "../../../helpers/handlers/socket-game-battle-handler";
+import * as GameActions from "../../redux/actions/game-actions";
 
 type BattlePropsType = {
     address: string;
@@ -32,20 +33,22 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
                 token: userToken
             }
         });
-        // замыкаем setInterval, чтобы перестать пинговать сервер при демонтировании компонета
-        const getPingInterval = startHandlingGameBattleSocket(
-            userToken,
-            address,
-            game,
-            gameSocketTCP,
-            dispatch
+
+        dispatch(GameActions.action_game_set_tcp_socket(gameSocketTCP));
+
+        const getPingIntervalAndUDPChann = startHandlingGameBattleSocket(
+            userToken, address, game, gameSocketTCP, dispatch
         );
 
         game.TCPChann = gameSocketTCP;
 
         return () => {
+            const [pingInterval, gameSocketUDP] = getPingIntervalAndUDPChann();
+            
             gameSocketTCP.disconnect();
-            clearInterval(getPingInterval());
+            gameSocketUDP.close();
+
+            clearInterval(pingInterval);
         };
     }, []);
 

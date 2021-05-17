@@ -44,7 +44,7 @@ export default class AppSocketHandler {
                         }
                     );
 
-                    BattleTCPClientSocketHandler.handle(authSocket, manager);
+                    BattleTCPClientSocketHandler.handle(authSocket, manager, gameRoom);
                 }
             }
         );

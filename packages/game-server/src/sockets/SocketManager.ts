@@ -24,28 +24,6 @@ export default class SocketManager {
         );
     }
 
-    /**
-     * Находит сокет по идентификатору из списка подключенных по TCP.
-     * 
-     * @param socketId - идентификатор сокета
-     * @returns сокет
-     */
-    public getTCPSocketById(socketId: string): io.Socket {
-        return this.serverSocketTCP.of("battle").sockets.get(socketId);
-    }
-
-    /**
-     * Отправляет игровые слоты всем подключенным к комнате сокетам.
-     * 
-     * @param slots - игровые слоты
-     */
-    public broadcastGameRoomSlots(slots: Shared.Interfaces.IGameSlots) {
-        this.serverSocketTCP.of("battle").to("room").emit(
-            String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_ROOM_SLOTS),
-            slots
-        );
-    }
-
     public handle(UDP_port: number, iceServers: any) {
         this.UDP_port = UDP_port;
         this.iceServers = iceServers;
@@ -102,5 +80,27 @@ export default class SocketManager {
 
             UDPClientSocketHandler.handle(socket, this);
         });
+    }
+    
+    /**
+     * Находит сокет по идентификатору из списка подключенных по TCP.
+     * 
+     * @param socketId - идентификатор сокета
+     * @returns сокет
+     */
+    public getTCPSocketById(socketId: string): io.Socket {
+        return this.serverSocketTCP.of("battle").sockets.get(socketId);
+    }
+
+    /**
+     * Отправляет игровые слоты всем подключенным к комнате сокетам.
+     * 
+     * @param slots - игровые слоты
+     */
+    public broadcastGameRoomSlots(slots: Shared.Interfaces.IGameSlots) {
+        this.serverSocketTCP.of("battle").to("room").emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_ROOM_SLOTS),
+            slots
+        );
     }
 }

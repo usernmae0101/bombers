@@ -5,12 +5,18 @@ import * as Shared from "@bombers/shared/src/idnex";
 import * as GameSelectors from "../../../redux/selectors/game-selectors";
 import styles from "./slots.module.scss";
 
-const Slot: React.FC<{ slot: Shared.Interfaces.IGameSlot; color: number; }> = ({ slot, color }) => {
+type SlotPropsType = { 
+    slot: Shared.Interfaces.IGameSlot; 
+    color: number; 
+};
+
+const Slot: React.FC<SlotPropsType> = ({ slot, color }) => {
     return (
         <li className={styles.slot} data-color={color}>
             <img src={slot.user.avatar} />
             <span>{slot.user.nickname}</span>
             <span>{slot.user.rating}</span>
+            <span>{!slot.isReady && "не"} готов</span>
         </li>
     );
 };
