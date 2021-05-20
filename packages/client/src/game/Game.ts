@@ -3,9 +3,11 @@ import { Socket } from "socket.io-client";
 import { Application } from "pixi.js";
 
 import * as Shared from "@bombers/shared/src/idnex";
+import Renderer from "./core/Renderer";
+import * as Containers from "./containers/";
 
 export default class Game {
-    private _ping: number;
+    private _tick: number = 0;
     /** Соединение с игровым сервером по TCP. */
     private _TCPChann: Socket;
     /** Соединение с игровым сервером по UDP. */
@@ -15,12 +17,22 @@ export default class Game {
     /** Игровое состояние. */
     private _state: Shared.Interfaces.IGameState;
     private _app: Application;
+    private _renderer: Renderer;
 
     constructor() {
         this._app = new Application({
             width: Shared.Common.calculateCanvasWidth(),
-            height: Shared.Common.calculateCanvasHeight()
+            height: Shared.Common.calculateCanvasHeight(),
+            backgroundAlpha: 0
         });
+
+        this._renderer = new Renderer([
+            new Containers.BoxesContainer,
+            new Containers.RocksContainer
+        ]);
+
+        // подгружаем игровые ресурсы
+        this._app.loader.add([Shared.Constants.GAME_RESOURCES_IMAGE_TILESET]);
     }
 
     set TCPChann(value: Socket) {
@@ -45,15 +57,19 @@ export default class Game {
         this._color = value;
     }
 
-    set ping(value: number) {
-        this._ping = value;
-    }
-
     public start() {
-        alert("started")
+        document.getElementById(Shared.Constants.GAME_CANVAS_VIEW_ID).appendChild(this._app.view);
+
+        this._renderer.init(this._app.stage);
+
+        setInterval(() => this._update(), 1000 / Shared.Constants.GAME_CLIENT_UPDATE_RATE);
+        
+        this._app.ticker.add(() => {
+            this._renderer.render(this._state);
+        });
     }
 
     private _update() {
-        
+        this._tick++;
     }
 }

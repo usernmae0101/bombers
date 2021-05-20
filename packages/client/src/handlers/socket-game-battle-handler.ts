@@ -74,7 +74,6 @@ export const startHandlingGameBattleSocket = (
         () => {
             const latency = Date.now() - pingTimestamp;
 
-            game.ping = latency;
             dispatch(GameActions.action_game_set_ping(latency));
 
             if (!isConnected) {

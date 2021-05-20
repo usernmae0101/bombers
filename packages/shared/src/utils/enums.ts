@@ -141,7 +141,9 @@ export enum MoveDirections {
  * Идентификаторы игровых карт.
  */
 export enum GameMaps {
-    MAP_1
+    MAP_1,
+    MAP_2,
+    MAP_3
 }
 
 /**
@@ -149,5 +151,15 @@ export enum GameMaps {
  */
 export enum EntityNumbers {
     BOX,
-    ROCK
+    ROCK,
+    PLAYER
+}
+
+/**
+ * Слои отрисовки контейнеров.
+ */
+export enum ContainerLayers {
+    BOXES,
+    ROCKS,
+    PLAYERS
 }

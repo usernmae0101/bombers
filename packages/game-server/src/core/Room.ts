@@ -37,7 +37,7 @@ export default class Room {
      * @param token - авторизационный токен пользователя
      * @param userData - данные пользователя
      */
-    public onJoin(token: string, userData: Shared.Interfaces.IUser) { 
+    public onJoin(token: string, userData: Shared.Interfaces.IUser) {
         const color = this._chooseRandomColor();
 
         this._users[token] = { color };
@@ -51,8 +51,8 @@ export default class Room {
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
-    public onLeave() { 
-        
+    public onLeave() {
+
     }
 
     /**
@@ -63,17 +63,17 @@ export default class Room {
     public onReady(token: string) {
         this._slots[this._users[token].color].isReady = true;
 
-        if (++this._readyCounter > 1 && !this._game.isStarted) 
+        if (++this._readyCounter > 1 && !this._game.isStarted)
             this._startGame();
 
         // FIXME: передавать только изменение (статус готовности) 
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
-	/**
-	 * Запускает игру, начинает обновлять игровое состояние.
-	 */
-    private _startGame() { 
+    /**
+     * Запускает игру, начинает обновлять игровое состояние.
+     */
+    private _startGame() {
         this._game.isStarted = true;
 
         this._updateInterval = setInterval(() => {
@@ -85,10 +85,10 @@ export default class Room {
         );
     }
 
-	/**
-	 * Останавливает игру, перестаёт обновлять игровое состояние.
-	 */
-    private _endGame() { 
+    /**
+     * Останавливает игру, перестаёт обновлять игровое состояние.
+     */
+    private _endGame() {
         this._game.isStarted = false;
 
         clearInterval(this._updateInterval);
@@ -151,7 +151,7 @@ export default class Room {
      */
     get users(): Shared.Interfaces.IRoomUsers {
         return this._users;
-    } 
+    }
 
     get isGameStarted(): boolean {
         return this._game.isStarted;
@@ -168,6 +168,7 @@ export default class Room {
      * Возвращает текущее состояние игровой комнаты для лобби.
      */
     get state(): Shared.Interfaces.IStateLobbyGameRoom {
+
         return {
             totalSlots: this._totalSlots,
             activeSlots: this._activeSlots,

@@ -42,3 +42,8 @@ export const GAME_CLIENT_UPDATE_RATE = 45;
  * Абсолютный путь (от index.html) к изображению травы.
  */
 export const GAME_RESOURCES_IMAGE_GRASS = "/images/grass.png";
+
+/**
+ * Абсолютный путь (от index.html) к изображению набора тайлов.
+ */
+export const GAME_RESOURCES_IMAGE_TILESET = "/images/tilemap_72x72.png";

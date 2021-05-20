@@ -13,6 +13,7 @@ import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import Game from "../../../game/Game";
 import { startHandlingGameBattleSocket } from "../../../handlers/socket-game-battle-handler";
 import * as GameActions from "../../redux/actions/game-actions";
+import Keyboard from "../../../game/core/Keyboard";
 
 type BattlePropsType = {
     address: string;
@@ -26,6 +27,8 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
     const userToken = useSelector(UserSelectors.select_user_auth_token);
 
     React.useEffect(() => {
+        Keyboard.subscribe();
+
         const game = new Game;
    
         const gameSocketTCP = io(`http://${address}:${port}/battle`, {
@@ -43,6 +46,8 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
         game.TCPChann = gameSocketTCP;
 
         return () => {
+            Keyboard.unsubscribe();
+
             const [pingInterval, gameSocketUDP] = getPingIntervalAndUDPChann();
             
             gameSocketTCP.disconnect();
