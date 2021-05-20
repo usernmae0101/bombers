@@ -8,7 +8,7 @@ import store from "./redux/store";
 import * as UserSelectors from "./redux/selectors/user-selecrots";
 import * as UserActions from "./redux/actions/user-actions";
 import * as Shared from "@bombers/shared/src/idnex";
-import { startHandlingAppSocket } from "../helpers/handlers/socket-app-handler";
+import { startHandlingAppSocket } from "../handlers/socket-app-handler";
 import Loader from "./components/Loader";
 
 const Main = () => {

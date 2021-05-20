@@ -11,7 +11,7 @@ import HUD from "./HUD";
 import * as GameSelectors from "../../redux/selectors/game-selectors";
 import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import Game from "../../../game/Game";
-import { startHandlingGameBattleSocket } from "../../../helpers/handlers/socket-game-battle-handler";
+import { startHandlingGameBattleSocket } from "../../../handlers/socket-game-battle-handler";
 import * as GameActions from "../../redux/actions/game-actions";
 
 type BattlePropsType = {

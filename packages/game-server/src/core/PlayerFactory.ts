@@ -3,17 +3,17 @@ import { createPlayer } from "./game-state";
 
 export default class PlayerFactory {
     /**
-     * Создаёт игрока, задавая начальные координаты на карте.
+     * Создаёт игрока, задавая начальные координаты на канвасе.
      * 
      * @param color - цвет игрока
      * @returns игрок
      */
     public static create(color: Shared.Enums.PlayerColors): Shared.Interfaces.IGameStatePlayer {
         const tileSize = Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-        // ширина карты в пикселях
-        const mapWidth = Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_X  * tileSize;
-        // высота карты в пикселях
-        const mapHeight = Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_Y  * tileSize;
+        // ширина канваса в пикселях
+        const mapWidth = Shared.Common.calculateCanvasWidth();
+        // высота канваса в пикселях
+        const mapHeight = Shared.Common.calculateCanvasHeight();
 
         switch (color) {
             case Shared.Enums.PlayerColors.BLUE:

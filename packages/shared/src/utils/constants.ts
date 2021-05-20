@@ -27,3 +27,18 @@ export const GAME_RESOLUTION_TILE_LENGTH_Y = 11;
  * Частота обновления игрового состояния на сервере в секунду.
  */
 export const GAME_SERVER_TICK_RATE = 45;
+
+/**
+ * Идентификатор html-элемента для канваса.
+ */
+export const GAME_CANVAS_VIEW_ID = "cnv";
+
+/**
+ * Частота бновления локального сотояния и отправки клавиш на сервер в секунду.
+ */
+export const GAME_CLIENT_UPDATE_RATE = 45;
+
+/**
+ * Абсолютный путь (от index.html) к изображению травы.
+ */
+export const GAME_RESOURCES_IMAGE_GRASS = "/images/grass.png";

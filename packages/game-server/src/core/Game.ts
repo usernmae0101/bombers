@@ -1,5 +1,4 @@
 import * as Shared from "@bombers/shared/src/idnex";
-import { createState } from "./game-state";
 
 export default class Game {
     /** Игровое состояние. */

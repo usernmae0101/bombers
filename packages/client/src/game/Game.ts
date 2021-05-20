@@ -1,5 +1,6 @@
 import { ClientChannel } from "@geckos.io/client";
 import { Socket } from "socket.io-client";
+import { Application } from "pixi.js";
 
 import * as Shared from "@bombers/shared/src/idnex";
 
@@ -11,16 +12,36 @@ export default class Game {
     private _UDPChann: ClientChannel;
     /** Цвет локального игрока. */
     private _color: Shared.Enums.PlayerColors;
+    /** Игровое состояние. */
+    private _state: Shared.Interfaces.IGameState;
+    private _app: Application;
 
-    set TCPChann (value: Socket) {
+    constructor() {
+        this._app = new Application({
+            width: Shared.Common.calculateCanvasWidth(),
+            height: Shared.Common.calculateCanvasHeight()
+        });
+    }
+
+    set TCPChann(value: Socket) {
         this._TCPChann = value;
     }
 
-    set UDPChann (value: ClientChannel) {
+    set UDPChann(value: ClientChannel) {
         this._UDPChann = value;
     }
 
-    set color (value: Shared.Enums.PlayerColors) {
+    /**
+     * Устанавлвает игровое состояние.
+     */
+    set state(value: Shared.Interfaces.IGameState) {
+        this._state = value;
+    }
+
+    /**
+     * Устанавливает цвет локального игрока.
+     */
+    set color(value: Shared.Enums.PlayerColors) {
         this._color = value;
     }
 
@@ -28,5 +49,11 @@ export default class Game {
         this._ping = value;
     }
 
-    public start() {}
+    public start() {
+        alert("started")
+    }
+
+    private _update() {
+        
+    }
 }

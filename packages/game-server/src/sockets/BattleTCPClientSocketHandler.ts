@@ -19,7 +19,7 @@ export default class BattleTCPClientSocketHandler {
 
         // принимаем готовность к игре
         socket.on(
-            String(Shared.Enums.SocketChannels.GAME_OM_READY_TO_PLAY),
+            String(Shared.Enums.SocketChannels.GAME_ON_READY_TO_PLAY),
             () => gameRoom.onReady(token)
         )
     }

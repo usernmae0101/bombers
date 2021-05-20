@@ -40,7 +40,9 @@ export default class AppSocketHandler {
                             color: gameRoom.users[responseData.token].color,
                             iceServers: manager.iceServers,
                             UDP_port: manager.UDP_port,
-                            slots: gameRoom.slots
+                            slots: gameRoom.slots,
+                            gameState: gameRoom.gameState,
+                            isGameStarted: gameRoom.isGameStarted
                         }
                     );
 

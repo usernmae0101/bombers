@@ -3,8 +3,8 @@ import { Socket } from "socket.io-client";
 import geckos, { ClientChannel } from '@geckos.io/client'
 
 import * as Shared from "@bombers/shared/src/idnex";
-import Game from "../../game/Game";
-import * as GameActions from "../../ui/redux/actions/game-actions";
+import Game from "../game/Game";
+import * as GameActions from "../ui/redux/actions/game-actions";
 
 interface IJoinRoomData {
     /** Цвет игрока. */
@@ -15,6 +15,10 @@ interface IJoinRoomData {
     iceServers: any[];
     /** Игровые слоты. */
     slots: Shared.Interfaces.IGameSlots;
+    /** Игровое состояние. */
+    gameState: Shared.Interfaces.IGameState;
+    /** Статус игры: начата или нет. */
+    isGameStarted: boolean;
 }
 
 let pingTimestamp: number = null;
@@ -53,6 +57,9 @@ export const startHandlingGameBattleSocket = (
 
             game.color = data.color;
             game.UDPChann = UDPChann;
+            game.state = data.gameState;
+
+            data.isGameStarted && game.start();
 
             UDPChann.onConnect(() => {
                 ping(socket);
@@ -83,6 +90,12 @@ export const startHandlingGameBattleSocket = (
         (slots: Shared.Interfaces.IGameSlots) => {
             dispatch(GameActions.action_game_set_slots(slots));
         }
+    )
+
+    // запускаем игру
+    socket.on(
+        String(Shared.Enums.SocketChannels.GAME_ON_START),
+        () => game.start()
     )
 
     return function() {

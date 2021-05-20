@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 
 import { LobbyServerType } from "../../../redux/types/lobby-types";
 import Room from "./Room";
-import { startHandlingGameLobbySocket } from "../../../../helpers/handlers/socket-game-lobby-handler";
+import { startHandlingGameLobbySocket } from "../../../../handlers/socket-game-lobby-handler";
 
 const Server: React.FC<LobbyServerType> = (props) => {
     const dispatch = useDispatch();
@@ -25,12 +25,13 @@ const Server: React.FC<LobbyServerType> = (props) => {
                 {
                     !props.isConnected ? <div>connecting..</div> :
                         <div>
+                            <span>{props.address} | </span>
                             <Room 
                                 address={props.address} 
                                 port={props.TCP_port} 
                                 {...props.room}
                             />
-                            <span>{props.ping}</span>
+                            <span> | {props.ping}</span>
                         </div>
                 }
             </div>

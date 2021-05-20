@@ -56,7 +56,7 @@ export enum SocketChannels {
     /**
      * Подтверждение готовности к игре.
      */
-    GAME_OM_READY_TO_PLAY,
+    GAME_ON_READY_TO_PLAY,
     /**
      * Отправление данных пользователю при подключении к комнате.
      */
@@ -65,6 +65,14 @@ export enum SocketChannels {
      * Получение состояния игровой комнаты на сервере.
      */
     GAME_ON_SET_ROOM_STATE,
+    /**
+     * Начало игры.
+     */
+    GAME_ON_START,
+    /**
+     * Конец игры.
+     */
+    GAME_ON_END,
     /**
      * Обновление количества подключенных пользователей.
      */
@@ -134,4 +142,12 @@ export enum MoveDirections {
  */
 export enum GameMaps {
     MAP_1
+}
+
+/**
+ * Идентификаторы игровых сущностей.
+ */
+export enum EntityNumbers {
+    BOX,
+    ROCK
 }

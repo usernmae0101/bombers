@@ -70,18 +70,32 @@ export default class Room {
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
+	/**
+	 * Запускает игру, начинает обновлять игровое состояние.
+	 */
     private _startGame() { 
         this._game.isStarted = true;
 
         this._updateInterval = setInterval(() => {
             this._game.update();
         }, 1000 / Shared.Constants.GAME_SERVER_TICK_RATE);
+
+        this._socketManager.serverSocketTCP.of("battle").to("room").emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_START)
+        );
     }
 
+	/**
+	 * Останавливает игру, перестаёт обновлять игровое состояние.
+	 */
     private _endGame() { 
         this._game.isStarted = false;
 
         clearInterval(this._updateInterval);
+
+        this._socketManager.serverSocketTCP.of("battle").to("room").emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_END)
+        );
     }
 
     /**
@@ -138,6 +152,10 @@ export default class Room {
     get users(): Shared.Interfaces.IRoomUsers {
         return this._users;
     } 
+
+    get isGameStarted(): boolean {
+        return this._game.isStarted;
+    }
 
     private _configurate() {
         this._setAvailableColors();

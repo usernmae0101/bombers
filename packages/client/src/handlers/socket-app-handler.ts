@@ -2,10 +2,10 @@ import { Dispatch } from "redux";
 import { Socket } from "socket.io-client";
 
 import * as Shared from "@bombers/shared/src/idnex";
-import * as DashboardActions from "../../ui/redux/actions/dashboard-actions";
-import * as ChatActions from "../../ui/redux/actions/chat-actions";
-import * as LobbyActions from "../../ui/redux/actions/lobby-actions";
-import * as LobbyTypes from "../../ui/redux/types/lobby-types";
+import * as DashboardActions from "../ui/redux/actions/dashboard-actions";
+import * as ChatActions from "../ui/redux/actions/chat-actions";
+import * as LobbyActions from "../ui/redux/actions/lobby-actions";
+import * as LobbyTypes from "../ui/redux/types/lobby-types";
 
 type InitialStateType = {
 	chat: Shared.Interfaces.IServerAppChat;

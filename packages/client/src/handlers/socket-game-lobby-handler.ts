@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import { Socket } from "socket.io-client";
 
-import * as LobbyActions from "../../ui/redux/actions/lobby-actions";
+import * as LobbyActions from "../ui/redux/actions/lobby-actions";
 import * as Shared from "@bombers/shared/src/idnex";
 
 export const startHandlingGameLobbySocket = (address: string, socket: Socket, dispatch: Dispatch) => {
