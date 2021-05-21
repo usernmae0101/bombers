@@ -1,6 +1,3 @@
-/**
- * Идентификаторы клавиш, которые регистрируются во время игры.
- */
 export enum InputKeys {
     /** 
      * "W", 
@@ -37,9 +34,6 @@ export enum InputKeys {
     INPUT_KEY_SPACE
 }
 
-/** 
- * Идентификаторы каналов веб-сокета. 
- */
 export enum SocketChannels {
     /**
      * Получение сетевой задержки между клиентом и игровым сервером.
@@ -107,9 +101,6 @@ export enum SocketChannels {
     APP_ON_ADD_CHAT_MESSAGE
 }
 
-/**
- * Возвращаемые коды от API-сервера.
- */
 export enum ApiResponseCodes {
     /** 
      * Подключенный через социальную сеть пользователь не был найден в базе банных.
@@ -117,9 +108,6 @@ export enum ApiResponseCodes {
     USER_NOT_EXISTS_SOCIAL
 }
 
-/**
- * Цвета игроков.
- */
 export enum PlayerColors {
     RED,
     PURPLE,
@@ -127,9 +115,6 @@ export enum PlayerColors {
     YELLOW
 }
 
-/**
- * Направления движения игрока.
- */
 export enum MoveDirections {
     UP,
     DOWN,
@@ -137,27 +122,37 @@ export enum MoveDirections {
     RIGHT
 }
 
-/**
- * Идентификаторы игровых карт.
- */
 export enum GameMaps {
     MAP_1,
     MAP_2,
     MAP_3
 }
 
-/**
- * Идентификаторы игровых сущностей.
- */
 export enum EntityNumbers {
+    GRASS,
+    CRATER,
+    PLAYER,
     BOX,
     ROCK,
-    PLAYER
+    BOMB_RED,
+    BOMB_BLUE,
+    BOMB_YELLOW,
+    BOMB_PURPLE,
+    FIRE_CENTER,
+    FIRE_LEFT,
+    FIRE_RIGHT,
+    FIRE_MIDDLE_Y,
+    FIRE_MIDDLE_X,
+    FIRE_EDGE,
+    FIRE_TOP,
+    FIRE_BOTTOM,
+    ITEM_HEALTH,
+    ITEM_RADIUS,
+    ITEM_BOMB,
+    ITEM_SPEED,
+    ARROW
 }
 
-/**
- * Слои отрисовки контейнеров.
- */
 export enum ContainerLayers {
     BOXES,
     ROCKS,

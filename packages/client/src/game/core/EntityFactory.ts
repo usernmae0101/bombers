@@ -1,16 +1,22 @@
 import * as Shared from "@bombers/shared/src/idnex";
-import BoxEntity from "../entities/BoxEntity";
-import RockEntity from "../entities/RockEntity";
+import * as Entities from "../entities/";
+import { getEntityFrame } from "./frames";
 
 export default class EntityFactory {
+    /**
+     * Создаёт игровую сущность по переданному идентификатору.
+     * 
+     * @param entityId - идентификатор игровой сущности
+     * @returns игровая сущность
+     */
     public static create(entityId: Shared.Enums.EntityNumbers): any {
-        const frameX = 15, frameY = 20;
+        const { x: frameX, y: frameY } = getEntityFrame(entityId);
 
         switch (entityId) {
             case Shared.Enums.EntityNumbers.BOX:
-                return new BoxEntity(frameX, frameY);
+                return new Entities.BoxEntity(frameX, frameY);
             case Shared.Enums.EntityNumbers.ROCK:
-                return new RockEntity(frameX, frameY);
+                return new Entities.RockEntity(frameX, frameY);
         }
     }
 }

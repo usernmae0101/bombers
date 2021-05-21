@@ -17,17 +17,17 @@ export const createMapById = (mapId: Enums.GameMaps): number[][][] => {
     switch (mapId) {
         case Enums.GameMaps.MAP_1:
             return [
-                [E], [E], [E], [R], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [B], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [B], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [E], [E], [R], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
-                [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E], [E],
+                [E, E, E, R, E, E, E, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, B, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, B, E, E, E, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, E, E, R, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E],
+                [E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E],
             ];
     }
 }

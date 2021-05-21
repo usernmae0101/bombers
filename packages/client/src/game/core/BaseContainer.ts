@@ -4,6 +4,8 @@ import * as Shared from "@bombers/shared/src/idnex";
 import BaseEntity from "./BaseEntity";
 import EntityFactory from "./EntityFactory";
 
+// FIXME: переписать. код плохо написан (сложно, неправильно). упростить
+
 export default abstract class BaseContainer<T extends BaseEntity> extends Container {
     protected entities: T[][] = [];
     protected current_entity_id: number[][] = [];
@@ -81,7 +83,8 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
 
                 if (entity_id !== undefined)
                     this.tryToAddEntity(entity_id, row, col);
-                else this.tryToRemoveEntity(row, col);
+                else 
+                	this.tryToRemoveEntity(row, col);
             }
         }
     }
