@@ -1,4 +1,5 @@
 import BoxEntity from "./BoxEntity";
+import PlayerEntity from "./PlayerEntity";
 import RockEntity from "./RockEntity";
 
-export { BoxEntity, RockEntity };
+export { BoxEntity, RockEntity, PlayerEntity };

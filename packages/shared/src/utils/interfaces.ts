@@ -49,9 +49,12 @@ export interface IGameState {
     /** Игровая карта. */
     map: number[][][];
     /** Игроки. */
-    plyaers: {
-        [color: number]: IGameStatePlayer;
-    }
+    players: IGameStatePlayers;
+}
+
+export interface IGameStatePlayers {
+    /** Игроки. Ключ игрока - цвет. */
+    [color: number]: IGameStatePlayer;
 }
 
 export interface IGameStatePlayer {
