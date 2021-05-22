@@ -64,6 +64,22 @@ export interface IKeysData {
     keys: Enums.InputKeys[];
 }
 
+export interface INotReliableStateChanges {
+    [color: string]: {
+        /** Позиция игрока по X на карте. */
+        x?: number;
+        /** Позиция игрока по Y на карте. */
+        y?: number;
+    }
+}
+
+export interface IStateChanges {
+    /** Надёжные изменения, передаются на TCP. */
+    reliable: any[];
+    /** Ненадёжные изменения, передаются по UDP. */
+    notReliable: INotReliableStateChanges;
+}
+
 export interface IGameStatePlayer {
     /** Здоровье игрока. */
     health: number;

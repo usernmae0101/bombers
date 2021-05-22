@@ -23,6 +23,8 @@ export default class Room {
     private _updateInterval: NodeJS.Timeout = null;
     private _broadcastInterval: NodeJS.Timeout = null;
     private _game: Game;
+    private _stateChanges: Shared.Interfaces.IStateChanges;
+    private _lastChangedStateKey: string;
 
     constructor(socketManager: SocketManager, mapId: Shared.Enums.GameMaps) {
         this._socketManager = socketManager;
@@ -43,11 +45,11 @@ export default class Room {
 
         this._users[token] = { color };
         this._slots[color].user = userData;
-        this._game.addPlayerToState(color); 
+        this._game.addPlayerToState(color);
         ++this._activeSlots;
-        
+
         this._game.keysBuffer[color] = [];
-        
+
         if (this._activeSlots === this._totalSlots)
             this._isLocked = true;
 
@@ -55,9 +57,11 @@ export default class Room {
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
-    public onLeave() {
+    // TODO:
+    public onLeave() { }
 
-    }
+    // TODO:
+    public onReconnect() { }
 
     /**
      * Добавляет присланные нажатые клавиши и номер 
@@ -67,7 +71,7 @@ export default class Room {
      * @param keysData - нажатые клавиши и номер такта
      */
     public onKeys(token: string, keysData: Shared.Interfaces.IKeysData) {
-        const color = this._users[token].color;    
+        const color = this._users[token].color;
 
         // FIXME: ограничить буфер
         this._game.keysBuffer[color].push(keysData);
@@ -96,12 +100,16 @@ export default class Room {
 
         // широковещание игрового состояния
         this._broadcastInterval = setInterval(() => {
-            this._socketManager.broadcastStateChanges(this._game.state);
+            this._socketManager.broadcastStateChanges(this._stateChanges);
+            this._resetStateChanges();
         }, 1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE);
 
         // обновление игрового состояния
         this._updateInterval = setInterval(() => {
-            this._game.update();
+            if (!this._game.isStarted)
+                this._endGame();
+            else
+                this._game.update();
         }, 1000 / Shared.Constants.GAME_SERVER_TICK_RATE);
 
         this._socketManager.serverSocketTCP.of("battle").to("room").emit(
@@ -113,8 +121,6 @@ export default class Room {
      * Останавливает игру, перестаёт обновлять игровое состояние.
      */
     private _endGame() {
-        this._game.isStarted = false;
-
         clearInterval(this._broadcastInterval);
         clearInterval(this._updateInterval);
 
@@ -136,6 +142,64 @@ export default class Room {
         this._availableColors.splice(index, 1);
 
         return color;
+    }
+
+    private _resetStateChanges() {
+        this._stateChanges = { reliable: [], notReliable: {} };
+    }
+
+    private _configurate() {
+        this._setAvailableColors();
+        this._resetStateChanges();
+
+        const state = createState(
+            createMapById(this._mapId)
+        );
+
+        // вешаем Proxy на state, чтобы отлавливать изменения
+        const stateHandler: ProxyHandler<any> = {
+            get: (target, key) => {
+                if (typeof target[key] === "object" && target[key] !== null) {
+                    // записываем ключ, чтобы понять, что поменялось
+                    this._lastChangedStateKey = key as string;
+
+                    return new Proxy(target[key], stateHandler);
+                }
+
+                return target[key];
+            },
+            set: (target, key, value, receiver) => {
+                // массив, значит карта - передаём надёжно
+                if (Array.isArray(target)) {
+                    this._stateChanges.reliable.push(
+                        {
+                            row: this._lastChangedStateKey,
+                            col: key,
+                            entities: value
+                        }
+                    );
+                }
+                // поменяли координаты игрока - передаём ненадёжно
+                else if (["x", "y"].includes(key as string)) {
+                    this._stateChanges.notReliable[this._lastChangedStateKey] = { [key]: value };
+                }
+                // какие-то другие хар-ки игрока - передаём надёжно
+                else {
+                    this._stateChanges.reliable.push(
+                        {
+                            color: this._lastChangedStateKey,
+                            key,
+                            value
+                        }
+                    );
+                }
+
+                return Reflect.set(target, key, value, receiver);
+            }
+        }
+
+        this._game.state = state;
+        this._game.proxyState = new Proxy<Shared.Interfaces.IGameState>(state, stateHandler);
     }
 
     /**
@@ -180,13 +244,6 @@ export default class Room {
 
     get isGameStarted(): boolean {
         return this._game.isStarted;
-    }
-
-    private _configurate() {
-        this._setAvailableColors();
-        this._game.state = createState(
-            createMapById(this._mapId)
-        );
     }
 
     /**

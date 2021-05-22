@@ -47,7 +47,7 @@ export default class SocketManager {
         // Срабатывает при подключении пользователя по TCP из игровой комнаты.
         this.serverSocketTCP.of("battle").on("connection", socket => {
             const { token } = socket.handshake.auth;
-            
+
             // если пользователь переподключился (например, вылетел)
             if (token as string in room.users) {
                 // TODO: доделать
@@ -81,7 +81,7 @@ export default class SocketManager {
             UDPClientSocketHandler.handle(socket, room);
         });
     }
-    
+
     /**
      * Находит сокет по идентификатору из списка подключенных по TCP.
      * 
@@ -105,15 +105,25 @@ export default class SocketManager {
     }
 
     /**
-     * Отправляет игровое состояние всем подключенным сокетам по UDP.
+     * Отправляет изменения игрового состояния.
      * 
-     * @param state - игровое состояние
+     * @param stateChanges - изменения в игровом состоянии
      */
-    public broadcastStateChanges(state: Shared.Interfaces.IGameState) {
-        // FIXME: отправлять только изменения
-        this.serverSocketUDP.emit(
-            String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-            state
-        )
+    public broadcastStateChanges(stateChanges: Shared.Interfaces.IStateChanges) {
+        // если есть изменения для UDP
+        if (Object.keys(stateChanges.notReliable).length) {
+            this.serverSocketUDP.emit(
+                String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
+                stateChanges.notReliable
+            );
+        }
+
+        // если есть изменения для TCP
+        if (stateChanges.reliable.length) {
+            this.serverSocketTCP.of("battle").to("room").emit(
+                String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
+                stateChanges.reliable
+            );
+        }
     }
 }

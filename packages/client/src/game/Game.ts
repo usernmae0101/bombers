@@ -6,6 +6,17 @@ import Renderer from "./core/Renderer";
 import * as Containers from "./containers/";
 import Keyboard from "./core/Keyboard";
 
+interface IPredcionBuffer {
+    [tick: number]: {
+        /** Нажатые клавиши. */
+        keys: number[];
+        /** Позиция на канвасе по X. */
+        x: number;
+        /** Позиция на канвасе по Y. */
+        y: number;
+    }
+}
+
 export default class Game {
     private _tick: number = 0;
     /** Соединение с игровым сервером по UDP. */
@@ -15,6 +26,7 @@ export default class Game {
     /** Игровое состояние. */
     private _state: Shared.Interfaces.IGameState;
     private _app: Application;
+    private _predictionBuffer: IPredcionBuffer = {};
     private _keys: Shared.Enums.InputKeys[] = [];
     private _renderer: Renderer;
 
@@ -38,7 +50,7 @@ export default class Game {
     set UDPChann(value: ClientChannel) {
         this._UDPChann = value;
     }
-    
+
     set state(value: Shared.Interfaces.IGameState) {
         this._state = value;
     }
@@ -89,8 +101,37 @@ export default class Game {
         }
     }
 
-    private _updateLocalPlayer() {
+    // TODO:
+    public onReliableStateChanges(changes: any[]) {
 
+    }
+
+    // TODO:
+    public onNotReliableStateChanges(changes: Shared.Interfaces.INotReliableStateChanges) {
+        
+    }
+
+    // TODO:
+    private _serverReconciliation() {
+        
+    }
+
+    private _updateLocalPlayer() {
+        const player = this._state.players[this._color];
+
+        const [isMove, direction] = Shared.Core.tryToMovePlayer(this._keys);
+        if (isMove) {
+            Shared.Core.movePlayer(player, direction);
+            // check overlap
+            // check collision
+
+            // FIXME: ограничить буфер
+            this._predictionBuffer[this._tick] = {
+                keys: this._keys,
+                x: player.x,
+                y: player.y
+            };
+        }
     }
 
     public start() {
@@ -100,7 +141,7 @@ export default class Game {
 
         // считываение клавиш
         setInterval(() => this._update(), 1000 / Shared.Constants.GAME_CLIENT_UPDATE_RATE);
-        
+
         // отрисовака
         this._app.ticker.add(() => {
             this._renderer.render(this._state);

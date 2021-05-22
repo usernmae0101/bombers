@@ -65,14 +65,22 @@ export const startHandlingGameBattleSocket = (
                 ping(socket);
                 pingInterval = setInterval(ping, 5000, socket);
 
-                // FIXME: принимать только изменения
+                // получаем изменения игрового состояния
                 UDPChann.on(
                     String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                    (state: Shared.Interfaces.IGameState) => { game.state = state; }
+                    (changes: Shared.Interfaces.INotReliableStateChanges) => {
+                        game.onNotReliableStateChanges(changes);
+                    }
                 )
             });
         }
     );
+    
+    // получаем изменения игрового состояния
+    socket.on(
+        String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
+        (changes: any[]) => game.onReliableStateChanges(changes)
+    )
 
     // высчитываем сетевую задержку
     socket.on(

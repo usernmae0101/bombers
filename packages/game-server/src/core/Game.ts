@@ -6,14 +6,15 @@ export default class Game {
     private _state: Shared.Interfaces.IGameState;
     /** Cтатус игры: начата или нет. */
     private _isStarted: boolean = false;
+    private _proxyState: Shared.Interfaces.IGameState;
     public keysBuffer: { [color: number]: Shared.Interfaces.IKeysData[] } = {};
 
     private _updatePlayers() {
-        for (let color in this.state.players) {
+        for (let color in this._proxyState.players) {
             if (this.keysBuffer[color].length) {
                 const { keys, tick } = this.keysBuffer[color].shift();
 
-                const player = this._state.players[color];
+                const player = this._proxyState.players[color];
 
                 const [isMove, direction] = Shared.Core.tryToMovePlayer(keys);
                 if (isMove) {
@@ -24,15 +25,15 @@ export default class Game {
 
                 const isPlace = Shared.Core.tryToPlaceBomb(keys, player.bombs);
                 if (isPlace)
-                    Shared.Core.placeBomb(this._state, +color);
+                    Shared.Core.placeBomb(this._proxyState, +color);
 
-                this._state.players[color].tick = tick;
+                this._proxyState.players[color].tick = tick;
             }
         }
     }
 
     public addPlayerToState(color: number) {
-        this.state.players[color] = PlayerFactory.create(color); 
+        this._proxyState.players[color] = PlayerFactory.create(color); 
     }
 
     /**
@@ -61,6 +62,10 @@ export default class Game {
      */
     get isStarted(): boolean {
         return this._isStarted;
+    }
+
+    set proxyState(value: Shared.Interfaces.IGameState) {
+        this._proxyState = value;
     }
 
     /**
