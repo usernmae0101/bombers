@@ -57,6 +57,13 @@ export interface IGameStatePlayers {
     [color: number]: IGameStatePlayer;
 }
 
+export interface IKeysData {
+    /** Номер игрового такта. */
+    tick: number;
+    /** Нажатые клавиши. */
+    keys: Enums.InputKeys[];
+}
+
 export interface IGameStatePlayer {
     /** Здоровье игрока. */
     health: number;
@@ -72,6 +79,8 @@ export interface IGameStatePlayer {
     x: number;
     /** Позиция игрока по Y на карте. */
     y: number;
+    /** Номер игрового такта. */
+    tick: number;
 }
 
 export interface IStateLobbyGameRoom {

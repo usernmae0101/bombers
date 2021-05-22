@@ -43,8 +43,6 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
             userToken, address, game, gameSocketTCP, dispatch
         );
 
-        game.TCPChann = gameSocketTCP;
-
         return () => {
             Keyboard.unsubscribe();
 

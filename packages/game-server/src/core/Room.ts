@@ -21,6 +21,7 @@ export default class Room {
     private _users: Shared.Interfaces.IRoomUsers = {};
     private _socketManager: SocketManager;
     private _updateInterval: NodeJS.Timeout = null;
+    private _broadcastInterval: NodeJS.Timeout = null;
     private _game: Game;
 
     constructor(socketManager: SocketManager, mapId: Shared.Enums.GameMaps) {
@@ -56,6 +57,23 @@ export default class Room {
     }
 
     /**
+     * Добавляет присланные нажатые клавиши и номер 
+     * игрового такта от пользователя в буфер.
+     * 
+     * @param token - токен пользователя
+     * @param keysData - нажатые клавиши и номер такта
+     */
+    public onKeys(token: string, keysData: Shared.Interfaces.IKeysData) {
+        const color = this._users[token].color;
+
+        if (this._game.keysBuffer[color] === undefined) 
+            this._game.keysBuffer[color] = [];
+
+        // FIXME: ограничить буфер
+        this._game.keysBuffer[color].push(keysData);
+    }
+
+    /**
      * Меняет статус готовности пользователя к игре.
      * 
      * @param token - токен пользователя
@@ -76,6 +94,12 @@ export default class Room {
     private _startGame() {
         this._game.isStarted = true;
 
+        // широковещание игрового состояния
+        this._broadcastInterval = setInterval(() => {
+            this._socketManager.broadcastStateChanges(this._game.state);
+        }, 1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE);
+
+        // обновление игрового состояния
         this._updateInterval = setInterval(() => {
             this._game.update();
         }, 1000 / Shared.Constants.GAME_SERVER_TICK_RATE);
@@ -91,6 +115,7 @@ export default class Room {
     private _endGame() {
         this._game.isStarted = false;
 
+        clearInterval(this._broadcastInterval);
         clearInterval(this._updateInterval);
 
         this._socketManager.serverSocketTCP.of("battle").to("room").emit(
@@ -168,7 +193,6 @@ export default class Room {
      * Возвращает текущее состояние игровой комнаты для лобби.
      */
     get state(): Shared.Interfaces.IStateLobbyGameRoom {
-
         return {
             totalSlots: this._totalSlots,
             activeSlots: this._activeSlots,

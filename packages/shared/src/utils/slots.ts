@@ -13,12 +13,14 @@ export const emptySlot: Shared.Interfaces.IGameSlot = {
     isDisconnected: false
 };
 
+const { makeCopyObject } = Shared.Helpers;
+
 /**
  * Четыре игровых слота, отдельный для каждого цвета.
  */
 export const slots: Shared.Interfaces.IGameSlots = {
-    [Shared.Enums.PlayerColors.PURPLE]: { ...emptySlot },
-    [Shared.Enums.PlayerColors.RED]: { ...emptySlot },
-    [Shared.Enums.PlayerColors.YELLOW]: { ...emptySlot },
-    [Shared.Enums.PlayerColors.BLUE]: { ...emptySlot },
+    [Shared.Enums.PlayerColors.PURPLE]: makeCopyObject(emptySlot),
+    [Shared.Enums.PlayerColors.RED]: makeCopyObject(emptySlot),
+    [Shared.Enums.PlayerColors.YELLOW]: makeCopyObject(emptySlot),
+    [Shared.Enums.PlayerColors.BLUE]: makeCopyObject(emptySlot),
 };

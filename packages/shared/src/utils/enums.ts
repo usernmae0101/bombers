@@ -48,6 +48,14 @@ export enum SocketChannels {
      */
     GAME_ON_UPDATE_GAME_ROOM_SLOTS,
     /**
+     * Обновление игрового состояния.
+     */
+    GAME_ON_UPDATE_GAME_STATE,
+    /**
+     * Отправка нажатых клавиш на сервер.
+     */
+    GAME_ON_SEND_INPUT_KEYS,
+    /**
      * Подтверждение готовности к игре.
      */
     GAME_ON_READY_TO_PLAY,

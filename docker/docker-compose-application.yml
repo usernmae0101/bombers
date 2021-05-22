@@ -13,7 +13,7 @@ services:
       context: ./../
       dockerfile: packages/app-server/Dockerfile
       args: 
-        - PORT=${HTTP_SERVER_PORT}
+        - PORT=${APP_SERVER_PORT}
     container_name: bombers_app-server
     restart: always
     depends_on: 
@@ -21,7 +21,7 @@ services:
     env_file: 
       - ./../.env
     ports: 
-      - ${HTTP_SERVER_PORT}:${HTTP_SERVER_PORT}
+      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
     volumes: 
       - ./../public:/app-server/packages/app-server/public
   db:

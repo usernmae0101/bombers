@@ -29,6 +29,11 @@ export const GAME_RESOLUTION_TILE_LENGTH_Y = 11;
 export const GAME_SERVER_TICK_RATE = 45;
 
 /**
+ * Частота отправки игрового состояния подключенным сокетам в секунду.
+ */
+ export const GAME_SERVER_BROADCAST_RATE = 10;
+
+/**
  * Идентификатор html-элемента для канваса.
  */
 export const GAME_CANVAS_VIEW_ID = "cnv";

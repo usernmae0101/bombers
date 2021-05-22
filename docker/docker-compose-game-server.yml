@@ -1,4 +1,17 @@
 version: '3'
 
 services:
-    server:
+  server:
+    build:     
+      context: ./../
+      dockerfile: packages/game-server/Dockerfile
+      args:
+        - TCP_PORT=${GAME_SERVER_TCP_PORT}
+        - UDP_PORT=${GAME_SERVER_UDP_PORT}
+    container_name: bombers_game-server
+    restart: always
+    env_file: 
+      - ./../.env
+    ports: 
+      - ${GAME_SERVER_TCP_PORT}:${GAME_SERVER_TCP_PORT}
+      - ${GAME_SERVER_UDP_PORT}:${GAME_SERVER_UDP_PORT}

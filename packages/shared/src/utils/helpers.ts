@@ -16,6 +16,16 @@ export const calculateCanvasWidth = (): number => {
  * 
  * @returns высота канваса в пикселях
  */
- export const calculateCanvasHeight = (): number => {
+export const calculateCanvasHeight = (): number => {
     return Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_Y * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+};
+
+/**
+ * Делаем копию объекта, включая все вложенные объекты.
+ * 
+ * @param object - объект, который нужно скопировать
+ * @returns копия объекта
+ */
+export const makeCopyObject = <T>(object: T): T => {
+    return JSON.parse(JSON.stringify(object));
 };

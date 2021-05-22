@@ -78,7 +78,7 @@ export default class SocketManager {
                 return;
             }
 
-            UDPClientSocketHandler.handle(socket, this);
+            UDPClientSocketHandler.handle(socket, room);
         });
     }
     
@@ -102,5 +102,18 @@ export default class SocketManager {
             String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_ROOM_SLOTS),
             slots
         );
+    }
+
+    /**
+     * Отправляет игровое состояние всем подключенным сокетам по UDP.
+     * 
+     * @param state - игровое состояние
+     */
+    public broadcastStateChanges(state: Shared.Interfaces.IGameState) {
+        // FIXME: отправлять только изменения
+        this.serverSocketUDP.emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
+            state
+        )
     }
 }

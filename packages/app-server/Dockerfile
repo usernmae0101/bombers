@@ -1,6 +1,6 @@
 FROM node:12
 
-ARG PORT
+ARG PORT 
 
 WORKDIR /app-server
 

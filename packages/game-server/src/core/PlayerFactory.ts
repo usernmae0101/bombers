@@ -11,9 +11,9 @@ export default class PlayerFactory {
     public static create(color: Shared.Enums.PlayerColors): Shared.Interfaces.IGameStatePlayer {
         const tileSize = Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
         // ширина канваса в пикселях
-        const mapWidth = Shared.Common.calculateCanvasWidth();
+        const mapWidth = Shared.Helpers.calculateCanvasWidth();
         // высота канваса в пикселях
-        const mapHeight = Shared.Common.calculateCanvasHeight();
+        const mapHeight = Shared.Helpers.calculateCanvasHeight();
 
         switch (color) {
             case Shared.Enums.PlayerColors.BLUE:

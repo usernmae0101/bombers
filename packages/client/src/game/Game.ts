@@ -1,15 +1,13 @@
 import { ClientChannel } from "@geckos.io/client";
-import { Socket } from "socket.io-client";
 import { Application } from "pixi.js";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import Renderer from "./core/Renderer";
 import * as Containers from "./containers/";
+import Keyboard from "./core/Keyboard";
 
 export default class Game {
     private _tick: number = 0;
-    /** Соединение с игровым сервером по TCP. */
-    private _TCPChann: Socket;
     /** Соединение с игровым сервером по UDP. */
     private _UDPChann: ClientChannel;
     /** Цвет локального игрока. */
@@ -17,12 +15,13 @@ export default class Game {
     /** Игровое состояние. */
     private _state: Shared.Interfaces.IGameState;
     private _app: Application;
+    private _keys: Shared.Enums.InputKeys[] = [];
     private _renderer: Renderer;
 
     constructor() {
         this._app = new Application({
-            width: Shared.Common.calculateCanvasWidth(),
-            height: Shared.Common.calculateCanvasHeight(),
+            width: Shared.Helpers.calculateCanvasWidth(),
+            height: Shared.Helpers.calculateCanvasHeight(),
             backgroundAlpha: 0
         });
 
@@ -35,17 +34,10 @@ export default class Game {
         this._app.loader.add([Shared.Constants.GAME_RESOURCES_IMAGE_TILESET]);
     }
 
-    set TCPChann(value: Socket) {
-        this._TCPChann = value;
-    }
-
     set UDPChann(value: ClientChannel) {
         this._UDPChann = value;
     }
-
-    /**
-     * Устанавлвает игровое состояние.
-     */
+    
     set state(value: Shared.Interfaces.IGameState) {
         this._state = value;
     }
@@ -55,6 +47,49 @@ export default class Game {
      */
     set color(value: Shared.Enums.PlayerColors) {
         this._color = value;
+    }
+
+    private _handleInputs() {
+        switch (true) {
+            case Keyboard.keys["KeyW"]:
+            case Keyboard.keys["ArrowUp"]:
+                this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_W);
+                break;
+            case Keyboard.keys["KeyD"]:
+            case Keyboard.keys["ArrowRight"]:
+                this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_D);
+                break;
+            case Keyboard.keys["KeyS"]:
+            case Keyboard.keys["ArrowDown"]:
+                this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_S);
+                break;
+            case Keyboard.keys["KeyA"]:
+            case Keyboard.keys["ArrowLeft"]:
+                this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_A);
+                break;
+            case Keyboard.keys["Space"]:
+                if (!Keyboard.locked["Space"]) {
+                    this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_SPACE);
+
+                    Keyboard.locked["Space"] = true;
+                }
+        }
+    }
+
+    private _sendInputKeysToServer() {
+        if (this._keys.length) {
+            this._UDPChann.emit(
+                String(Shared.Enums.SocketChannels.GAME_ON_SEND_INPUT_KEYS),
+                {
+                    keys: this._keys,
+                    tick: this._tick
+                }
+            )
+        }
+    }
+
+    private _updateLocalPlayer() {
+
     }
 
     public start() {
@@ -70,6 +105,12 @@ export default class Game {
     }
 
     private _update() {
+        this._handleInputs();
+        this._sendInputKeysToServer();
+        this._updateLocalPlayer();
+
+        this._keys = [];
+
         this._tick++;
     }
 }

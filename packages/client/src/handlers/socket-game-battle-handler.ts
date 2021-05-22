@@ -32,8 +32,8 @@ const ping = (socket: Socket) => {
 export const startHandlingGameBattleSocket = (
     userToken: string,
     address: string,
-    game: Game, 
-    socket: Socket, 
+    game: Game,
+    socket: Socket,
     dispatch: Dispatch
 ): () => [NodeJS.Timeout, ClientChannel] => {
     let gameSocketUDP: ClientChannel;
@@ -64,10 +64,16 @@ export const startHandlingGameBattleSocket = (
             UDPChann.onConnect(() => {
                 ping(socket);
                 pingInterval = setInterval(ping, 5000, socket);
+
+                // FIXME: принимать только изменения
+                UDPChann.on(
+                    String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
+                    (state: Shared.Interfaces.IGameState) => { game.state = state; }
+                )
             });
         }
-    ); 
- 
+    );
+
     // высчитываем сетевую задержку
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_PING_PONG),
@@ -97,7 +103,7 @@ export const startHandlingGameBattleSocket = (
         () => game.start()
     )
 
-    return function() {
+    return function () {
         return [pingInterval, gameSocketUDP];
     }
 };

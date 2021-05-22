@@ -5,12 +5,27 @@ export default class Game {
     private _state: Shared.Interfaces.IGameState;
     /** Cтатус игры: начата или нет. */
     private _isStarted: boolean = false;
+    public keysBuffer: { [color: number]: Shared.Interfaces.IKeysData[] } = {};
+
+    private _updatePlayers() {
+        for (let color in this.state.players) {
+            if (this.keysBuffer[color].length) {
+                const { keys, tick } = this.keysBuffer[color].shift();
+
+                const player = this._state.players[color];
+
+                
+
+                this._state.players[color].tick = tick;
+            }
+        }
+    }
 
     /**
      * Обновляет игровое состояние.
      */
     public update() {
-
+        this._updatePlayers();
     }
 
     /** 
