@@ -34,8 +34,10 @@ const serverSocketUDP = geckos({
     // https://ru.wikipedia.org/wiki/Traversal_Using_Relay_NAT
     iceServers,
     ordered: false,
-    authorization: async (auth) => {
-        return { token: auth };
+    authorization: async (auth) => ({ token: auth }),
+    cors: {
+        origin: "*",
+        allowAuthorization: true 
     }
 });
 

@@ -26,6 +26,7 @@ export default class Game {
         });
 
         this._renderer = new Renderer([
+            new Containers.PlayersContainer,
             new Containers.BoxesContainer,
             new Containers.RocksContainer
         ]);
@@ -97,8 +98,10 @@ export default class Game {
 
         this._renderer.init(this._app.stage);
 
+        // считываение клавиш
         setInterval(() => this._update(), 1000 / Shared.Constants.GAME_CLIENT_UPDATE_RATE);
         
+        // отрисовака
         this._app.ticker.add(() => {
             this._renderer.render(this._state);
         });

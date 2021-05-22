@@ -1,6 +1,46 @@
 import * as Shared from "../idnex";
 
 /**
+ * Передвигает игрока. Устанавливает направление движения.
+ * 
+ * @param player - игрок
+ * @param direction - направление движения
+ */
+export const movePlayer = (
+    player: Shared.Interfaces.IGameStatePlayer,
+    direction: Shared.Enums.MoveDirections
+) => { 
+    player.direction = direction;
+
+    switch (direction) {
+        case Shared.Enums.MoveDirections.UP:
+            player.y -= player.speed;
+            break;
+        case Shared.Enums.MoveDirections.RIGHT:
+            player.x += player.speed;
+            break;
+        case Shared.Enums.MoveDirections.DOWN:
+            player.y += player.speed;
+            break;
+        case Shared.Enums.MoveDirections.LEFT:
+            player.x -= player.speed;
+    }
+};
+
+/**
+ * Устанавливает бомбу.
+ * 
+ * @param state - игровое состояние
+ * @param color - цвет игрока
+ */
+export const placeBomb = (
+    state: Shared.Interfaces.IGameState,
+    color: Shared.Enums.PlayerColors
+) => {
+
+};
+
+/**
  * Пытается передвинуть игрока, если были нажаты клавиши.
  * 
  * @param keys - нажатые клавиши

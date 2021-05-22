@@ -8,7 +8,7 @@ import * as Shared from "@bombers/shared/src/idnex";
  */
 export const createState = (map: number[][][]): Shared.Interfaces.IGameState => ({
     map,
-    plyaers: {}
+    players: {}
 });
 
 /**

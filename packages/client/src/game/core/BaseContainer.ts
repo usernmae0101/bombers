@@ -17,8 +17,8 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
     constructor(layer: number, entity_ids: number[] = [], priority_id?: number) {
         super();
 
-        super.width = Shared.Common.calculateCanvasWidth();
-        super.height = Shared.Common.calculateCanvasHeight();
+        super.width = Shared.Helpers.calculateCanvasWidth();
+        super.height = Shared.Helpers.calculateCanvasHeight();
 
         this.zIndex = layer;
         this.entity_ids = entity_ids;

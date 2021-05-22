@@ -80,7 +80,7 @@ export interface IGameStatePlayer {
     /** Позиция игрока по Y на карте. */
     y: number;
     /** Номер игрового такта. */
-    tick: number;
+    tick?: number;
 }
 
 export interface IStateLobbyGameRoom {

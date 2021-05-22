@@ -43,8 +43,11 @@ export default class Room {
 
         this._users[token] = { color };
         this._slots[color].user = userData;
+        this._game.addPlayerToState(color); 
         ++this._activeSlots;
-
+        
+        this._game.keysBuffer[color] = [];
+        
         if (this._activeSlots === this._totalSlots)
             this._isLocked = true;
 
@@ -64,10 +67,7 @@ export default class Room {
      * @param keysData - нажатые клавиши и номер такта
      */
     public onKeys(token: string, keysData: Shared.Interfaces.IKeysData) {
-        const color = this._users[token].color;
-
-        if (this._game.keysBuffer[color] === undefined) 
-            this._game.keysBuffer[color] = [];
+        const color = this._users[token].color;    
 
         // FIXME: ограничить буфер
         this._game.keysBuffer[color].push(keysData);

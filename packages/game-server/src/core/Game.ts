@@ -1,4 +1,5 @@
 import * as Shared from "@bombers/shared/src/idnex";
+import PlayerFactory from "./PlayerFactory";
 
 export default class Game {
     /** Игровое состояние. */
@@ -14,11 +15,24 @@ export default class Game {
 
                 const player = this._state.players[color];
 
-                
+                const [isMove, direction] = Shared.Core.tryToMovePlayer(keys);
+                if (isMove) {
+                    Shared.Core.movePlayer(player, direction);
+                    // check overlap
+                    // check collision
+                }
+
+                const isPlace = Shared.Core.tryToPlaceBomb(keys, player.bombs);
+                if (isPlace)
+                    Shared.Core.placeBomb(this._state, +color);
 
                 this._state.players[color].tick = tick;
             }
         }
+    }
+
+    public addPlayerToState(color: number) {
+        this.state.players[color] = PlayerFactory.create(color); 
     }
 
     /**
