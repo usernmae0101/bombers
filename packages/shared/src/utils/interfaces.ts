@@ -64,13 +64,19 @@ export interface IKeysData {
     keys: Enums.InputKeys[];
 }
 
+export interface INotReliableStateData {
+    /** Позиция игрока по X на карте. */
+    x?: number;
+    /** Позиция игрока по Y на карте. */
+    y?: number;
+    /** Номер игрового такта. */
+    tick?: number;
+    /** Направление движения игрока. */
+    direction?: number;
+}
+
 export interface INotReliableStateChanges {
-    [color: string]: {
-        /** Позиция игрока по X на карте. */
-        x?: number;
-        /** Позиция игрока по Y на карте. */
-        y?: number;
-    }
+    [color: string]: INotReliableStateData;
 }
 
 export interface IStateChanges {
@@ -103,7 +109,7 @@ export interface IStateLobbyGameRoom {
     /** Идентификатор карты. */
     mapId: Enums.GameMaps;
     /** Открыта ли комната (можно ли занять игровой слот). */
-    isLocked: boolean; 
+    isLocked: boolean;
     /** Количество занятых игровых слотов. */
     activeSlots: number;
     /** Общее количество игровых слотов. */
@@ -128,7 +134,7 @@ export interface ILobbyServer {
 }
 
 export interface IGameSlot {
-    /** Данные игрока. */
+    /** Данные пользователя. */
     user: IUser,
     /** Статус подключения к игровому северу. */
     isDisconnected: boolean;

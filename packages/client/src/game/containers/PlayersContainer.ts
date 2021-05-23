@@ -41,7 +41,7 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
     private _removePlayers(players: Shared.Interfaces.IGameStatePlayers) {
         for (let color in this._players) {
             if (Object.keys(players).includes(color)) continue;
-
+            
             this._players[color].player.destroy();
             delete this._players[color];
         }
@@ -50,7 +50,7 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
     private _addPlayers(players: Shared.Interfaces.IGameStatePlayers) {
         for (let color in players) {
             if (Object.keys(this._players).includes(color)) continue;
-
+           
             const { x: frameX, y: frameY } = getEntityFrame(EntityNumbers.PLAYER, +color, MoveDirections.DOWN);
             const player = new PlayerEntity(frameX, frameY, +color);
 

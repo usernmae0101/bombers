@@ -79,7 +79,7 @@ export const startHandlingGameBattleSocket = (
     // получаем изменения игрового состояния
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-        (changes: any[]) => game.onReliableStateChanges(changes)
+        (changes: any[]) => game.onReliableStateChanges(changes, dispatch)
     )
 
     // высчитываем сетевую задержку

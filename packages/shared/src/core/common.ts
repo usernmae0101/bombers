@@ -10,7 +10,7 @@ export const movePlayer = (
     player: Shared.Interfaces.IGameStatePlayer,
     direction: Shared.Enums.MoveDirections
 ) => { 
-    player.direction !== direction && (player.direction = direction);
+    player.direction = direction;
 
     switch (direction) {
         case Shared.Enums.MoveDirections.UP:

@@ -58,10 +58,14 @@ export default class Room {
     }
 
     // TODO:
-    public onLeave() { }
+    public onLeave() { 
+
+    }
 
     // TODO:
-    public onReconnect() { }
+    public onReconnect() { 
+        
+    }
 
     /**
      * Добавляет присланные нажатые клавиши и номер 
@@ -171,29 +175,29 @@ export default class Room {
             set: (target, key, value, receiver) => {
                 // массив, значит карта - передаём надёжно
                 if (Array.isArray(target)) {
-                    this._stateChanges.reliable.push(
-                        {
-                            row: this._lastChangedStateKey,
-                            col: key,
-                            entities: value
-                        }
-                    );
+                    this._stateChanges.reliable.push({ 
+                        row: this._lastChangedStateKey, 
+                        col: key, 
+                        entities: value 
+                    });
                 }
                 // поменяли координаты игрока - передаём ненадёжно
-                else if (["x", "y"].includes(key as string)) {
-                    this._stateChanges.notReliable[this._lastChangedStateKey] = { [key]: value };
+                else if (["x", "y", "tick", "direction"].includes(key as string)) {
+                    if (!(this._lastChangedStateKey in this._stateChanges.notReliable))
+                        this._stateChanges.notReliable[this._lastChangedStateKey] = {};
+
+                    const _key = key as keyof Shared.Interfaces.INotReliableStateData;
+
+                    this._stateChanges.notReliable[this._lastChangedStateKey][_key] = value;
                 }
                 // какие-то другие хар-ки игрока - передаём надёжно
                 else {
-                    this._stateChanges.reliable.push(
-                        {
-                            color: this._lastChangedStateKey,
-                            key,
-                            value
-                        }
-                    );
+                    this._stateChanges.reliable.push({ 
+                        color: this._lastChangedStateKey, 
+                        key, 
+                        value 
+                    });
                 }
-
                 return Reflect.set(target, key, value, receiver);
             }
         }
