@@ -175,11 +175,13 @@ export default class Room {
             set: (target, key, value, receiver) => {
                 // массив, значит карта - передаём надёжно
                 if (Array.isArray(target)) {
-                    this._stateChanges.reliable.push({ 
-                        row: this._lastChangedStateKey, 
-                        col: key, 
-                        entities: value 
-                    });
+                    this._stateChanges.reliable.push(
+                    	{ 
+                        	row: this._lastChangedStateKey, 
+                        	col: key, 
+                        	entities: value 
+                    	}
+                    );
                 }
                 // поменяли координаты игрока - передаём ненадёжно
                 else if (["x", "y", "tick", "direction"].includes(key as string)) {
@@ -192,11 +194,13 @@ export default class Room {
                 }
                 // какие-то другие хар-ки игрока - передаём надёжно
                 else {
-                    this._stateChanges.reliable.push({ 
-                        color: this._lastChangedStateKey, 
-                        key, 
-                        value 
-                    });
+                    this._stateChanges.reliable.push(
+                    	{ 
+                        	color: this._lastChangedStateKey, 
+                        	key, 
+                        	value 
+                    	}
+                    );
                 }
                 return Reflect.set(target, key, value, receiver);
             }

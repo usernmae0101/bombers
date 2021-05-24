@@ -8,7 +8,7 @@ import Renderer from "./core/Renderer";
 import * as Containers from "./containers/";
 import Keyboard from "./core/Keyboard";
 
-interface IPredcionBuffer {
+interface IPredctionBuffer {
     [tick: number]: {
         /** Нажатые клавиши. */
         keys: number[];
@@ -39,7 +39,7 @@ export default class Game {
     /** Игровое состояние. */
     private _state: Shared.Interfaces.IGameState;
     private _app: Application;
-    private _predictionBuffer: IPredcionBuffer = {};
+    private _predictionBuffer: IPredctionBuffer = {};
     private _snapshotBuffer: ISnapshotBuffer = {};
     private _keys: Shared.Enums.InputKeys[] = [];
     private _renderer: Renderer;
@@ -160,8 +160,6 @@ export default class Game {
 
                 enemy.x = Shared.Maths.lerp(s1.snapshot.x, s2.snapshot.x, alpha);
                 enemy.y = Shared.Maths.lerp(s1.snapshot.y, s2.snapshot.y, alpha);
-
-                buffer.splice(0, 2);
             }
 
             else {
@@ -250,6 +248,7 @@ export default class Game {
 
         // отрисовака
         this._app.ticker.add(() => {
+            this._interpolateEnemies();
             this._renderer.render(this._state);
         });
     }
@@ -258,7 +257,6 @@ export default class Game {
         this._handleInputs();
         this._sendInputKeysToServer();
         this._updateLocalPlayer(this._keys, true);
-        this._interpolateEnemies();
 
         this._keys = [];
 

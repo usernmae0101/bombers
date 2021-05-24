@@ -5,6 +5,8 @@ import { Sprite } from "@pixi/sprite";
 import * as Shared from "@bombers/shared/src/idnex";
 
 export default class BaseEntity extends Sprite {
+    private _tick: number = 0;
+
     constructor(frameX: number, frameY: number) {
         super(
             new Texture(
@@ -17,6 +19,21 @@ export default class BaseEntity extends Sprite {
                 )
             )
         );
+    }
+
+    /**
+     * Устанавливает прозрачность игровой сущности
+     * на период, заданный в игровых тактах, и меняет 
+     * обратно на непрозрачность.
+     * 
+     * @param frequency - частота смены (в игровых тактах)
+     * @param opacity - прозрачность (от 0.0 до 1.0)
+     */
+    public blink(frequency: number, opacity: number) {
+        if (++this._tick < frequency) return;
+
+        this.alpha = this.alpha === 1 ? opacity : 1;
+        this._tick = 0;
     }
 
     /**
