@@ -6,6 +6,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 
 export default class BaseEntity extends Sprite {
     private _tick: number = 0;
+    private _blinkedTimes: number = 0;
 
     constructor(frameX: number, frameY: number) {
         super(
@@ -21,6 +22,14 @@ export default class BaseEntity extends Sprite {
         );
     }
 
+    get destroyed(): boolean {
+        return this._destroyed;
+    }
+
+    get blinkedTimes(): number {
+        return this._blinkedTimes;
+    }
+
     /**
      * Устанавливает прозрачность игровой сущности
      * на период, заданный в игровых тактах, и меняет 
@@ -33,6 +42,7 @@ export default class BaseEntity extends Sprite {
         if (++this._tick < frequency) return;
 
         this.alpha = this.alpha === 1 ? opacity : 1;
+        this._blinkedTimes++;
         this._tick = 0;
     }
 

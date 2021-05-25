@@ -17,6 +17,8 @@ export default class EntityFactory {
                 return new Entities.BoxEntity(frameX, frameY);
             case Shared.Enums.EntityNumbers.ROCK:
                 return new Entities.RockEntity(frameX, frameY);
+            case Shared.Enums.EntityNumbers.ARROW:
+                return new Entities.ArrowEntity(frameX, frameY);
         }
     }
 }

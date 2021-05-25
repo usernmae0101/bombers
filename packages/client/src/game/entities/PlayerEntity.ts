@@ -13,7 +13,17 @@ export default class PlayerEntity extends BaseEntity {
         this._color = color;
     }
 
-    setPosition(x: number, y: number) {
+    get color(): number {
+        return this._color;
+    }
+
+    /**
+     * Устанавливает позицию игрока на канвасе.
+     * 
+     * @param x - позиция по X (левый верхний край спрайта)
+     * @param y - позиция по Y (левый верхний край спрайта)
+     */
+    public setPosition(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
@@ -23,7 +33,7 @@ export default class PlayerEntity extends BaseEntity {
      * 
      * @param direction - направление игрока
      */
-    setDirection(direction: number) {
+    public setDirection(direction: number) {
         const { x, y } = getEntityFrame(EntityNumbers.PLAYER, this._color, direction);
 
         this.texture.frame.x = x;

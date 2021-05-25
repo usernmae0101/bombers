@@ -27,16 +27,16 @@ export const movePlayer = (
     // TODO: добавить формулу
     switch (direction) {
         case UP:
-            player.y -= player.speed;
+            player.y -= player.speed + 6;
             break;
         case RIGHT:
-            player.x += player.speed;
+            player.x += player.speed + 6;
             break;
         case DOWN:
-            player.y += player.speed;
+            player.y += player.speed + 6;
             break;
         case LEFT:
-            player.x -= player.speed;
+            player.x -= player.speed + 6;
     }
 };
 

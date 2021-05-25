@@ -154,12 +154,12 @@ export default class Game {
             if (buffer.length > 1 && buffer[0].timestamp <= renderTime && renderTime <= buffer[1].timestamp) {
                 const [s1, s2] = buffer;
 
-                const alpha = (renderTime - s1.timestamp) / (s2.timestamp - s1.timestamp);
+                const ratio = (renderTime - s1.timestamp) / (s2.timestamp - s1.timestamp);
 
                 enemy.direction = buffer[1].snapshot.direction;
 
-                enemy.x = Shared.Maths.lerp(s1.snapshot.x, s2.snapshot.x, alpha);
-                enemy.y = Shared.Maths.lerp(s1.snapshot.y, s2.snapshot.y, alpha);
+                enemy.x = Shared.Maths.lerp(s1.snapshot.x, s2.snapshot.x, ratio);
+                enemy.y = Shared.Maths.lerp(s1.snapshot.y, s2.snapshot.y, ratio);
             }
 
             else {
@@ -258,7 +258,7 @@ export default class Game {
 
         // отрисовака
         this._app.ticker.add(() => {
-            this._renderer.render(this._state);
+            this._renderer.render(this._state, this._color);
         });
     }
 

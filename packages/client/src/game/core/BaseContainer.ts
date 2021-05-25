@@ -12,7 +12,10 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
     protected entity_ids: number[];
     private _priority_id: number;
 
-    public abstract update(state?: Shared.Interfaces.IGameState): void;
+    public abstract update(
+        state?: Shared.Interfaces.IGameState,
+        localPlayerColor?: number
+    ): void;
 
     constructor(layer: number, entity_ids: number[] = [], priority_id?: number) {
         super();
