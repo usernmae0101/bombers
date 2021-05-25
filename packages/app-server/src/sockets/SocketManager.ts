@@ -132,9 +132,9 @@ export default class SocketManager {
 
         // Соединение инициировал игровой сервер.
         this.io.of("game-server").on("connection", socket => {
-            const { gameServer, secretKey } = socket.handshake.query;
+            const { gameServer } = socket.handshake.query;
 
-            if (gameServer !== undefined && String(secretKey) === String(process.env.WEBSOCKET_SECRET_KEY)) {
+            if (gameServer !== undefined) {
                 this.addGameServerToState(JSON.parse(gameServer as string));
 
                 GameServerSocketHandler.handle(socket, this);

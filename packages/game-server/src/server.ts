@@ -21,7 +21,6 @@ const iceServers = isDevMode ? [] : JSON.parse(process.env.GAME_SERVER_ICE_LIST)
 // socket-соединение (TCP) с центральным сервером
 const clientSocketTCP = io(`http://${appServerAddress}:${appServerPort}/game-server`, {
     query: {
-        secretKey: process.env.WEBSOCKET_SECRET_KEY,
         gameServer: JSON.stringify({
             TCP_port: gameServerPortTCP,
             address: gameServerAddress,

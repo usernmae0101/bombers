@@ -1,7 +1,9 @@
 import * as Shared from "../idnex";
 
 /**
- * Передвигает игрока. Устанавливает направление движения.
+ * Передвигает игрока. Если направление движения поменялось,
+ * обновляет направление и выравнивает игрока по оси обратной его движению: 
+ * если движется по Y - выравнивает по X, а если движется по X - выравнивает по Y.
  * 
  * @param player - игрок
  * @param direction - направление движения
@@ -9,22 +11,48 @@ import * as Shared from "../idnex";
 export const movePlayer = (
     player: Shared.Interfaces.IGameStatePlayer,
     direction: Shared.Enums.MoveDirections
-) => { 
-    player.direction = direction;
+) => {
+    const { UP, LEFT, RIGHT, DOWN } = Shared.Enums.MoveDirections;
 
+    if (player.direction !== direction) {
+        if ([UP, DOWN].includes(direction))
+            alignPlayer(player, "x");
+
+        if ([LEFT, RIGHT].includes(direction))
+            alignPlayer(player, "y");
+
+        player.direction = direction;
+    }
+    
+    // TODO: добавить формулу
     switch (direction) {
-        case Shared.Enums.MoveDirections.UP:
+        case UP:
             player.y -= player.speed;
             break;
-        case Shared.Enums.MoveDirections.RIGHT:
+        case RIGHT:
             player.x += player.speed;
             break;
-        case Shared.Enums.MoveDirections.DOWN:
+        case DOWN:
             player.y += player.speed;
             break;
-        case Shared.Enums.MoveDirections.LEFT:
+        case LEFT:
             player.x -= player.speed;
     }
+};
+
+/**
+ * Выравнивает игрока в клетке, большую часть которой он занимает.
+ * 
+ * @param player - игрок
+ * @param axis - по какой оси выравнивать (x или y)
+ */
+export const alignPlayer = (
+    player: Shared.Interfaces.IGameStatePlayer,
+    axis: "x" | "y"
+) => {
+    const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
+
+    player[axis] = Math.round(player[axis] / GAME_RESOLUTION_TILE_SIZE) * GAME_RESOLUTION_TILE_SIZE;
 };
 
 /**

@@ -117,30 +117,30 @@ export default class Game {
 
     public onReliableStateChanges(changes: any[], dispatch: Dispatch) {
         for (let _changes of changes) {
-             // поменялась карта
-             if (Object.keys(_changes).includes("row")) 
-                 this._state.map[_changes.row][_changes.col] = _changes.entities;
-             // поменялись хар-ки игрока или добавлен игрок
-             else {
+            // поменялась карта
+            if (Object.keys(_changes).includes("row"))
+                this._state.map[_changes.row][_changes.col] = _changes.entities;
+            // поменялись хар-ки игрока или добавлен игрок
+            else {
                 if (_changes.color === "players") {
                     this._state.players[_changes.key] = _changes.value;
                     continue;
                 }
-                
+
                 const player = this._state.players[_changes.color];
- 
-                 if (+_changes.color === this._color) {
-                     if (_changes.key === "bombs") 
-                         dispatch(GameActions.action_game_set_bombs(_changes.value));
-                     else if (_changes.key === "speed") 
-                         dispatch(GameActions.action_game_set_speed(_changes.value));
-                     else if (_changes.key === "radius")
-                         dispatch(GameActions.action_game_set_radius(_changes.value));
-                 }
-                 
-                 player[_changes.key as keyof Shared.Interfaces.IGameStatePlayer] = _changes.value;
-             }
-         }
+
+                if (+_changes.color === this._color) {
+                    if (_changes.key === "bombs")
+                        dispatch(GameActions.action_game_set_bombs(_changes.value));
+                    else if (_changes.key === "speed")
+                        dispatch(GameActions.action_game_set_speed(_changes.value));
+                    else if (_changes.key === "radius")
+                        dispatch(GameActions.action_game_set_radius(_changes.value));
+                }
+
+                player[_changes.key as keyof Shared.Interfaces.IGameStatePlayer] = _changes.value;
+            }
+        }
     }
 
     // FIXME: добавить плавность анимации
@@ -153,9 +153,9 @@ export default class Game {
 
             if (buffer.length > 1 && buffer[0].timestamp <= renderTime && renderTime <= buffer[1].timestamp) {
                 const [s1, s2] = buffer;
-                
+
                 const alpha = (renderTime - s1.timestamp) / (s2.timestamp - s1.timestamp);
-               
+
                 enemy.direction = buffer[1].snapshot.direction;
 
                 enemy.x = Shared.Maths.lerp(s1.snapshot.x, s2.snapshot.x, alpha);
@@ -163,7 +163,7 @@ export default class Game {
             }
 
             else {
-                if (buffer.length > 1 && buffer[1].timestamp <= renderTime)
+                while (buffer.length > 1 && buffer[1].timestamp <= renderTime)
                     buffer.shift();
 
                 if (buffer.length === 1) {
@@ -184,8 +184,10 @@ export default class Game {
                 continue;
             }
 
-            const { x: currentX, y: currentY } = this._state.players[+color];
-            
+            const enemy = this._state.players[+color];
+
+            const { x: currentX, y: currentY, } = enemy;
+
             if (!(color in this._snapshotBuffer))
                 this._snapshotBuffer[color] = [];
 
@@ -194,6 +196,7 @@ export default class Game {
                 timestamp: Date.now(),
                 snapshot: {
                     ...changes[color],
+                    direction: changes[color].direction ?? enemy.direction,
                     x: changes[color].x ?? currentX,
                     y: changes[color].y ?? currentY
                 }
@@ -211,11 +214,18 @@ export default class Game {
             }
 
             if (+tick === changes.tick) {
-                this._state.players[this._color].x = changes.x ?? this._predictionBuffer[tick].x;
-                this._state.players[this._color].y = changes.y ?? this._predictionBuffer[tick].y;
+                const { x: predictedX, y: predictedY } = this._predictionBuffer[tick];
+
+                const authX = changes.x ?? predictedX;
+                const authY = changes.y ?? predictedY;
+
+                if (authX === predictedX && authY === predictedY)
+                    break;
+
+                this._state.players[this._color].x = authX;
+                this._state.players[this._color].y = authY;
             }
 
-            // FIXME: обновлять только при расхождении?
             this._updateLocalPlayer(this._predictionBuffer[tick].keys, false);
         }
     }
@@ -248,7 +258,6 @@ export default class Game {
 
         // отрисовака
         this._app.ticker.add(() => {
-            this._interpolateEnemies();
             this._renderer.render(this._state);
         });
     }
@@ -257,6 +266,7 @@ export default class Game {
         this._handleInputs();
         this._sendInputKeysToServer();
         this._updateLocalPlayer(this._keys, true);
+        this._interpolateEnemies();
 
         this._keys = [];
 
