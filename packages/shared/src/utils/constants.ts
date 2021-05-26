@@ -19,6 +19,11 @@ export const GAME_RESOLUTION_TILE_SIZE = 72;
 export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
 
 /**
+ * Задерка в миллисекундах перед взрывом бомбы.
+ */
+export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 2500;
+
+/**
  * Количество игровых тайлов на карте в высоту.
  */
 export const GAME_RESOLUTION_TILE_LENGTH_Y = 11;

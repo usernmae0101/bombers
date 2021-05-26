@@ -23,7 +23,7 @@ export const movePlayer = (
 
         player.direction = direction;
     }
-    
+
     // TODO: добавить формулу
     switch (direction) {
         case UP:
@@ -59,20 +59,76 @@ export const alignPlayer = (
  * Устанавливает бомбу.
  * 
  * @param state - игровое состояние
- * @param color - цвет игрока
+ * @param color - цвет игрока, поставившего бомбу
  */
 export const placeBomb = (
     state: Shared.Interfaces.IGameState,
     color: Shared.Enums.PlayerColors
 ) => {
+    const { GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT } = Shared.Constants;
 
+    const [playerRow, playerCol] = Shared.Helpers.calculatePlayerCellPosition(state.players[color]);
+    const bombId = Shared.Helpers.getBombIdByPlayerColor(color);
+
+    addEntityToMap(bombId, state.map, playerRow, playerCol);
+    --state.players[color].bombs;
+
+    setTimeout(() => {
+        ++state.players[color].bombs;
+        removeEntityFromMap(bombId, state.map, playerRow, playerCol);
+    }, GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT);
+};
+
+/**
+ * Меняет состояние карты. Добавляет игровую сущность в ячейку.
+ * 
+ * @param entityId - идентификатор игровой сущности
+ * @param map - игровая карта
+ * @param row - ряд ячейки
+ * @param col - колонка ячейки
+ */
+export const addEntityToMap = (
+    entityId: number,
+    map: number[][][],
+    row: number,
+    col: number
+) => {
+    const entities = [
+    	...map[row][col]
+    ];
+    
+    entities.push(entityId);
+
+    map[row][col] = entities;
+};
+
+/**
+ * Меняет состояние карты. Удаляет игровую сущность из ячейки.
+ * 
+ * @param entityId - идентификатор игровой сущности
+ * @param map - игровая карта
+ * @param row - ряд ячейки
+ * @param col - колонка ячейки
+ */
+export const removeEntityFromMap = (
+    entityId: number,
+    map: number[][][],
+    row: number,
+    col: number
+) => {
+    const entities = [...map[row][col]];
+    const entitityIndex = entities.findIndex(id => id === entityId);
+    
+    entities.splice(entitityIndex, 1);
+
+    map[row][col] = entities;
 };
 
 /**
  * Пытается передвинуть игрока, если были нажаты клавиши.
  * 
  * @param keys - нажатые клавиши
- * @returns двигать ли игрока: да или нет, в каком направлении
+ * @returns [двигать ли игрока: да или нет, в каком направлении]
  */
 export const tryToMovePlayer = (keys: number[]): [boolean, number] => {
     const { MoveDirections, InputKeys } = Shared.Enums;
@@ -91,19 +147,28 @@ export const tryToMovePlayer = (keys: number[]): [boolean, number] => {
     return [false, null];
 };
 
-
 /**
  * Пытается поставить бомбу, если были нажаты клавиши.
  * 
  * @param keys - нажатые клавиши
- * @param bombs - количество бомб
- * @returns ставить ли бомбу: да или нет
+ * @param state - игровое состояние
+ * @param color - цвет игрока, пытающегося поставить бомбу
+ * @returns можно ли ставить бомбу: да или нет
  */
-export const tryToPlaceBomb = (keys: number[], bombs: number) => {
+export const tryToPlaceBomb = (
+    keys: number[],
+    state: Shared.Interfaces.IGameState,
+    color: number
+): boolean => {
     const { INPUT_KEY_SPACE } = Shared.Enums.InputKeys;
 
     if (!keys.includes(INPUT_KEY_SPACE)) return false;
-    if (bombs === 0) return false;
+    if (state.players[color].bombs === 0) return false;
+
+    const [playerRow, playerCol] = Shared.Helpers.calculatePlayerCellPosition(state.players[color]);
+
+    for (let eintity of Shared.Helpers.getAllEntitiesInCell(state.map, playerRow, playerCol))
+        if (Shared.Helpers.getAllBombsIds().includes(eintity)) return false;
 
     return true;
 };

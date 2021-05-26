@@ -1,11 +1,9 @@
 import * as Shared from "@bombers/shared/src/idnex";
 import BaseContainer from "../core/BaseContainer";
-import EntityFactory from "../core/EntityFactory";
 import { getEntityFrame } from "../core/frames";
-import ArrowEntity from "../entities/ArrowEntity";
 import PlayerEntity from "../entities/PlayerEntity";
 
-const { EntityNumbers, MoveDirections, PlayerColors } = Shared.Enums;
+const { EntityNumbers, MoveDirections } = Shared.Enums;
 
 interface IPlayers {
     [color: number]: {
@@ -24,7 +22,6 @@ interface IPlayers {
 
 export default class PlayersContainer extends BaseContainer<PlayerEntity> {
     private _players: IPlayers = {};
-    private _arrow: ArrowEntity;
 
     constructor() {
         super(Shared.Enums.ContainerLayers.PLAYERS);
@@ -69,32 +66,6 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
         }
     }
 
-    private _updateLocalPlayer(localPlayer: PlayerEntity) {
-        const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
-
-        if (this._arrow === undefined) {
-            this._arrow = EntityFactory.create(EntityNumbers.ARROW);
-
-            switch (localPlayer.color) {
-                case PlayerColors.PURPLE:
-                case PlayerColors.BLUE:
-                    this._arrow.y += GAME_RESOLUTION_TILE_SIZE;
-                    break;
-                case PlayerColors.YELLOW:
-                case PlayerColors.RED:
-                    this._arrow.angle = 180;
-                    this._arrow.x += GAME_RESOLUTION_TILE_SIZE;
-            }
-
-            localPlayer.addChild(this._arrow);
-        }
-
-        if (this._arrow.blinkedTimes < 20) 
-            this._arrow.blink(15, 0.5);
-        else if (!this._arrow.destroyed) 
-            this._arrow.destroy(); 
-    }
-
     private _updatePlayers(
         players: Shared.Interfaces.IGameStatePlayers,
         localPlayerColor: number
@@ -114,9 +85,10 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
                 this._players[color].cache.y = players[color].y;
             }
 
-            // обновляем локального игрока отдельно
-            if (+color === localPlayerColor) 
-                this._updateLocalPlayer(this._players[color].player);     
+            // обновляем локального игрока 
+            if (+color === localPlayerColor) {
+                this._players[color].player.updateArrow();
+            }
 
             // меняем направление игрока
             if (this._players[color].cache.direction !== players[color].direction) {

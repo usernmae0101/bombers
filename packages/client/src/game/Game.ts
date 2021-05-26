@@ -53,6 +53,7 @@ export default class Game {
 
         this._renderer = new Renderer([
             new Containers.PlayersContainer,
+            new Containers.BombsContainer,
             new Containers.BoxesContainer,
             new Containers.RocksContainer
         ]);
@@ -93,13 +94,13 @@ export default class Game {
             case Keyboard.keys["KeyA"]:
             case Keyboard.keys["ArrowLeft"]:
                 this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_A);
-                break;
-            case Keyboard.keys["Space"]:
-                if (!Keyboard.locked["Space"]) {
-                    this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_SPACE);
+        }
 
-                    Keyboard.locked["Space"] = true;
-                }
+
+        if (Keyboard.keys["Space"] && !Keyboard.locked["Space"]) {
+            this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_SPACE);
+
+            Keyboard.locked["Space"] = true;
         }
     }
 
@@ -258,6 +259,7 @@ export default class Game {
 
         // отрисовака
         this._app.ticker.add(() => {
+            this._interpolateEnemies();
             this._renderer.render(this._state, this._color);
         });
     }
@@ -266,7 +268,6 @@ export default class Game {
         this._handleInputs();
         this._sendInputKeysToServer();
         this._updateLocalPlayer(this._keys, true);
-        this._interpolateEnemies();
 
         this._keys = [];
 

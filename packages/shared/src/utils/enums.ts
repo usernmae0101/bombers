@@ -164,5 +164,6 @@ export enum EntityNumbers {
 export enum ContainerLayers {
     BOXES,
     ROCKS,
+    BOMBS,
     PLAYERS
 }

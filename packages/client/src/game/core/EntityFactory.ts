@@ -2,6 +2,8 @@ import * as Shared from "@bombers/shared/src/idnex";
 import * as Entities from "../entities/";
 import { getEntityFrame } from "./frames";
 
+const { EntityNumbers } = Shared.Enums;
+
 export default class EntityFactory {
     /**
      * Создаёт игровую сущность по переданному идентификатору.
@@ -13,12 +15,17 @@ export default class EntityFactory {
         const { x: frameX, y: frameY } = getEntityFrame(entityId);
 
         switch (entityId) {
-            case Shared.Enums.EntityNumbers.BOX:
+            case EntityNumbers.BOX:
                 return new Entities.BoxEntity(frameX, frameY);
-            case Shared.Enums.EntityNumbers.ROCK:
+            case EntityNumbers.ROCK:
                 return new Entities.RockEntity(frameX, frameY);
-            case Shared.Enums.EntityNumbers.ARROW:
+            case EntityNumbers.ARROW:
                 return new Entities.ArrowEntity(frameX, frameY);
+            case EntityNumbers.BOMB_BLUE:
+            case EntityNumbers.BOMB_YELLOW:
+            case EntityNumbers.BOMB_PURPLE:
+            case EntityNumbers.BOMB_RED:
+                return new Entities.BombEntity(frameX, frameY);;
         }
     }
 }

@@ -23,7 +23,7 @@ export default class Game {
                     // check collision
                 }
 
-                const isPlace = Shared.Core.tryToPlaceBomb(keys, player.bombs);
+                const isPlace = Shared.Core.tryToPlaceBomb(keys, this._state, +color);
                 if (isPlace)
                     Shared.Core.placeBomb(this._proxyState, +color);
 
