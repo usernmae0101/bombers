@@ -18,6 +18,15 @@ export interface IChatMessage {
     date: number;
 }
 
+export interface IOverlapData {
+    /** Ряд клетки на карте. */
+    row: number;
+    /** Колонка клетки на карте. */
+    col: number;
+    /** Дистанцая, на которую спрайт игрока перекрыл клетку. */
+    distance: number;
+}
+
 export interface IRoomAuthResponseData {
     /** Статус аутентификации: успешна или нет. */
     success?: boolean;
@@ -27,7 +36,7 @@ export interface IRoomAuthResponseData {
     token?: string;
     /** Данные пользователя. */
     userData?: IUser;
-};
+}
 
 export interface IServerAppChat {
     /** Сообщения в чате, сохраненные в буфере. */

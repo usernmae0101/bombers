@@ -1,13 +1,17 @@
 import * as Shared from "@bombers/shared/src/idnex";
 import PlayerFactory from "./PlayerFactory";
 
+interface IKeysBuffer {
+    [color: number]: Shared.Interfaces.IKeysData[];
+}
+
 export default class Game {
     /** Игровое состояние. */
     private _state: Shared.Interfaces.IGameState;
     /** Cтатус игры: начата или нет. */
     private _isStarted: boolean = false;
     private _proxyState: Shared.Interfaces.IGameState;
-    public keysBuffer: { [color: number]: Shared.Interfaces.IKeysData[] } = {};
+    public keysBuffer: IKeysBuffer = {};
 
     private _updatePlayers() {
         for (let color in this._proxyState.players) {
@@ -18,22 +22,35 @@ export default class Game {
 
                 const [isMove, direction] = Shared.Core.tryToMovePlayer(keys);
                 if (isMove) {
-                    Shared.Core.movePlayer(player, direction);
-                    // check overlap
-                    // check collision
+                    const _player = { ...player };
+
+                    const overlapData = Shared.Core.movePlayer(_player, direction, this._state.map);
+                    if (overlapData) {
+                        // перебираем пересечённые игровые сущности
+                        Shared.Core.filterOverlapData(overlapData, this._state.map, player);
+                    }
+
+                    player.x = _player.x;
+                    player.y = _player.y;
                 }
 
-                const isPlace = Shared.Core.tryToPlaceBomb(keys, this._state, +color);
-                if (isPlace)
+                const isPlaceBomb = Shared.Core.tryToPlaceBomb(keys, this._state, +color);
+                if (isPlaceBomb) {
                     Shared.Core.placeBomb(this._proxyState, +color);
+                }
 
                 this._proxyState.players[color].tick = tick;
             }
         }
     }
 
+    /**
+     * Добавляет игрока в игровое состояние.
+     * 
+     * @param color - цвет игрока
+     */
     public addPlayerToState(color: number) {
-        this._proxyState.players[color] = PlayerFactory.create(color); 
+        this._proxyState.players[color] = PlayerFactory.create(color);
     }
 
     /**
@@ -64,6 +81,9 @@ export default class Game {
         return this._isStarted;
     }
 
+    /**
+     * Устанавливает прокси-объект игрового состояния.
+     */
     set proxyState(value: Shared.Interfaces.IGameState) {
         this._proxyState = value;
     }

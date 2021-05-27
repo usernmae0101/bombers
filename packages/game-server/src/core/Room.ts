@@ -192,7 +192,7 @@ export default class Room {
 
                     this._stateChanges.notReliable[this._lastChangedStateKey][_key] = value;
                 }
-                // какие-то другие хар-ки игрока - передаём надёжно
+                // какие-то другие хар-ки игрока (или сам игрок) - передаём надёжно
                 else {
                     this._stateChanges.reliable.push(
                     	{ 

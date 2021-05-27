@@ -143,7 +143,6 @@ export default class Game {
         }
     }
 
-    // FIXME: добавить плавность анимации
     private _interpolateEnemies() {
         const renderTime = Date.now() - (1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE);
 
@@ -235,13 +234,21 @@ export default class Game {
 
         const [isMove, direction] = Shared.Core.tryToMovePlayer(keys);
         if (isMove) {
-            Shared.Core.movePlayer(player, direction);
-            // check overlap
-            // check collision
+            const _player = { ...player };
+
+            Shared.Core.movePlayer(_player, direction, this._state.map);
+
+            player.x = _player.x;
+            player.y = _player.y;
 
             // FIXME: ограничить буфер?
-            if (isInsertPrediction)
-                this._predictionBuffer[this._tick] = { x: player.x, y: player.y, keys };
+            if (isInsertPrediction) {
+                this._predictionBuffer[this._tick] = {
+                    x: player.x,
+                    y: player.y,
+                    keys
+                };
+            }
         }
     }
 
