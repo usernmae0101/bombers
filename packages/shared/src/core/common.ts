@@ -87,15 +87,8 @@ export const placeBomb = (
  * @param row - ряд ячейки
  * @param col - колонка ячейки
  */
-export const addEntityToMap = (
-    entityId: number,
-    map: number[][][],
-    row: number,
-    col: number
-) => {
-    const entities = [
-    	...map[row][col]
-    ];
+export const addEntityToMap = (entityId: number, map: number[][][], row: number, col: number) => {
+    const entities = [...map[row][col]];
     
     entities.push(entityId);
 
@@ -110,12 +103,7 @@ export const addEntityToMap = (
  * @param row - ряд ячейки
  * @param col - колонка ячейки
  */
-export const removeEntityFromMap = (
-    entityId: number,
-    map: number[][][],
-    row: number,
-    col: number
-) => {
+export const removeEntityFromMap = (entityId: number, map: number[][][], row: number, col: number) => {
     const entities = [...map[row][col]];
     const entitityIndex = entities.findIndex(id => id === entityId);
     

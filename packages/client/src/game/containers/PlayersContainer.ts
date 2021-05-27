@@ -90,6 +90,9 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
                 this._players[color].player.updateArrow();
             }
 
+            // обновляем полосу здоровья
+            this._players[color].player.updateHealthbar(players[color].health);
+
             // меняем направление игрока
             if (this._players[color].cache.direction !== players[color].direction) {
                 this._players[color].player.setDirection(players[color].direction);

@@ -10,11 +10,11 @@ import Keyboard from "./core/Keyboard";
 
 interface IPredctionBuffer {
     [tick: number]: {
-        /** Нажатые клавиши. */
+        /** Нажатые пользователем клавиши. */
         keys: number[];
-        /** Позиция на канвасе по X. */
+        /** Позиция игрока на канвасе по X. */
         x: number;
-        /** Позиция на канвасе по Y. */
+        /** Позиция игрока на канвасе по Y. */
         y: number;
     }
 }
@@ -95,7 +95,6 @@ export default class Game {
             case Keyboard.keys["ArrowLeft"]:
                 this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_A);
         }
-
 
         if (Keyboard.keys["Space"] && !Keyboard.locked["Space"]) {
             this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_SPACE);

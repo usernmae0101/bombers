@@ -19,7 +19,7 @@ export const GAME_RESOLUTION_TILE_SIZE = 72;
 export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
 
 /**
- * Задерка в миллисекундах перед взрывом бомбы.
+ * Таймаут в миллисекундах на взрыв бомбы после установки.
  */
 export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 2500;
 
@@ -36,7 +36,7 @@ export const GAME_SERVER_TICK_RATE = 45;
 /**
  * Частота отправки игрового состояния подключенным сокетам в секунду.
  */
- export const GAME_SERVER_BROADCAST_RATE = 10;
+export const GAME_SERVER_BROADCAST_RATE = 10;
 
 /**
  * Идентификатор html-элемента для канваса.
@@ -47,6 +47,11 @@ export const GAME_CANVAS_VIEW_ID = "cnv";
  * Частота бновления локального сотояния и отправки клавиш на сервер в секунду.
  */
 export const GAME_CLIENT_UPDATE_RATE = 45;
+
+/**
+ * Отступ при отрисовке спрайта в пикселях.
+ */
+export const GAME_RESOLUTION_TILE_OFFSET = 3;
 
 /**
  * Абсолютный путь (от index.html) к изображению травы.

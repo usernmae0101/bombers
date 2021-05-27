@@ -6,16 +6,22 @@ import * as GameSelecors from "../../../redux/selectors/game-selectors";
 import styles from "./game.module.scss";
 
 const Canvas = React.memo(() => {
-    const canvasWrapperStyles = {
-        background: `url(${Shared.Constants.GAME_RESOURCES_IMAGE_GRASS}) 100% 100%`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover"
+    const canvasBackgroundImgStyles: React.CSSProperties = {
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        zIndex: 0
     };
 
     return (
-        <div className={styles.canvas} style={canvasWrapperStyles} id="cnv"></div>
+        <div className={styles.canvas} id="cnv">
+            <img 
+                src={Shared.Constants.GAME_RESOURCES_IMAGE_GRASS}
+                style={canvasBackgroundImgStyles}
+            />
+        </div>
     );
-}); 
+});
 
 const Game = () => {
     const localColor = useSelector(GameSelecors.select_game_color);
@@ -31,7 +37,7 @@ const Game = () => {
     return (
         <div className={styles.game}>
             <div className={styles.menu}>
-                { !gameSlots[localColor].isReady && <button onClick={readyToPlay}>играть</button>}
+                {!gameSlots[localColor].isReady && <button onClick={readyToPlay}>играть</button>}
             </div>
             <Canvas />
         </div>

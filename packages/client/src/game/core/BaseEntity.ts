@@ -4,6 +4,8 @@ import { Sprite } from "@pixi/sprite";
 
 import * as Shared from "@bombers/shared/src/idnex";
 
+const { GAME_RESOLUTION_TILE_SIZE, GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
+
 export default class BaseEntity extends Sprite {
     private _tick: number = 0;
     private _blinkedTimes: number = 0;
@@ -11,15 +13,18 @@ export default class BaseEntity extends Sprite {
     constructor(frameX: number, frameY: number) {
         super(
             new Texture(
-                BaseTexture.from(Shared.Constants.GAME_RESOURCES_IMAGE_TILESET), 
+                BaseTexture.from(Shared.Constants.GAME_RESOURCES_IMAGE_TILESET),
                 new Rectangle(
                     frameX,
                     frameY,
-                    Shared.Constants.GAME_RESOLUTION_TILE_SIZE,
-                    Shared.Constants.GAME_RESOLUTION_TILE_SIZE
+                    GAME_RESOLUTION_TILE_SIZE,
+                    GAME_RESOLUTION_TILE_SIZE
                 )
             )
         );
+
+        this.width = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
+        this.height = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
     }
 
     get destroyed(): boolean {
@@ -53,7 +58,7 @@ export default class BaseEntity extends Sprite {
      * @param col - колонка ячейки на игровой карте
      */
     public setPosition(row: number, col: number) {
-        this.x = col * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-        this.y = row * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+        this.x = col * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_OFFSET;
+        this.y = row * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_OFFSET;
     }
 }
