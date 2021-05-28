@@ -21,7 +21,7 @@ export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
 /**
  * Таймаут в миллисекундах на взрыв бомбы после установки.
  */
-export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 2500;
+export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 2_500;
 
 /**
  * Количество игровых тайлов на карте в высоту.

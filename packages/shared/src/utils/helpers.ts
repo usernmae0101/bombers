@@ -20,7 +20,7 @@ export const calculatePlayerCellPosition = (
 };
 
 /**
- * Высчитывает количество пикселей, на которое
+ * Высчитывает количество пикселей, на которые
  * спрайт игрока пересёк ячейку на карте.
  * 
  * @param playerPoint - позиция игрока (верхний левый край) по X или Y
@@ -59,37 +59,6 @@ export const calculateCanvasHeight = (): number => {
  */
 export const makeCopyObject = <T>(object: T): T => {
     return JSON.parse(JSON.stringify(object));
-};
-
-/**
- * Проверяет, находится ли в ячейке идентификатор 
- * игровой сущности, с которой игрок сталкивается.
- * 
- * @param overlapData - информация о ячейке, с которой игрок пересёкся
- * @param map - игровая карта
- * @returns столкнулся ли игрок с чем-то: да или нет
- */
-export const isPlayerCollide = (
-    overlapData: Shared.Interfaces.IOverlapData,
-    map: number[][][]
-): boolean => {
-    const cellEintites = map[overlapData.row][overlapData.col];
-
-    for (let entityId of cellEintites) {
-        if (
-            // идентификаторы игровых сущностей, с которыми игрок сталкивается
-            [
-                EntityNumbers.BOMB_BLUE,
-                EntityNumbers.BOMB_PURPLE,
-                EntityNumbers.BOMB_YELLOW,
-                EntityNumbers.BOMB_RED,
-                EntityNumbers.BOX,
-                EntityNumbers.ROCK
-            ].includes(entityId)
-        ) return true;
-    }
-
-    return false;
 };
 
 /**
@@ -134,5 +103,5 @@ export const getAllBombsIds = (): Shared.Enums.EntityNumbers[] => {
  * @returns идентификаторы игровых сущностей
  */
 export const getAllEntitiesInCell = (map: number[][][], row: number, col: number): number[] => {
-    return { ...map[row][col] };
+    return [ ...map[row][col] ];
 };

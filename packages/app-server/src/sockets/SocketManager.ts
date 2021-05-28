@@ -34,7 +34,9 @@ export default class SocketManager {
                     member.nickname
                 );
                 return false;
-            } else return true;
+            } 
+            
+            return true;
         });
     }
 
@@ -52,6 +54,7 @@ export default class SocketManager {
         this.state.chat.messages[
             circularBuffer === 0 ? 0 : circularBuffer - 1
         ] = message;
+
         this.io.of("client").emit(
             String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE),
             message
@@ -127,7 +130,9 @@ export default class SocketManager {
                             ClientSocketHandler.handle(socket, this, currentSocketUserData);
                         }
                     });
-            } else socket.disconnect(true);
+            } 
+            
+            else socket.disconnect(true);
         });
 
         // Соединение инициировал игровой сервер.
@@ -138,7 +143,9 @@ export default class SocketManager {
                 this.addGameServerToState(JSON.parse(gameServer as string));
 
                 GameServerSocketHandler.handle(socket, this);
-            } else socket.disconnect(true);
+            } 
+            
+            else socket.disconnect(true);
         });
     }
 

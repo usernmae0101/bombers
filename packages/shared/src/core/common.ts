@@ -1,5 +1,5 @@
 import * as Shared from "../idnex";
-import { isOutOfBorder } from "./collision";
+import { isOutOfBorder, isPlayerCollide } from "./collision";
 
 /**
  * Передвигает игрока. Если направление движения поменялось, 
@@ -16,8 +16,7 @@ export const movePlayer = (
     direction: Shared.Enums.MoveDirections,
     map: number[][][]
 ): Shared.Interfaces.IOverlapData => {
-    const { isPlayerCollide } = Shared.Helpers;
-    const { UP, LEFT, RIGHT, DOWN } = Shared.Enums.MoveDirections;
+    const { UP, RIGHT, DOWN } = Shared.Enums.MoveDirections;
 
     // по какой оси движется игрок
     const axisAlongWhichPlayerMoves = [UP, DOWN].includes(direction) ? "y" : "x";
@@ -25,22 +24,11 @@ export const movePlayer = (
     const isDirectionChanged = player.direction !== direction;
 
     if (isDirectionChanged)
+        // меняем направление в состоянии, если изменилось
         player.direction = direction;
 
-    // TODO: добавить формулу
-    switch (direction) {
-        case UP:
-            player.y -= player.speed + 6;
-            break;
-        case RIGHT:
-            player.x += player.speed + 6;
-            break;
-        case DOWN:
-            player.y += player.speed + 6;
-            break;
-        case LEFT:
-            player.x -= player.speed + 6;
-    }
+    // передвигаем игрока
+    player[axisAlongWhichPlayerMoves] += (player.speed + 6) * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
 
     if (isOutOfBorder(player)) {
         // выравниваем игрока, если он вышел за границу канваса
@@ -48,19 +36,14 @@ export const movePlayer = (
         return;
     }
 
-    const overlapData = checkPlayerOverlap(player, map);
-    if (overlapData && isPlayerCollide(overlapData, map)) {
+    const [overlapData, atEdgeOfBorder] = checkPlayerOverlap(player, map);
+
+    if (overlapData && isPlayerCollide(map[overlapData.row][overlapData.col]))
         // выравниваем игрока, если он с чем-то столкнулся
         alignPlayer(player, axisAlongWhichPlayerMoves);
-    } 
-    // если ни с чем не столкнулся и поменялось направление движения
-    else if (isDirectionChanged) {
-        if ([UP, DOWN].includes(direction))
-            alignPlayer(player, "x");
-
-        if ([LEFT, RIGHT].includes(direction))
-            alignPlayer(player, "y");
-    }
+    else if (isDirectionChanged && !atEdgeOfBorder)
+        // выравниваем игрока по обратной оси, если он не у границы
+        alignPlayer(player, axisAlongWhichPlayerMoves === "x" ? "y" : "x");
 
     return overlapData;
 };
@@ -81,7 +64,7 @@ export const filterOverlapData = (
     const { GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
 
     // учитываем оступы в пикселях при отрисовке спрайтов
-    if (overlapData.distance <= GAME_RESOLUTION_TILE_OFFSET * 2) 
+    if (overlapData.distance <= GAME_RESOLUTION_TILE_OFFSET * 2)
         return;
 
     const cellEntities = map[overlapData.row][overlapData.col];
@@ -98,12 +81,12 @@ export const filterOverlapData = (
  * 
  * @param player - игрок
  * @param map - карта
- * @returns информация о ячейке, которая была пересечена игроком
+ * @returns [информация о ячейке, у границы канваса ли игрок: да, нет]
  */
 export const checkPlayerOverlap = (
     player: Shared.Interfaces.IGameStatePlayer,
     map: number[][][]
-): undefined | Shared.Interfaces.IOverlapData => {
+): [Shared.Interfaces.IOverlapData, boolean] => {
     const { calculatePlayerCellPosition, calculateOverlapDistance } = Shared.Helpers;
     const { UP, LEFT, RIGHT, DOWN } = Shared.Enums.MoveDirections;
     const { GAME_RESOLUTION_TILE_LENGTH_X, GAME_RESOLUTION_TILE_LENGTH_Y, GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
@@ -115,49 +98,67 @@ export const checkPlayerOverlap = (
 
     switch (player.direction) {
         case UP:
+            // у верхнего края канваса
+            if (playerRow === 0) return [undefined, true];
+
             cellRow = playerRow - 1;
         case DOWN:
             cellRow = cellRow ?? playerRow + 1;
-            // у верхнего или нижнего края канваса
-            if (playerRow === 0 || playerRow === GAME_RESOLUTION_TILE_LENGTH_Y - 1) return;
+
+            // у нижнего края канваса
+            if (player.direction === DOWN && playerRow === GAME_RESOLUTION_TILE_LENGTH_Y - 1) return [undefined, true];
 
             // если ячейка не пустая
             if (map[cellRow][playerCol].length) {
                 // if (rect1.y < rect2.y + rect2.height && rect1.height + rect1.y > rect2.y)
                 if (player.y < (cellRow * GAME_RESOLUTION_TILE_SIZE) + GAME_RESOLUTION_TILE_SIZE &&
                     player.y + GAME_RESOLUTION_TILE_SIZE > (cellRow * GAME_RESOLUTION_TILE_SIZE)) {
-                    return {
-                        row: cellRow,
-                        col: playerCol,
-                        distance: calculateOverlapDistance(
-                            player.y,
-                            cellRow * GAME_RESOLUTION_TILE_SIZE
-                        )
-                    };
+                    return [
+                        {
+                            row: cellRow,
+                            col: playerCol,
+                            distance: calculateOverlapDistance(
+                                player.y,
+                                cellRow * GAME_RESOLUTION_TILE_SIZE
+                            )
+                        },
+                        false
+                    ];
                 }
             }
+
+            return [undefined, false];
         case LEFT:
+            // у левого края канваса
+            if (playerCol === 0) return [undefined, true];
+
             cellCol = playerCol - 1;
         case RIGHT:
             cellCol = cellCol ?? playerCol + 1;
-            // у левого или правого края канваса
-            if (playerCol === 0 || playerCol === GAME_RESOLUTION_TILE_LENGTH_X - 1) return;
+
+            // у правого края канваса
+            if (player.direction === RIGHT && playerCol === GAME_RESOLUTION_TILE_LENGTH_X - 1) return [undefined, true];
 
             // если ячейка не пустая
             if (map[playerRow][cellCol].length) {
                 // if (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x)
                 if (player.x < (cellCol * GAME_RESOLUTION_TILE_SIZE) + GAME_RESOLUTION_TILE_SIZE &&
                     player.x + GAME_RESOLUTION_TILE_SIZE > (cellCol * GAME_RESOLUTION_TILE_SIZE)) {
-                    return {
-                        row: playerRow,
-                        col: cellCol,
-                        distance: calculateOverlapDistance(
-                            player.x,
-                            cellCol * GAME_RESOLUTION_TILE_SIZE
-                        )
-                    };
+                    return [
+                        {
+                            row: playerRow,
+                            col: cellCol,
+                            distance: calculateOverlapDistance(
+                                player.x,
+                                cellCol * GAME_RESOLUTION_TILE_SIZE
+                            )
+                        },
+                        false
+                    ];
                 }
             }
+
+            return [undefined, false];
     }
 };
 
@@ -271,15 +272,20 @@ export const tryToPlaceBomb = (
     state: Shared.Interfaces.IGameState,
     color: number
 ): boolean => {
+    const { calculatePlayerCellPosition, getAllEntitiesInCell, getAllBombsIds } = Shared.Helpers;
     const { INPUT_KEY_SPACE } = Shared.Enums.InputKeys;
 
-    if (!keys.includes(INPUT_KEY_SPACE)) return false;
-    if (state.players[color].bombs === 0) return false;
+    if (!keys.includes(INPUT_KEY_SPACE)) 
+        return false;
+        
+    if (state.players[color].bombs === 0) 
+        return false;
 
-    const [playerRow, playerCol] = Shared.Helpers.calculatePlayerCellPosition(state.players[color]);
+    const [playerRow, playerCol] = calculatePlayerCellPosition(state.players[color]);
 
-    for (let eintity of Shared.Helpers.getAllEntitiesInCell(state.map, playerRow, playerCol))
-        if (Shared.Helpers.getAllBombsIds().includes(eintity)) return false;
+    for (let eintity of getAllEntitiesInCell(state.map, playerRow, playerCol))
+        if (getAllBombsIds().includes(eintity)) 
+            return false;
 
     return true;
 };

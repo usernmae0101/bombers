@@ -240,6 +240,7 @@ export default class Game {
 
             player.x = _player.x;
             player.y = _player.y;
+            player.direction = _player.direction;
 
             // FIXME: ограничить буфер?
             if (isInsertPrediction) {
