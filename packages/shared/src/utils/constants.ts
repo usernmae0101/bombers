@@ -19,9 +19,19 @@ export const GAME_RESOLUTION_TILE_SIZE = 72;
 export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
 
 /**
+ * Процент вероятности выпадения бонусного предмета из коробки.
+ */
+export const GAME_GAMEPLAY_DROP_ITEM_PERCENT = 65;
+
+/**
  * Таймаут в миллисекундах на взрыв бомбы после установки.
  */
 export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 2_500;
+
+/**
+ * Время в миллисекундах, после которого пламя исчезает.
+ */
+export const GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW = 800;
 
 /**
  * Количество игровых тайлов на карте в высоту.

@@ -137,7 +137,6 @@ export enum GameMaps {
 }
 
 export enum EntityNumbers {
-    GRASS,
     CRATER,
     PLAYER,
     BOX,
@@ -151,9 +150,9 @@ export enum EntityNumbers {
     FIRE_RIGHT,
     FIRE_MIDDLE_Y,
     FIRE_MIDDLE_X,
-    FIRE_EDGE,
     FIRE_TOP,
     FIRE_BOTTOM,
+    FIRE_EDGE,
     ITEM_HEALTH,
     ITEM_RADIUS,
     ITEM_BOMB,
@@ -164,6 +163,9 @@ export enum EntityNumbers {
 export enum ContainerLayers {
     BOXES,
     ROCKS,
+    CRATERS,
     BOMBS,
+    ITEMS,
+    FIRES,
     PLAYERS
 }

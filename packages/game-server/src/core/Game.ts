@@ -37,7 +37,7 @@ export default class Game {
 
                 const isPlaceBomb = Shared.Core.tryToPlaceBomb(keys, this._state, +color);
                 if (isPlaceBomb) {
-                    Shared.Core.placeBomb(this._proxyState, +color);
+                    Shared.Core.placeBombToMap(this._proxyState, +color);
                 }
 
                 this._proxyState.players[color].tick = tick;

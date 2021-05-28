@@ -1,4 +1,5 @@
 import * as Shared from "./../idnex";
+import { getRandomBetween } from "./maths";
 
 const { PlayerColors, EntityNumbers } = Shared.Enums;
 
@@ -59,6 +60,22 @@ export const calculateCanvasHeight = (): number => {
  */
 export const makeCopyObject = <T>(object: T): T => {
     return JSON.parse(JSON.stringify(object));
+};
+
+/**
+ * Достаёт случайный бонусный предмет из списка.
+ * 
+ * @returns идентификатор игровой сущности предмета
+ */
+export const chooseRandomBonusItem = (): Shared.Enums.EntityNumbers => {   
+    const items = [
+        EntityNumbers.ITEM_BOMB,
+        EntityNumbers.ITEM_HEALTH,
+        EntityNumbers.ITEM_RADIUS,
+        EntityNumbers.ITEM_SPEED
+    ];
+
+    return getRandomBetween(0, items.length - 1);
 };
 
 /**

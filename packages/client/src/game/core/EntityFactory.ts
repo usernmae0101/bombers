@@ -25,7 +25,22 @@ export default class EntityFactory {
             case EntityNumbers.BOMB_YELLOW:
             case EntityNumbers.BOMB_PURPLE:
             case EntityNumbers.BOMB_RED:
-                return new Entities.BombEntity(frameX, frameY);;
+                return new Entities.BombEntity(frameX, frameY);
+            case EntityNumbers.FIRE_CENTER:
+            case EntityNumbers.FIRE_BOTTOM:
+            case EntityNumbers.FIRE_LEFT:
+            case EntityNumbers.FIRE_TOP:
+            case EntityNumbers.FIRE_RIGHT:
+            case EntityNumbers.FIRE_MIDDLE_X:
+            case EntityNumbers.FIRE_MIDDLE_Y:
+                return new Entities.FireEntity(frameX, frameY, entityId);
+            case EntityNumbers.ITEM_BOMB:
+            case EntityNumbers.ITEM_HEALTH:
+            case EntityNumbers.ITEM_SPEED:
+            case EntityNumbers.ITEM_RADIUS:
+                return new Entities.ItemEntity(frameX, frameY);
+            case EntityNumbers.CRATER:
+                return new Entities.CraterEntity(frameX, frameY);
         }
     }
 }

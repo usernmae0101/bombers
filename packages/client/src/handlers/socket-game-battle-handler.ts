@@ -6,7 +6,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import Game from "../game/Game";
 import * as GameActions from "../ui/redux/actions/game-actions";
 
-interface IJoinRoomData {
+interface IConnectRoomData {
     /** Цвет игрока. */
     color: Shared.Enums.PlayerColors;
     /** UDP порт, чтобы установить второе (ненадёжное) соединение. */
@@ -43,7 +43,7 @@ export const startHandlingGameBattleSocket = (
     // получаем данные при успешном подключении к комнате
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_CONNECT_ROOM_DATA),
-        (data: IJoinRoomData) => {
+        (data: IConnectRoomData) => {
             dispatch(GameActions.action_game_set_slots(data.slots));
             dispatch(GameActions.action_game_set_color(data.color));
 
