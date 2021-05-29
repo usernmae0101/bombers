@@ -52,6 +52,8 @@ export default class Game {
         });
 
         this._renderer = new Renderer([
+            new Containers.CratersContainer,
+            new Containers.ItemsContainer,
             new Containers.FiresContainer,
             new Containers.PlayersContainer,
             new Containers.BombsContainer,

@@ -75,7 +75,7 @@ export const chooseRandomBonusItem = (): Shared.Enums.EntityNumbers => {
         EntityNumbers.ITEM_SPEED
     ];
 
-    return getRandomBetween(0, items.length - 1);
+    return items[getRandomBetween(0, items.length - 1)];
 };
 
 /**

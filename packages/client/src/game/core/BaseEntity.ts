@@ -10,7 +10,7 @@ export default class BaseEntity extends Sprite {
     private _tick: number = 0;
     private _blinkedTimes: number = 0;
 
-    constructor(frameX: number, frameY: number) {
+    constructor(frameX: number, frameY: number, isResize: boolean = true) {
         super(
             new Texture(
                 BaseTexture.from(Shared.Constants.GAME_RESOURCES_IMAGE_TILESET),
@@ -22,9 +22,11 @@ export default class BaseEntity extends Sprite {
                 )
             )
         );
-
-        this.width = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
-        this.height = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
+        
+        if (isResize) {
+            this.width = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
+            this.height = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
+        }
     }
 
     get destroyed(): boolean {
@@ -36,6 +38,31 @@ export default class BaseEntity extends Sprite {
     }
 
     /**
+     * Поворачивает спрайт на 90 градусов.
+     */
+    public rotate90degrees() {
+        this.angle = 90;
+        this.x += GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_OFFSET * 2;
+    }
+
+    /**
+     * Поворачивает спрайт на 180 градусов.
+     */
+    public rotate180degress() {
+        this.angle = 180;
+        this.x += GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_OFFSET * 2;
+        this.y += GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_OFFSET * 2; 
+    }
+
+    /**
+     * Поворачивает спрайт на 270 градусов.
+     */
+    public rotate270degrees() {
+        this.angle = 270;
+        this.y += GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_OFFSET * 2; 
+    }
+
+    /**
      * Устанавливает прозрачность игровой сущности
      * на период, заданный в игровых тактах, и меняет 
      * обратно на непрозрачность.
@@ -44,11 +71,11 @@ export default class BaseEntity extends Sprite {
      * @param opacity - прозрачность (от 0.0 до 1.0)
      */
     public blink(frequency: number, opacity: number) {
-        if (++this._tick < frequency) return;
+        if (++this._tick % frequency !== 0) 
+            return;
 
         this.alpha = this.alpha === 1 ? opacity : 1;
         this._blinkedTimes++;
-        this._tick = 0;
     }
 
     /**

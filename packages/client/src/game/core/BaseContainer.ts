@@ -33,6 +33,9 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
             const entity: T = EntityFactory.create(entity_id);
 
             entity.setPosition(row, col);
+            if ("configurate" in entity)
+                // @ts-ignore
+                entity.configurate(entity_id);
             this.addChild(entity);
 
             this.current_entity_id[row][col] = entity_id;

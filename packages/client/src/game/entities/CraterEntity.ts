@@ -5,7 +5,7 @@ const {  GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
 
 export default class CraterEntity extends BaseEntity {
     constructor(frameX: number, frameY: number) {
-        super(frameX, frameY);
+        super(frameX, frameY, false);
     }
 
     setPosition(row: number, col: number) {

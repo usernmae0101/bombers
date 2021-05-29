@@ -33,7 +33,7 @@ export default class EntityFactory {
             case EntityNumbers.FIRE_RIGHT:
             case EntityNumbers.FIRE_MIDDLE_X:
             case EntityNumbers.FIRE_MIDDLE_Y:
-                return new Entities.FireEntity(frameX, frameY, entityId);
+                return new Entities.FireEntity(frameX, frameY);
             case EntityNumbers.ITEM_BOMB:
             case EntityNumbers.ITEM_HEALTH:
             case EntityNumbers.ITEM_SPEED:

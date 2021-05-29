@@ -39,11 +39,14 @@ export default class FiresContainer extends BaseContainer<FireEntity> {
                     const entity = EntityFactory.create(middle_entity);
 
                     entity.setPosition(row, col);
+                    entity.configurate(middle_entity);
 
                     this.addChild(entity);
                     this._middleBuffer[`${middle_entity}${position}`] = entity;
                 }
-            } else if (bufferSlot !== undefined) {
+            } 
+            
+            else if (bufferSlot !== undefined) {
                 bufferSlot.destroy();
                 delete this._middleBuffer[`${middle_entity}${position}`];
             }
@@ -75,6 +78,7 @@ export default class FiresContainer extends BaseContainer<FireEntity> {
                     this.tryToRemoveEntity(row, col);
                     this.tryToAddEntity(EntityNumbers.FIRE_CENTER, row, col);
                 }
+
                 return true;
             }
         }

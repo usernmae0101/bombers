@@ -164,8 +164,8 @@ export enum ContainerLayers {
     BOXES,
     ROCKS,
     CRATERS,
-    BOMBS,
     ITEMS,
     FIRES,
+    BOMBS,
     PLAYERS
 }
