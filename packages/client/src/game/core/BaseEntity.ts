@@ -7,7 +7,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 const { GAME_RESOLUTION_TILE_SIZE, GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
 
 export default class BaseEntity extends Sprite {
-    private _tick: number = 0;
+    protected tick: number = 0;
     private _blinkedTimes: number = 0;
 
     constructor(frameX: number, frameY: number, isResize: boolean = true) {
@@ -71,7 +71,7 @@ export default class BaseEntity extends Sprite {
      * @param opacity - прозрачность (от 0.0 до 1.0)
      */
     public blink(frequency: number, opacity: number) {
-        if (++this._tick % frequency !== 0) 
+        if (++this.tick % frequency !== 0) 
             return;
 
         this.alpha = this.alpha === 1 ? opacity : 1;

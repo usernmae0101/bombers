@@ -24,7 +24,7 @@ export const filterOverlapData = (
 
     for (let entityId of cellEntities) {
         switch (entityId) {
-            // TODO: перебрать сущности
+           // TODO: перебрать
         }
     }
 };

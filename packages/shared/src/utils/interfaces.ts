@@ -112,6 +112,8 @@ export interface IGameStatePlayer {
     y: number;
     /** Номер игрового такта. */
     tick?: number;
+    /** Уязвим ли игрок. */
+    isImmortal?: boolean;
 }
 
 export interface IStateLobbyGameRoom {

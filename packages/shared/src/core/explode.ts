@@ -249,13 +249,13 @@ export const detonateBomb = (
     );
 
     // удаляем пламя через таймаут
-    /*setTimeout(
+    setTimeout(
         updateBlazeDependsCallback,
         GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW,
         argumentsToUpdateBlazeFunc[0],
         argumentsToUpdateBlazeFunc[1],
         removeEntityFromMap
-    );*/
+    );
 };
 
 /**

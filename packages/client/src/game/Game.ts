@@ -140,8 +140,9 @@ export default class Game {
                     else if (_changes.key === "radius")
                         dispatch(GameActions.action_game_set_radius(_changes.value));
                 }
-
-                player[_changes.key as keyof Shared.Interfaces.IGameStatePlayer] = _changes.value;
+                
+               // @ts-ignore 
+               player[_changes.key as keyof Shared.Interfaces.IGameStatePlayer] = _changes.value;
             }
         }
     }
