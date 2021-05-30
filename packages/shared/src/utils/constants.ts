@@ -1,22 +1,7 @@
-/**
- * Максимальная длина сообщения в чате.
- */
-export const CHAT_MAX_MESSAGE_LENGTH = 300;
+/***************************************
+ * GAMEPLAY----------------------------*
+ ***************************************/
 
-/**
- * Количество сообщений чата, которые запоминаются в истории.
- */
-export const CHAT_MESSAGES_BUFFER_SIZE = 20;
-
-/**
- * Размер игрового тайла в пикселях.
- */
-export const GAME_RESOLUTION_TILE_SIZE = 72;
-
-/**
- * Количетво игровых тайлов на карте в ширину.
- */
-export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
 
 /**
  * Процент вероятности выпадения бонусного предмета из коробки.
@@ -34,9 +19,77 @@ export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 2_500;
 export const GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW = 800;
 
 /**
+ * Лимит на храрактеристику игрока: бомбы.
+ */
+export const GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT = 10;
+
+/**
+ * Лимит на храрактеристику игрока: скорость.
+ */
+export const GAME_GAMEPLAY_PLAYER_PROPERTY_SPEED_LIMIT = 10;
+
+/**
+* Лимит на храрактеристику игрока: здоровье.
+*/
+export const GAME_GAMEPLAY_PLAYER_PROPERTY_HEALTH_LIMIT = 3;
+
+/**
+* Лимит на храрактеристику игрока: радиус.
+*/
+export const GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT = 10;
+
+/**
+ * На сколько миллисекунд делать игрока неязвимым после получения урона.
+ */
+export const GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL = 1_000;
+
+
+/***************************************
+ * RESOLUTION--------------------------*
+ ***************************************/
+
+
+/**
+ * Размер игрового тайла в пикселях.
+ */
+export const GAME_RESOLUTION_TILE_SIZE = 72;
+
+/**
+ * Количетво игровых тайлов на карте в ширину.
+ */
+export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
+
+/**
+ * Отступ при отрисовке спрайта в пикселях.
+ */
+export const GAME_RESOLUTION_TILE_OFFSET = 3;
+
+/**
  * Количество игровых тайлов на карте в высоту.
  */
 export const GAME_RESOLUTION_TILE_LENGTH_Y = 11;
+
+
+/***************************************
+ * CHAT--------------------------------*
+ ***************************************/
+
+
+/**
+ * Максимальная длина сообщения в чате.
+ */
+export const CHAT_MAX_MESSAGE_LENGTH = 300;
+
+/**
+ * Количество сообщений чата, которые запоминаются в истории.
+ */
+export const CHAT_MESSAGES_BUFFER_SIZE = 20;
+
+
+/***************************************
+ * REST--------------------------------*
+ ***************************************/
+
 
 /**
  * Частота обновления игрового состояния на сервере в секунду.
@@ -58,10 +111,11 @@ export const GAME_CANVAS_VIEW_ID = "cnv";
  */
 export const GAME_CLIENT_UPDATE_RATE = 45;
 
-/**
- * Отступ при отрисовке спрайта в пикселях.
- */
-export const GAME_RESOLUTION_TILE_OFFSET = 3;
+
+/***************************************
+ * RESOURCES---------------------------*
+ ***************************************/
+
 
 /**
  * Абсолютный путь (от index.html) к изображению травы.

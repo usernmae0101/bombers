@@ -120,9 +120,14 @@ export default class Game {
 
     public onReliableStateChanges(changes: any[], dispatch: Dispatch) {
         for (let _changes of changes) {
+            // удалён игрок из игрового состояния
+            if ("delete" in _changes) {
+                delete this._state.players[_changes.delete];
+            }
             // поменялась карта
-            if (Object.keys(_changes).includes("row"))
+            else if ("row" in _changes) {
                 this._state.map[_changes.row][_changes.col] = _changes.entities;
+            }
             // поменялись хар-ки игрока или добавлен игрок
             else {
                 if (_changes.color === "players") {
@@ -140,9 +145,9 @@ export default class Game {
                     else if (_changes.key === "radius")
                         dispatch(GameActions.action_game_set_radius(_changes.value));
                 }
-                
-               // @ts-ignore 
-               player[_changes.key as keyof Shared.Interfaces.IGameStatePlayer] = _changes.value;
+
+                // @ts-ignore 
+                player[_changes.key as keyof Shared.Interfaces.IGameStatePlayer] = _changes.value;
             }
         }
     }
@@ -264,9 +269,10 @@ export default class Game {
         this._renderer.init(this._app.stage);
 
         // считываение клавиш
-        setInterval(() => {
-            this._update();
-        }, 1000 / Shared.Constants.GAME_CLIENT_UPDATE_RATE);
+        setInterval(
+            () => { this._update(); },
+            1000 / Shared.Constants.GAME_CLIENT_UPDATE_RATE
+        );
 
         // отрисовака
         this._app.ticker.add(() => {

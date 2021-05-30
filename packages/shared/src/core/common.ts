@@ -1,30 +1,132 @@
 import * as Shared from "@bombers/shared/src/idnex";
+import { GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT } from "../utils/constants";
 import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision";
 
 /**
  * Перебирает идентификаторы игровых сущностей 
- * из ячейки, с которой игрок пересёкся.
+ * из ячейки, с которой игрок пересёкся. Удаляет
+ * поднятый бонусный предмет с карты.
  * 
  * @param overlapData - данные о пересечении
- * @param map - карта
- * @param player - игрок
+ * @param state - игровое состояние
+ * @param color - цвет игрока
+ * @param bombsState - состояние бомб
  */
 export const filterOverlapData = (
     overlapData: Shared.Interfaces.IOverlapData,
-    map: number[][][],
-    player: Shared.Interfaces.IGameStatePlayer
+    state: Shared.Interfaces.IGameState,
+    color: Shared.Enums.PlayerColors,
+    bombsState: Shared.Interfaces.IBombsState
 ) => {
+    const { EntityNumbers } = Shared.Enums;
     const { GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
 
     // учитываем оступы в пикселях при отрисовке спрайтов
     if (overlapData.distance <= GAME_RESOLUTION_TILE_OFFSET * 2)
         return;
 
-    const cellEntities = map[overlapData.row][overlapData.col];
+    const cellEntities = state.map[overlapData.row][overlapData.col];
 
     for (let entityId of cellEntities) {
         switch (entityId) {
-           // TODO: перебрать
+            case EntityNumbers.FIRE_CENTER:
+            case EntityNumbers.FIRE_BOTTOM:
+            case EntityNumbers.FIRE_LEFT:
+            case EntityNumbers.FIRE_TOP:
+            case EntityNumbers.FIRE_RIGHT:
+            case EntityNumbers.FIRE_MIDDLE_X:
+            case EntityNumbers.FIRE_MIDDLE_Y:
+                tryToDamagePlayer(state, color);
+                break;
+            case EntityNumbers.ITEM_BOMB:
+            case EntityNumbers.ITEM_HEALTH:
+            case EntityNumbers.ITEM_RADIUS:
+            case EntityNumbers.ITEM_SPEED:
+                pickUpBonusItem(entityId, state.players[color], color, bombsState);
+                removeEntityFromMap(entityId, state.map, overlapData.row, overlapData.col);
+        }
+    }
+};
+
+/**
+ * Наносит урон игроку, который коснулся пламени.
+ * Если у игрока кончилось здоровье, то удаляем
+ * его из игового сотояния.
+ * 
+ * @param state - игровое состояние
+ * @param color - цвет игрока
+ */
+export const tryToDamagePlayer = (
+    state: Shared.Interfaces.IGameState,
+    color: Shared.Enums.PlayerColors
+) => {
+    const { GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL } = Shared.Constants;
+
+    if (!state.players[color].isImmortal) {
+        // удаляем игрока из состояния
+        if (state.players[color].health === 1) {
+            delete state.players[color];
+            return;
+        }
+
+        --state.players[color].health;
+
+        // делаем игрока неязвимым
+        state.players[color].isImmortal = true;
+
+        // возвращаем уязвимость через таймаут
+        setTimeout(
+            () => { state.players[color].isImmortal = false; },
+            GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL
+        );
+    }
+};
+
+/**
+ * Применяет бонусный предмет на игрока, если лимиты позволяют.
+ * 
+ * @param entityId - идентификатор игровой сущности предмета
+ * @param player - игрок
+ * @param color - цвет игрока
+ * @param bombsState - состояние бомб
+ */
+export const pickUpBonusItem = (
+    entityId: Shared.Enums.EntityNumbers,
+    player: Shared.Interfaces.IGameStatePlayer,
+    color: Shared.Enums.PlayerColors,
+    bombsState: Shared.Interfaces.IBombsState
+) => {
+    const { EntityNumbers } = Shared.Enums;
+    const {
+        GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT,
+        GAME_GAMEPLAY_PLAYER_PROPERTY_HEALTH_LIMIT,
+        GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT,
+        GAME_GAMEPLAY_PLAYER_PROPERTY_SPEED_LIMIT
+    } = Shared.Constants;
+
+    // подобрали бомбу
+    if (entityId === EntityNumbers.ITEM_BOMB) {
+        if (player.bombs < GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT) {
+            ++player.bombs;
+            ++bombsState[color];
+        }
+    }
+    // подобрали скорость
+    else if (entityId === EntityNumbers.ITEM_SPEED) {
+        if (player.speed < GAME_GAMEPLAY_PLAYER_PROPERTY_SPEED_LIMIT) {
+            ++player.speed;
+        }
+    }
+    // подобрали здоровье
+    else if (entityId === EntityNumbers.ITEM_HEALTH) {
+        if (player.health < GAME_GAMEPLAY_PLAYER_PROPERTY_HEALTH_LIMIT) {
+            ++player.health;
+        }
+    }
+    // подобрали радиус
+    else if (entityId === EntityNumbers.ITEM_RADIUS) {
+        if (player.radius < GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT) {
+            ++player.radius;
         }
     }
 };
@@ -37,7 +139,7 @@ export const filterOverlapData = (
  * @param player - игрок
  * @param direction - направление движения
  * @param map - состояние игровой карты
- * @returns данные о ячейке, пресечённой игроком
+ * @returns данные о ячейке, пресеbчённой игроком
  */
 export const movePlayer = (
     player: Shared.Interfaces.IGameStatePlayer,
@@ -46,9 +148,7 @@ export const movePlayer = (
 ): Shared.Interfaces.IOverlapData => {
     const { UP, RIGHT, DOWN } = Shared.Enums.MoveDirections;
 
-    // по какой оси движется игрок
     const axisAlongWhichPlayerMoves = [UP, DOWN].includes(direction) ? "y" : "x";
-    // поменялось ли направление движения
     const isDirectionChanged = player.direction !== direction;
 
     if (isDirectionChanged) {
@@ -174,12 +274,14 @@ export const tryToMovePlayer = (keys: number[]): [boolean, number] => {
  * 
  * @param keys - нажатые клавиши
  * @param state - игровое состояние
+ * @param bombsState - состояние бомб
  * @param color - цвет игрока, пытающегося поставить бомбу
  * @returns можно ли ставить бомбу: да или нет
  */
 export const tryToPlaceBomb = (
     keys: number[],
     state: Shared.Interfaces.IGameState,
+    bombsState: Shared.Interfaces.IBombsState,
     color: number
 ): boolean => {
     const { calculatePlayerCellPosition, getAllEntitiesInCell, getAllBombsIds } = Shared.Helpers;
@@ -188,11 +290,12 @@ export const tryToPlaceBomb = (
     if (!keys.includes(INPUT_KEY_SPACE))
         return false;
 
-    if (state.players[color].bombs === 0)
+    if (bombsState[color] === 0)
         return false;
 
     const [playerRow, playerCol] = calculatePlayerCellPosition(state.players[color]);
 
+    // проверяем, есть ли в ячейке какая-нибудь бомба
     for (let eintity of getAllEntitiesInCell(state.map, playerRow, playerCol))
         if (getAllBombsIds().includes(eintity))
             return false;

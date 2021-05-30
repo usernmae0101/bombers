@@ -58,13 +58,13 @@ export default class Room {
     }
 
     // TODO:
-    public onLeave() { 
+    public onLeave() {
 
     }
 
     // TODO:
-    public onReconnect() { 
-        
+    public onReconnect() {
+
     }
 
     /**
@@ -101,6 +101,14 @@ export default class Room {
      */
     private _startGame() {
         this._game.isStarted = true;
+
+        // FIXME: передалеать 
+        // инициализируем начальное состояние бомб для игроков
+        const bombsState: Shared.Interfaces.IBombsState = {};
+        for (let { color } of Object.values(this._users)) {
+            bombsState[color] = 1;
+        }
+        this._game.bombsState = bombsState;
 
         // широковещание игрового состояния
         this._broadcastInterval = setInterval(() => {
@@ -176,11 +184,11 @@ export default class Room {
                 // массив, значит карта - передаём надёжно
                 if (Array.isArray(target)) {
                     this._stateChanges.reliable.push(
-                    	{ 
-                        	row: this._lastChangedStateKey, 
-                        	col: key, 
-                        	entities: value 
-                    	}
+                        {
+                            row: this._lastChangedStateKey,
+                            col: key,
+                            entities: value
+                        }
                     );
                 }
                 // поменяли координаты игрока - передаём ненадёжно
@@ -195,16 +203,28 @@ export default class Room {
                 // какие-то другие хар-ки игрока (или сам игрок) - передаём надёжно
                 else {
                     this._stateChanges.reliable.push(
-                    	{ 
-                        	color: this._lastChangedStateKey, 
-                        	key, 
-                        	value 
-                    	}
+                        {
+                            color: this._lastChangedStateKey,
+                            key,
+                            value
+                        }
                     );
                 }
                 return Reflect.set(target, key, value, receiver);
+            },
+            deleteProperty: (target, key) => {
+                Reflect.deleteProperty(target, key);
+
+                // удалили игрока из состояния - передаём надёжно
+                this._stateChanges.reliable.push(
+                    {
+                        delete: key
+                    }
+                );
+
+                return true;
             }
-        }
+        };
 
         this._game.state = state;
         this._game.proxyState = new Proxy<Shared.Interfaces.IGameState>(state, stateHandler);

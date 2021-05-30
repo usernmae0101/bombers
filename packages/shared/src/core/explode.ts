@@ -38,18 +38,27 @@ interface IDirectionBlazeState {
  * удаления бомбы.
  * 
  * @param state - игровое состояние
+ * @param bombsState - состояние бомб
  * @param color - цвет игрока, поставившего бомбу
  */
-export const placeBombToMap = (state: Shared.Interfaces.IGameState, color: Shared.Enums.PlayerColors) => {
+export const placeBombToMap = (
+    state: Shared.Interfaces.IGameState, 
+    bombsState: Shared.Interfaces.IBombsState,
+    color: Shared.Enums.PlayerColors
+) => {
     const [playerRow, playerCol] = calculatePlayerCellPosition(state.players[color]);
 
     addEntityToMap(getBombIdByPlayerColor(color), state.map, playerRow, playerCol);
-    --state.players[color].bombs;
+    --bombsState[color];
 
+    // удаляем бомбу через таймаут
     setTimeout(
         removeBombFromMap,
         Shared.Constants.GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT,
-        [playerRow, playerCol], state, color
+        [playerRow, playerCol], 
+        state, 
+        bombsState,
+        color
     );
 };
 
@@ -60,17 +69,19 @@ export const placeBombToMap = (state: Shared.Interfaces.IGameState, color: Share
  * 
  * @param epicetner - эпицентр взрыва на карте [ряд ячеки, колонка ячейки]
  * @param state - игровое состояние
+ * @param bombsState - состояние бомб
  * @param color - цвет игрока, поставившего бомбу
  */
 export const removeBombFromMap = (
     epicenter: [number, number],
     state: Shared.Interfaces.IGameState,
+    bombsState: Shared.Interfaces.IBombsState,
     color: Shared.Enums.PlayerColors
 ) => {
     const [epicenterRow, epicenterCol] = epicenter;
 
     removeEntityFromMap(getBombIdByPlayerColor(color), state.map, epicenterRow, epicenterCol);
-    ++state.players[color].bombs;
+    ++bombsState[color];
 
     // добавляем кратер, если его нет в ячейке на карте
     if (!state.map[epicenterRow][epicenterCol].includes(EntityNumbers.CRATER)) {

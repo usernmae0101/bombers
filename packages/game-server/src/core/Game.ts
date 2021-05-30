@@ -11,6 +11,7 @@ export default class Game {
     /** Cтатус игры: начата или нет. */
     private _isStarted: boolean = false;
     private _proxyState: Shared.Interfaces.IGameState;
+    private _bombsState: Shared.Interfaces.IBombsState;
     public keysBuffer: IKeysBuffer = {};
 
     private _updatePlayers() {
@@ -27,17 +28,17 @@ export default class Game {
                     const overlapData = Shared.Core.movePlayer(_player, direction, this._state.map);
                     if (overlapData) {
                         // перебираем пересечённые игровые сущности
-                        Shared.Core.filterOverlapData(overlapData, this._state.map, player);
-                    }
+                        Shared.Core.filterOverlapData(overlapData, this._proxyState, +color, this._bombsState);
+                    } 
 
                     player.x = _player.x;
                     player.y = _player.y;
                     player.direction = _player.direction;
                 }
 
-                const isPlaceBomb = Shared.Core.tryToPlaceBomb(keys, this._state, +color);
+                const isPlaceBomb = Shared.Core.tryToPlaceBomb(keys, this._state, this._bombsState, +color);
                 if (isPlaceBomb) {
-                    Shared.Core.placeBombToMap(this._proxyState, +color);
+                    Shared.Core.placeBombToMap(this._proxyState, this._bombsState, +color);
                 }
 
                 this._proxyState.players[color].tick = tick;
@@ -80,6 +81,13 @@ export default class Game {
      */
     get isStarted(): boolean {
         return this._isStarted;
+    }
+
+    /**
+     * Устанавливет состояние бомб для игроков.
+     */
+    set bombsState(value: Shared.Interfaces.IBombsState) {
+        this._bombsState = value;
     }
 
     /**
