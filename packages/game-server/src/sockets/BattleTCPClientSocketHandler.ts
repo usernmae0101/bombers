@@ -10,6 +10,12 @@ import Room from "../core/Room";
 export default class BattleTCPClientSocketHandler {
     public static handle(socket: Socket, manager: SocketManager, gameRoom: Room) {
         const token: string = socket.handshake.auth.token;
+        
+        // меняем эмоцию игрока
+        socket.on(
+            String(Shared.Enums.SocketChannels.GAME_ON_EMOTION_UPDATE),
+            (emotion: number) => gameRoom.onEmotionChange(token, emotion)
+        );
 
         // отвечаем на пинг
         socket.on(

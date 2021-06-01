@@ -66,6 +66,12 @@ export default class Room {
     public onReconnect() {
 
     }
+    
+    public onEmotionChange(token: string, emotion: number) {
+        const color = this._users[token].color;
+        
+        this._game.updatePlayerEmotion(color, emotion);
+    }
 
     /**
      * Добавляет присланные нажатые клавиши и номер 

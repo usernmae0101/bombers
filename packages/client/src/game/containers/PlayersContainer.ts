@@ -51,8 +51,11 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
         for (let color in players) {
             if (Object.keys(this._players).includes(color)) continue;
 
-            const { x: frameX, y: frameY } = getEntityFrame(EntityNumbers.PLAYER, +color, MoveDirections.DOWN);
+            const { x: frameX, y: frameY } = getEntityFrame(EntityNumbers.PLAYER, +color, players[color].direction);
             const player = new PlayerEntity(frameX, frameY, +color);
+    
+            // устанавливаем эмоцию игрока
+            player.updateEmotion(players[color].emotion, players[color].direction);
 
             this.addChild(player);
             this._players[color] = {
@@ -99,9 +102,10 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
             // обновляем полосу здоровья
             this._players[color].player.updateHealthbar(players[color].health);
 
-            // меняем направление игрока
+            // меняем направление игрока и обновляем эмоцию
             if (this._players[color].cache.direction !== players[color].direction) {
                 this._players[color].player.setDirection(players[color].direction);
+                this._players[color].player.updateEmotion(players[color].emotion, players[color].direction);
 
                 this._players[color].cache.direction = players[color].direction;
             }

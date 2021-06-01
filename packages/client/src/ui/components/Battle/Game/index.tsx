@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Application } from "@pixi/app";
+import { Socket } from "socket.io-client"
 
 import * as Shared from "@bombers/shared/src/idnex";
 import * as GameSelecors from "../../../redux/selectors/game-selectors";
@@ -40,7 +41,7 @@ const applyEmotion = (playerEntity: PlayerEntity, emotionEntityId: number) => {
     playerEntity.addChild(currentEmotion);
 };
 
-const initMenuCanvas = (color: number) => {
+const initMenuCanvas = (color: number, TCPSocket: Socket) => {
     const { EntityNumbers, MoveDirections } = Shared.Enums;
     const { GAME_RESOLUTION_TILE_SIZE, GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
 
@@ -88,6 +89,11 @@ const initMenuCanvas = (color: number) => {
         emotionEntity.buttonMode = true;
 
         emotionEntity.on('pointerdown', () => {
+            TCPSocket.emit(
+                String(Shared.Enums.SocketChannels.GAME_ON_EMOTION_UPDATE),
+                emotion
+            );
+
             applyEmotion(playerEntity, emotion);
         });
 
@@ -111,7 +117,7 @@ const Game = () => {
     };
 
     React.useEffect(() => {
-        initMenuCanvas(localColor);
+        initMenuCanvas(localColor, TCPSocket);
     }, [localColor]);
 
     return (

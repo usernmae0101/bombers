@@ -1,12 +1,12 @@
 import { Graphics } from "pixi.js";
 
 import * as Shared from "@bombers/shared/src/idnex";
-import { ArrowEntity } from ".";
+import { ArrowEntity, EmotionEntity } from ".";
 import BaseEntity from "../core/BaseEntity";
 import EntityFactory from "../core/EntityFactory";
 import { getEntityFrame } from "../core/frames";
 
-const { EntityNumbers, PlayerColors } = Shared.Enums;
+const { EntityNumbers, PlayerColors, MoveDirections } = Shared.Enums;
 const { GAME_RESOLUTION_TILE_SIZE, GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
 
 export default class PlayerEntity extends BaseEntity {
@@ -14,6 +14,7 @@ export default class PlayerEntity extends BaseEntity {
     private _health: number = null;
     private _healthbar: Graphics;
     private _arrow: ArrowEntity;
+    private _emotion: EmotionEntity;
 
     constructor(frameX: number, frameY: number, color: number) {
         super(frameX, frameY);
@@ -56,7 +57,33 @@ export default class PlayerEntity extends BaseEntity {
             this._health = health;
         }
     }
-    
+
+    public updateEmotion(emotion: number, direction: number) {
+        if (this._emotion !== undefined) {
+            this._emotion.destroy();
+            this._emotion = undefined;
+        } 
+        
+        if (direction === MoveDirections.UP)
+            return;
+
+        this._emotion = EntityFactory.create(emotion);
+
+        if (direction === MoveDirections.LEFT) {
+            this._emotion.texture.frame.x += GAME_RESOLUTION_TILE_SIZE / 2;
+            this._emotion.texture.frame.width = GAME_RESOLUTION_TILE_SIZE / 2;
+            this._emotion.texture.updateUvs();
+        }
+        
+        if (direction === MoveDirections.RIGHT) {
+            this._emotion.texture.frame.width = GAME_RESOLUTION_TILE_SIZE / 2;
+            this._emotion.texture.updateUvs();
+            this._emotion.x += GAME_RESOLUTION_TILE_SIZE / 2;
+        }
+
+        this.addChild(this._emotion);
+    }
+
     public updateArrow() {
         if (this._arrow === undefined) {
             this._arrow = EntityFactory.create(EntityNumbers.ARROW);

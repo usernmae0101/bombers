@@ -36,6 +36,10 @@ export enum InputKeys {
 
 export enum SocketChannels {
     /**
+     * Обновление эмоции игрока.
+     */
+    GAME_ON_EMOTION_UPDATE,
+    /**
      * Получение сетевой задержки между клиентом и игровым сервером.
      */
     GAME_ON_PING_PONG,

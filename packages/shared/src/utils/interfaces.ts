@@ -114,6 +114,8 @@ export interface IGameStatePlayer {
     tick?: number;
     /** Неуязвим ли игрок. */
     isImmortal?: boolean;
+    /** Эмоция игрока */
+    emotion: Enums.EntityNumbers;
 }
 
 export interface IBombsState {

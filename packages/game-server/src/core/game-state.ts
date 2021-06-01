@@ -25,6 +25,7 @@ export const createPlayer = (x: number, y: number): Shared.Interfaces.IGameState
     radius: 1,
     direction: Shared.Enums.MoveDirections.DOWN,
     isImmortal: false,
+    emotion: Shared.Enums.EntityNumbers.EMOTION_1_FRONT,
     x,
     y
 });

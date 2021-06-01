@@ -58,6 +58,10 @@ export default class Game {
     public addPlayerToState(color: number) {
         this._proxyState.players[color] = PlayerFactory.create(color);
     }
+    
+    public updatePlayerEmotion(color: number, emotion: number) {
+        this._proxyState.players[color].emotion = emotion;
+    }
 
     /**
      * Обновляет игровое состояние.

@@ -159,6 +159,9 @@ export default class Game {
         for (let color in this._snapshotBuffer) {
             const enemy = this._state.players[+color];
             const buffer = this._snapshotBuffer[color];
+            
+            // FIXME: удалить все снимки
+            if (!enemy) continue;
 
             if (buffer.length > 1 && buffer[0].timestamp <= renderTime && renderTime <= buffer[1].timestamp) {
                 const [s1, s2] = buffer;
