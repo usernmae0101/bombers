@@ -2,7 +2,7 @@ import BaseEntity from "../core/BaseEntity";
 import * as Shared from "@bombers/shared/src/idnex";
 
 const { EntityNumbers } = Shared.Enums;
-const { GAME_RESOLUTION_TILE_OFFSET, GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
+const { GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
 
 export default class FireEntity extends BaseEntity {
     constructor(frameX: number, frameY: number) {

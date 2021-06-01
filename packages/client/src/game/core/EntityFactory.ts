@@ -41,6 +41,11 @@ export default class EntityFactory {
                 return new Entities.ItemEntity(frameX, frameY);
             case EntityNumbers.CRATER:
                 return new Entities.CraterEntity(frameX, frameY);
+            case EntityNumbers.EMOTION_1_FRONT:
+            case EntityNumbers.EMOTION_2_FRONT:
+            case EntityNumbers.EMOTION_3_FRONT:
+            case EntityNumbers.EMOTION_4_FRONT:
+                return new Entities.EmotionEntity(frameX, frameY);
         }
     }
 }

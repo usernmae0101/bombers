@@ -102,9 +102,9 @@ export const GAME_SERVER_TICK_RATE = 45;
 export const GAME_SERVER_BROADCAST_RATE = 10;
 
 /**
- * Идентификатор html-элемента для канваса.
+ * Идентификатор html-элемента для канваса с игрой.
  */
-export const GAME_CANVAS_VIEW_ID = "cnv";
+export const GAME_CANVAS_VIEW_ID = "game-cnv";
 
 /**
  * Частота бновления локального сотояния и отправки клавиш на сервер в секунду.

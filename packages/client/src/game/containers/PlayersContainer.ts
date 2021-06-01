@@ -90,6 +90,12 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
                 this._players[color].player.updateArrow();
             }
 
+            // мелькаем игроком, если он получил урон
+            if (players[color].isImmortal)
+                this._players[color].player.blink(5, 0);
+            else if (this._players[color].player.alpha !== 1)
+                this._players[color].player.alpha = 1;
+
             // обновляем полосу здоровья
             this._players[color].player.updateHealthbar(players[color].health);
 

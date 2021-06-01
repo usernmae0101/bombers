@@ -39,6 +39,7 @@ export default class Game {
     /** Игровое состояние. */
     private _state: Shared.Interfaces.IGameState;
     private _app: Application;
+    private _updateInterval: NodeJS.Timeout;
     private _predictionBuffer: IPredctionBuffer = {};
     private _snapshotBuffer: ISnapshotBuffer = {};
     private _keys: Shared.Enums.InputKeys[] = [];
@@ -147,7 +148,7 @@ export default class Game {
                 }
 
                 // @ts-ignore 
-                player[_changes.key as keyof Shared.Interfaces.IGameStatePlayer] = _changes.value;
+                player[_changes.key] = _changes.value;
             }
         }
     }
@@ -241,8 +242,8 @@ export default class Game {
     private _updateLocalPlayer(keys: number[], isInsertPrediction: boolean) {
         const player = this._state.players[this._color];
 
-        const [isMove, direction] = Shared.Core.tryToMovePlayer(keys);
-        if (isMove) {
+        const [isPlayerMove, direction] = Shared.Core.tryToMovePlayer(keys);
+        if (isPlayerMove) {
             const _player = { ...player };
 
             Shared.Core.movePlayer(_player, direction, this._state.map);
@@ -269,7 +270,7 @@ export default class Game {
         this._renderer.init(this._app.stage);
 
         // считываение клавиш
-        setInterval(
+        this._updateInterval = setInterval(
             () => { this._update(); },
             1000 / Shared.Constants.GAME_CLIENT_UPDATE_RATE
         );
@@ -282,6 +283,12 @@ export default class Game {
     }
 
     private _update() {
+        // если локального игрока больше нет в состоянии
+        if (!(this._color in this._state.players)) {
+            clearInterval(this._updateInterval);
+            return;
+        }
+
         this._handleInputs();
         this._sendInputKeysToServer();
         this._updateLocalPlayer(this._keys, true);

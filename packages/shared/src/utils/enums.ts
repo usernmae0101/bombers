@@ -157,6 +157,10 @@ export enum EntityNumbers {
     ITEM_RADIUS,
     ITEM_BOMB,
     ITEM_SPEED,
+    EMOTION_1_FRONT,
+    EMOTION_2_FRONT,
+    EMOTION_3_FRONT,
+    EMOTION_4_FRONT,
     ARROW
 }
 

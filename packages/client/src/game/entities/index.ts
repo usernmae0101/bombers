@@ -2,6 +2,7 @@ import ArrowEntity from "./ArrowEntity";
 import BombEntity from "./BombEntity";
 import BoxEntity from "./BoxEntity";
 import CraterEntity from "./CraterEntity";
+import EmotionEntity from "./EmotionEntity";
 import FireEntity from "./FireEntity";
 import ItemEntity from "./ItemEntity";
 import PlayerEntity from "./PlayerEntity";
@@ -15,5 +16,6 @@ export {
     BombEntity,
     FireEntity,
     ItemEntity,
-    CraterEntity
+    CraterEntity,
+    EmotionEntity
 };

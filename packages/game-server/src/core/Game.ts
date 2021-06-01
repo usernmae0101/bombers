@@ -21,14 +21,18 @@ export default class Game {
 
                 const player = this._proxyState.players[color];
 
-                const [isMove, direction] = Shared.Core.tryToMovePlayer(keys);
-                if (isMove) {
+                const [isPlayerMove, direction] = Shared.Core.tryToMovePlayer(keys);
+                if (isPlayerMove) {
                     const _player = { ...player };
 
                     const overlapData = Shared.Core.movePlayer(_player, direction, this._state.map);
                     if (overlapData) {
                         // перебираем пересечённые игровые сущности
                         Shared.Core.filterOverlapData(overlapData, this._proxyState, +color, this._bombsState);
+                        
+                        // если игрок был удалён из игрового сосояния
+                        if (!(color in this._state.players)) 
+                            continue;
                     } 
 
                     player.x = _player.x;

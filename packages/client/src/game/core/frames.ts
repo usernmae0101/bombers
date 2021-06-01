@@ -112,7 +112,23 @@ const frames: IFrames = {
         [EntityNumbers.FIRE_EDGE]: {
             x: GAME_RESOLUTION_TILE_SIZE,
             y: 4 * GAME_RESOLUTION_TILE_SIZE
-        }
+        },
+        [EntityNumbers.EMOTION_1_FRONT]: {
+            x: 0,
+            y: 6 * GAME_RESOLUTION_TILE_SIZE
+        },
+        [EntityNumbers.EMOTION_2_FRONT]: {
+            x: GAME_RESOLUTION_TILE_SIZE,
+            y: 6 * GAME_RESOLUTION_TILE_SIZE
+        },
+        [EntityNumbers.EMOTION_3_FRONT]: {
+            x: 2 * GAME_RESOLUTION_TILE_SIZE,
+            y: 6 * GAME_RESOLUTION_TILE_SIZE
+        },
+        [EntityNumbers.EMOTION_4_FRONT]: {
+            x: 3 * GAME_RESOLUTION_TILE_SIZE,
+            y: 6 * GAME_RESOLUTION_TILE_SIZE
+        },
     },
     dynamic: {
         player: {
