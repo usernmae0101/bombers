@@ -3,17 +3,17 @@ import configurateStore from "redux-mock-store";
 import { render } from "enzyme";
 import { Provider } from "react-redux";
 
-import HUD from "@bombers/client/src/ui/components/Battle/HUD";
+import GameHUD from "@bombers/client/src/ui/components/Battle/GameHUD";
 
-describe("component HUD should render correctly", () => {
+describe("component GameHUD should renders correctly", () => {
     const mockStore = configurateStore();
     let wrapper: cheerio.Cheerio;
 
     const setStore = (store: any) => {
-        wrapper = render(<Provider store={store}><HUD /></Provider>)
+        wrapper = render(<Provider store={store}><GameHUD /></Provider>)
     };
 
-    it("should render correct values of items", () => {
+    it("should renders correct values of items", () => {
         const store = mockStore({
             game: {
                 HUD: {

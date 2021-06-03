@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import * as GameSelectors from "../../../redux/selectors/game-selectors";
-import styles from "./hud.module.scss";
+import styles from "./game-hud.module.scss";
 
-const HUD = () => {
+const GameHUD = () => {
     const ping = useSelector(GameSelectors.select_game_ping);
     const bombs = useSelector(GameSelectors.select_game_bombs);
     const speed = useSelector(GameSelectors.select_game_speed);
@@ -20,4 +20,4 @@ const HUD = () => {
     );
 };
 
-export default HUD;
+export default GameHUD;

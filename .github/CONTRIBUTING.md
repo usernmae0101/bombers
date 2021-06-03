@@ -74,8 +74,8 @@ interface IPlayer {
 
 # :pushpin: Задачи
 
-- ## [v0.1.0](docs/v0.1.0/list.md)
-- ## [v0.2.0](docs/v0.2.0/list.md)
+- ## [v0.1.0](../docs/v0.1.0/list.md)
+- ## [v0.2.0](../docs/v0.2.0/list.md)
 
 
 # :hammer: Инструменты

@@ -5,11 +5,10 @@ import { Socket } from "socket.io-client"
 
 import * as Shared from "@bombers/shared/src/idnex";
 import * as GameSelecors from "../../../redux/selectors/game-selectors";
-import styles from "./game.module.scss";
+import styles from "./game-container.module.scss";
 import { EmotionEntity, PlayerEntity } from "../../../../game/entities";
 import { getEntityFrame } from "../../../../game/core/frames";
 import EntityFactory from "../../../../game/core/EntityFactory";
-import { GAME_RESOLUTION_TILE_SIZE } from "@bombers/shared/src/utils/constants";
 
 const GameCanvas = React.memo(() => {
     const canvasBackgroundImgStyles: React.CSSProperties = {
@@ -105,7 +104,7 @@ const initMenuCanvas = (color: number, TCPSocket: Socket) => {
     document.getElementById("menu-cnv").appendChild(app.view);
 };
 
-const Game = () => {
+const GameContainer = () => {
     const localColor = useSelector(GameSelecors.select_game_color);
     const gameSlots = useSelector(GameSelecors.select_game_slots);
     const TCPSocket = useSelector(GameSelecors.select_game_tcp_socket);
@@ -137,4 +136,4 @@ const Game = () => {
     );
 };
 
-export default Game;
+export default GameContainer;

@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./bar.module.scss";
+import styles from "./room-bar.module.scss";
 
-const Bar = () => {
+const RoomBar = () => {
     return (
         <div className={styles.bar}>
             <span>(крестик)</span>
@@ -9,4 +9,4 @@ const Bar = () => {
     );
 };
 
-export default Bar;
+export default RoomBar;

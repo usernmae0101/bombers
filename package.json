@@ -10,7 +10,7 @@
     "jest": {
         "rootDir": ".",
         "transform": {
-            ".+\\.(css|styl|less|sass|scss)$": "jest-css-modules-transform",
+            ".+\\.(css|scss)$": "<rootDir>/tests/ui/stylesMock.js",
             ".(ts|tsx)": "ts-jest"
         },
         "testRegex": "spec\\.tsx?$",
@@ -38,7 +38,6 @@
         "enzyme-adapter-react-16": "^1.15.6",
         "enzyme-to-json": "^3.6.2",
         "jest": "^26.6.3",
-        "jest-css-modules-transform": "^4.2.1",
         "ts-jest": "^26.5.6"
     },
     "dependencies": {

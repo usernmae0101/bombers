@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import * as GameSelectors from "../../../redux/selectors/game-selectors";
-import styles from "./slots.module.scss";
+import styles from "./room-slots.module.scss";
 
 type SlotPropsType = { 
     slot: Shared.Interfaces.IGameSlot; 
@@ -21,7 +21,7 @@ const Slot: React.FC<SlotPropsType> = ({ slot, color }) => {
     );
 };
 
-const Slots = () => {
+const RoomSlots = () => {
     const slots = useSelector(GameSelectors.select_game_slots);
 
     return (
@@ -35,4 +35,4 @@ const Slots = () => {
     );
 };
 
-export default Slots;
+export default RoomSlots;

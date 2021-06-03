@@ -19,7 +19,7 @@ describeif(process.env.CI)("User model", () => {
         social: "vk"
     };
 
-    it("should create a User document", async () => {
+    it("should creates a User document", async () => {
         const user = await UserModel.create(commonUserData);
 
         expect(user.nickname).toEqual(commonUserData.nickname);
@@ -27,14 +27,14 @@ describeif(process.env.CI)("User model", () => {
         expect(user.social).toEqual(commonUserData.social);
     });
 
-    it("should find a User document", async () => {
+    it("should finds a User document", async () => {
         await UserModel.create(commonUserData);
         const user = await UserModel.findOne({ uid: commonUserData.uid });
 
         expect(user.nickname).toEqual(commonUserData.nickname);
     });
 
-    it("should not create User document", async () => {
+    it("should not creates User document", async () => {
         const create = async () => {
             let notValidUserData = { ...commonUserData }
             notValidUserData.social = "someNotValodSocial";

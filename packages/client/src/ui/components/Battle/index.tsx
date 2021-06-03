@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./battle.module.scss";
 import Loader from "../Loader";
-import Bar from "./Bar";
-import Slots from "./Slots";
-import GameComponent from "./Game";
-import HUD from "./HUD";
+import RoomBar from "./RoomBar";
+import RoomSlots from "./RoomSlots";
+import GameContainer from "./GameContainer";
+import GameHUD from "./GameHUD";
 import * as GameSelectors from "../../redux/selectors/game-selectors";
 import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import Game from "../../../game/Game";
@@ -59,10 +59,10 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
 
     return (
         <div className={styles.battle}>
-            <Bar />
-            <Slots />
-            <GameComponent />
-            <HUD />
+            <RoomBar />
+            <RoomSlots />
+            <GameContainer />
+            <GameHUD />
         </div>
     );
 };

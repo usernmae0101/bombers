@@ -4,14 +4,14 @@ import { Provider } from "react-redux";
 import React from "react";
 
 import * as Shared from "@bombers/shared/src/idnex";
-import Slots from "@bombers/client/src/ui/components/Battle/Slots";
+import RoomSlots from "@bombers/client/src/ui/components/Battle/RoomSlots";
 
-describe("Slots component should render correctly", () => {
+describe("RoomSlots component should renders correctly", () => {
     const mockStore = configurateStore();
     let wrapper: cheerio.Cheerio;
 
     const setStore = (store: any) => {
-        wrapper = render(<Provider store={store}><Slots /></Provider>)
+        wrapper = render(<Provider store={store}><RoomSlots /></Provider>)
     };
 
     it("should renders 4 empty slots", () => {
@@ -21,7 +21,7 @@ describe("Slots component should render correctly", () => {
         expect(wrapper.find("li")).toHaveLength(4);
     });
 
-    it("should render 1 slot with the nickname John Doe", () => {
+    it("should renders 1 slot with the nickname John Doe", () => {
         const store = mockStore({
             game: {
                 slots: {
