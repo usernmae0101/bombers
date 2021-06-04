@@ -88,7 +88,8 @@ export const isPlayerCollide = (cellEintites: number[]): boolean => {
                             col: playerCol,
                             distance: calculateOverlapDistance(
                                 player.y,
-                                cellRow * GAME_RESOLUTION_TILE_SIZE
+                                cellRow * GAME_RESOLUTION_TILE_SIZE,
+                                player.direction
                             )
                         },
                         false
@@ -119,7 +120,8 @@ export const isPlayerCollide = (cellEintites: number[]): boolean => {
                             col: cellCol,
                             distance: calculateOverlapDistance(
                                 player.x,
-                                cellCol * GAME_RESOLUTION_TILE_SIZE
+                                cellCol * GAME_RESOLUTION_TILE_SIZE,
+                                player.direction
                             )
                         },
                         false

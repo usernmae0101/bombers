@@ -1,7 +1,7 @@
 import * as Shared from "./../idnex";
 import { getRandomBetween } from "./maths";
 
-const { PlayerColors, EntityNumbers } = Shared.Enums;
+const { PlayerColors, EntityNumbers, MoveDirections } = Shared.Enums;
 
 /**
  * Определяет в какой ячейке на карте находится игрок.
@@ -21,14 +21,23 @@ export const calculatePlayerCellPosition = (
 };
 
 /**
- * Высчитывает количество пикселей, на которые
+ * Высчитывает количество пикселей, на которые 
  * спрайт игрока пересёк ячейку на карте.
  * 
  * @param playerPoint - позиция игрока (верхний левый край) по X или Y
  * @param cellPoint - позиция ячейки (верхний левый край) на карте по X или Y
- * @returns количество пикселей
+ * @param playerDirection - направление движения игрока
+ * @returns количество пикселей (абсолютное значение)
  */
-export const calculateOverlapDistance = (playerPoint: number, cellPoint: number): number => {
+export const calculateOverlapDistance = (
+    playerPoint: number, 
+    cellPoint: number,
+    playerDirection: Shared.Enums.MoveDirections
+): number => {
+    // учитываем, что отсчёт ведется от левого верхнего края спрайта
+    if ([MoveDirections.RIGHT, MoveDirections.DOWN].includes(playerDirection))
+        playerPoint += Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+
     return Math.abs(playerPoint - cellPoint);
 };
 
@@ -53,7 +62,7 @@ export const calculateCanvasHeight = (): number => {
 };
 
 /**
- * Делаем копию объекта, включая все вложенные объекты.
+ * Делает копию объекта, включая все вложенные объекты.
  * 
  * @param object - объект, который нужно скопировать
  * @returns копия объекта

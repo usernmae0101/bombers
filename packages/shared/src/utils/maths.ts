@@ -9,7 +9,7 @@
  */
 export function lerp(from: number, to: number, ratio: number): number {
     return from + (to - from) * ratio;
-};
+}
 
 /**
  * Получает случайное целое число в диапазоне от
@@ -21,4 +21,4 @@ export function lerp(from: number, to: number, ratio: number): number {
  */
 export function getRandomBetween(min: number, max: number): number {
     return Math.floor(Math.random( ) * (max - min + 1)) + min;
-};
+}
