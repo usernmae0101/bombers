@@ -42,10 +42,10 @@ describe("helpers should works correctly", () => {
     });
 
     it("should gets correct color of bomb by player color", () => {
-        expect(Enums.PlayerColors.BLUE).toEqual(Enums.EntityNumbers.BOMB_BLUE);
-        expect(Enums.PlayerColors.RED).toEqual(Enums.EntityNumbers.BOMB_RED);
-        expect(Enums.PlayerColors.PURPLE).toEqual(Enums.EntityNumbers.BOMB_PURPLE);
-        expect(Enums.PlayerColors.YELLOW).toEqual(Enums.EntityNumbers.BOMB_YELLOW);
+        expect(Helpers.getBombIdByPlayerColor(Enums.PlayerColors.BLUE)).toBe(Enums.EntityNumbers.BOMB_BLUE);
+        expect(Helpers.getBombIdByPlayerColor(Enums.PlayerColors.RED)).toBe(Enums.EntityNumbers.BOMB_RED);
+        expect(Helpers.getBombIdByPlayerColor(Enums.PlayerColors.PURPLE)).toBe(Enums.EntityNumbers.BOMB_PURPLE);
+        expect(Helpers.getBombIdByPlayerColor(Enums.PlayerColors.YELLOW)).toBe(Enums.EntityNumbers.BOMB_YELLOW);
     });
 
     it("should gets correct list of all ids bombs", () => {
