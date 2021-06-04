@@ -60,7 +60,7 @@ describe("helpers should works correctly", () => {
 
     it("should returns entities in a cell correctly", () => {
         const entities = [1, 2, 3];
-        const map = [[], [], [entities]];
+        const map = [[[], [], entities]];
         expect(Helpers.getAllEntitiesInCell(map, 0, 2)).toEqual(entities);
     });
 });
