@@ -51,15 +51,9 @@ export const placeBombToMap = (
     addEntityToMap(getBombIdByPlayerColor(color), state.map, playerRow, playerCol);
     --bombsState[color];
 
+    const args = [[playerRow, playerCol], state, bombsState, color];
     // удаляем бомбу через таймаут
-    setTimeout(
-        removeBombFromMap,
-        Shared.Constants.GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT,
-        [playerRow, playerCol], 
-        state, 
-        bombsState,
-        color
-    );
+    setTimeout(removeBombFromMap, Shared.Constants.GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT, ...args);
 };
 
 /**

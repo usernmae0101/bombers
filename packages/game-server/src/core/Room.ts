@@ -233,7 +233,7 @@ export default class Room {
         };
 
         this._game.state = state;
-        this._game.proxyState = new Proxy<Shared.Interfaces.IGameState>(state, stateHandler);
+        this._game.proxyState = new Proxy(state, stateHandler);
     }
 
     /**

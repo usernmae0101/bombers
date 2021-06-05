@@ -23,7 +23,7 @@ describe("collision should works correctly", () => {
             const map = [
                 [[], [], [], [1, 2, 5]],
                 [[], [], [], []],
-            // palyer here --^^    
+            // player here --^^    
             ];
             player.y -= 2;
             player.direction = Enums.MoveDirections.UP;
@@ -36,7 +36,7 @@ describe("collision should works correctly", () => {
             const player = createPlayer(startX, 0);
             const map = [
                 [[], [], [], []],
-            // palyer here --^^   
+            // player here --^^   
                 [[], [], [], []], 
             ];
             player.y += 2;

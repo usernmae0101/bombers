@@ -1,5 +1,4 @@
 import * as Shared from "@bombers/shared/src/idnex";
-import { GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT } from "../utils/constants";
 import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision";
 
 /**
@@ -153,15 +152,13 @@ export const movePlayer = (
     const isDirectionChanged = player.direction !== direction;
 
     if (isDirectionChanged) {
-        // меняем направление в состоянии, если игрок повернулся
         player.direction = direction;
     }
 
-    // передвигаем игрока
+    // FIXME: доделать формулу, по которой прибавлять скорость
     player[axisAlongWhichPlayerMoves] += (player.speed + 6) * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
 
     if (isOutOfBorder(player)) {
-        // выравниваем игрока, если он вышел за границу канваса
         alignPlayer(player, axisAlongWhichPlayerMoves);
         return;
     }
@@ -169,11 +166,9 @@ export const movePlayer = (
     const [overlapData, atEdgeOfBorder] = checkPlayerOverlap(player, map);
 
     if (overlapData && isPlayerCollide(map[overlapData.row][overlapData.col])) {
-        // выравниваем игрока, если он с чем-то столкнулся
         alignPlayer(player, axisAlongWhichPlayerMoves);
     }
     else if (isDirectionChanged && !atEdgeOfBorder) {
-        // выравниваем игрока по обратной оси, если он не у границы, повернулся и не столкнулся
         alignPlayer(player, axisAlongWhichPlayerMoves === "x" ? "y" : "x");
     }
 
@@ -296,7 +291,7 @@ export const tryToPlaceBomb = (
 
     const [playerRow, playerCol] = calculatePlayerCellPosition(state.players[color]);
 
-    // проверяем, есть ли в ячейке какая-нибудь бомба
+    // проверяем, есть ли в ячейке бомба любого цвета
     for (let eintity of getAllEntitiesInCell(state.map, playerRow, playerCol))
         if (getAllBombsIds().includes(eintity))
             return false;
