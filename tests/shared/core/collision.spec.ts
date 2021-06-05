@@ -3,9 +3,9 @@ import { createPlayer } from "@bombers/game-server/src/core/game-state";
 
 describe("collision should works correctly", () => {
     describe("overlap detenction should works correctly", () => {
-        it("should works when moving left", () => {
-            const statrtX = Constants.GAME_RESOLUTION_TILE_SIZE * 2;
-            const player = createPlayer(statrtX, 0);
+        it("should detects when cell is not empty and moving left", () => {
+            const startX = Constants.GAME_RESOLUTION_TILE_SIZE * 2;
+            const player = createPlayer(startX, 0);
             const map = [
                 [[], [1, 2, 3, 4], [], []]
             // player here --------^^
@@ -16,17 +16,45 @@ describe("collision should works correctly", () => {
             expect(Core.checkPlayerOverlap(player, map)).toEqual(expectData);
         });
 
-        it("should works when moving bottom", () => {
-            const statrtX = Constants.GAME_RESOLUTION_TILE_SIZE * 3;
-            const player = createPlayer(statrtX, 0);
+        it("should detects when cell is not empty and moving up", () => {
+            const startX = Constants.GAME_RESOLUTION_TILE_SIZE * 3;
+            const startY = Constants.GAME_RESOLUTION_TILE_SIZE;
+            const player = createPlayer(startX, startY);
             const map = [
+                [[], [], [], [1, 2, 5]],
                 [[], [], [], []],
             // palyer here --^^    
-                [[], [], [], [1, 2, 5]]
+            ];
+            player.y -= 2;
+            player.direction = Enums.MoveDirections.UP;
+            const expectData = [{ row: 0, col: 3, distance: 2 }, false];
+            expect(Core.checkPlayerOverlap(player, map)).toEqual(expectData);
+        });
+
+        it("should not detects when cell is empty and moving bottom", () => {
+            const startX = Constants.GAME_RESOLUTION_TILE_SIZE * 3;
+            const player = createPlayer(startX, 0);
+            const map = [
+                [[], [], [], []],
+            // palyer here --^^   
+                [[], [], [], []], 
             ];
             player.y += 2;
             player.direction = Enums.MoveDirections.DOWN;
-            const expectData = [{ row: 1, col: 3, distance: 2 }, false];
+            const expectData = [undefined, false];
+            expect(Core.checkPlayerOverlap(player, map)).toEqual(expectData);
+        });
+
+        it("should not detects when cell is empty and moving right", () => {
+            const startX = Constants.GAME_RESOLUTION_TILE_SIZE * 3;
+            const player = createPlayer(startX, 0);
+            const map = [
+                [[], [], [], [], []]
+            // player here --^^
+            ];
+            player.x += 2;
+            player.direction = Enums.MoveDirections.RIGHT;
+            const expectData = [undefined, false];
             expect(Core.checkPlayerOverlap(player, map)).toEqual(expectData);
         });
     });
@@ -57,6 +85,10 @@ describe("collision should works correctly", () => {
         it("should detects out by right", () => {
             player.x = Helpers.calculateCanvasWidth() + 1;
             expect(Core.isOutOfBorder(player)).toBeTruthy();
+        });
+
+        it("should returns false when inside canvas", () => {
+            expect(Core.isOutOfBorder(player)).toBeFalsy();
         });
     });
 
