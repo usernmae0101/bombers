@@ -24,21 +24,15 @@ export const calculatePlayerCellPosition = (
  * Высчитывает количество пикселей, на которые 
  * спрайт игрока пересёк ячейку на карте.
  * 
- * @param playerPoint - позиция игрока (верхний левый край) по X или Y
- * @param cellPoint - позиция ячейки (верхний левый край) на карте по X или Y
+ * @param playerPoint - позиция игрока по X или Y
+ * @param cellPoint - позиция ячейки на карте по X или Y
  * @param playerDirection - направление движения игрока
  * @returns количество пикселей (абсолютное значение)
  */
-export const calculateOverlapDistance = (
-    playerPoint: number, 
-    cellPoint: number,
-    playerDirection: Shared.Enums.MoveDirections
-): number => {
-    // учитываем, что отсчёт ведется от левого верхнего края спрайта
-    if ([MoveDirections.RIGHT, MoveDirections.DOWN].includes(playerDirection))
-        playerPoint += Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+export const calculateOverlapDistance = (playerPoint: number, cellPoint: number,): number => {
+    const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
 
-    return Math.abs(playerPoint - cellPoint);
+    return Math.abs(GAME_RESOLUTION_TILE_SIZE - Math.abs(playerPoint - cellPoint));
 };
 
 /**

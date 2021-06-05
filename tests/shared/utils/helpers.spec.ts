@@ -9,12 +9,18 @@ describe("helpers should works correctly", () => {
     });
 
     describe("should calculates overlap distance correctly", () => {
-        it("should calculates without offset", () => {
-            expect(Helpers.calculateOverlapDistance(25, 72, Enums.MoveDirections.RIGHT)).toBe(25);
+        it("should calculates when player moves right", () => {
+            let playerPoint = Constants.GAME_RESOLUTION_TILE_SIZE * 2;
+            const cellPoint = Constants.GAME_RESOLUTION_TILE_SIZE * 3;
+            playerPoint += 2;
+            expect(Helpers.calculateOverlapDistance(cellPoint, playerPoint)).toBe(2);
         });
 
-        it("should calculates with offeset", () => {
-            expect(Helpers.calculateOverlapDistance(70, 72, Enums.MoveDirections.LEFT)).toBe(2);
+        it("should calculates when player moves left", () => {
+            let playerPoint = Constants.GAME_RESOLUTION_TILE_SIZE * 2;
+            const cellPoint = Constants.GAME_RESOLUTION_TILE_SIZE * 3;
+            playerPoint -= 2;
+            expect(Helpers.calculateOverlapDistance(cellPoint, playerPoint)).toBe(2);
         });
     });
 

@@ -7,13 +7,13 @@ import Game from "../game/Game";
 import * as GameActions from "../ui/redux/actions/game-actions";
 
 interface IConnectRoomData {
-    /** Цвет игрока. */
+    /** Цвет игрока, выделенный сервером для пользователя. */
     color: Shared.Enums.PlayerColors;
     /** UDP порт, чтобы установить второе (ненадёжное) соединение. */
     UDP_port: number;
-    /** Список ICE серверов (TURN для p2p). */
+    /** Список ICE серверов (необходим TURN для соединения p2p). */
     iceServers: any[];
-    /** Игровые слоты. */
+    /** Состояние игровых слотов в комнате. */
     slots: Shared.Interfaces.IGameSlots;
     /** Игровое состояние. */
     gameState: Shared.Interfaces.IGameState;

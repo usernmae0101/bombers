@@ -32,7 +32,6 @@ export function isOutOfBorder(player: Shared.Interfaces.IGameStatePlayer): boole
 export const isPlayerCollide = (cellEintites: number[]): boolean => {
     for (let entityId of cellEintites) {
         if (
-            // идентификаторы игровых сущностей, с которыми игрок сталкивается
             [
                 EntityNumbers.BOMB_BLUE,
                 EntityNumbers.BOMB_PURPLE,
@@ -40,7 +39,8 @@ export const isPlayerCollide = (cellEintites: number[]): boolean => {
                 EntityNumbers.BOMB_RED,
                 EntityNumbers.BOX,
                 EntityNumbers.ROCK
-            ].includes(entityId)) return true;
+            ].includes(entityId)
+        ) return true;
     }
 
     return false;
@@ -48,6 +48,8 @@ export const isPlayerCollide = (cellEintites: number[]): boolean => {
 
 /**
  * Проверяет пересечение игрока с ячейкой на карте.
+ * Если ячейка не пустая, высчитывает дистанцию пересечения 
+ * и расположение ячейки на карте.
  * 
  * @param player - игрок
  * @param map - карта
@@ -88,8 +90,7 @@ export const isPlayerCollide = (cellEintites: number[]): boolean => {
                             col: playerCol,
                             distance: calculateOverlapDistance(
                                 player.y,
-                                cellRow * GAME_RESOLUTION_TILE_SIZE,
-                                player.direction
+                                cellRow * GAME_RESOLUTION_TILE_SIZE
                             )
                         },
                         false
@@ -120,8 +121,7 @@ export const isPlayerCollide = (cellEintites: number[]): boolean => {
                             col: cellCol,
                             distance: calculateOverlapDistance(
                                 player.x,
-                                cellCol * GAME_RESOLUTION_TILE_SIZE,
-                                player.direction
+                                cellCol * GAME_RESOLUTION_TILE_SIZE
                             )
                         },
                         false
