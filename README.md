@@ -3,7 +3,7 @@
     <img alt="Status" src="https://img.shields.io/static/v1?label=status&message=development&color=blueviolet">
     <img alt="Lines of Code" src="https://img.shields.io/tokei/lines/github/bombers0/bombers">
 	<a href="https://codecov.io/gh/bombers0/bombers">
-    	<img alt="Coverage" src="https://codecov.io/gh/bombers0/bombers/branch/main/graph/badge.svg">
+  		<img src="https://codecov.io/gh/bombers0/bombers/branch/dev/graph/badge.svg?token=OV94I2TJ59"/>
 	</a>
 	<img alt="Code Size" src="https://img.shields.io/github/languages/code-size/bombers0/bombers">
 	<a href="https://lgtm.com/projects/g/bombers0/bombers">
