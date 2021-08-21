@@ -26,11 +26,11 @@ export function isOutOfBorder(player: Shared.Interfaces.IGameStatePlayer): boole
  * Проверяет, находится ли в ячейке идентификатор 
  * игровой сущности, с которой игрок сталкивается.
  * 
- * @param cellEintites - список идентификаторов сущностей в ячейке
+ * @param cellEntities - список идентификаторов сущностей в ячейке
  * @returns столкнулся ли игрок с чем-то: да или нет
  */
-export const isPlayerCollide = (cellEintites: number[]): boolean => {
-    for (let entityId of cellEintites) {
+export const isPlayerCollide = (cellEntities: number[]): boolean => {
+    for (let entityId of cellEntities) {
         if (
             [
                 EntityNumbers.BOMB_BLUE,

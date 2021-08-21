@@ -26,10 +26,9 @@ export const calculatePlayerCellPosition = (
  * 
  * @param playerPoint - позиция игрока по X или Y
  * @param cellPoint - позиция ячейки на карте по X или Y
- * @param playerDirection - направление движения игрока
  * @returns количество пикселей (абсолютное значение)
  */
-export const calculateOverlapDistance = (playerPoint: number, cellPoint: number,): number => {
+export const calculateOverlapDistance = (playerPoint: number, cellPoint: number): number => {
     const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
 
     return Math.abs(GAME_RESOLUTION_TILE_SIZE - Math.abs(playerPoint - cellPoint));

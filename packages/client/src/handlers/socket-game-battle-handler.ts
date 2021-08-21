@@ -1,6 +1,7 @@
 import { Dispatch } from "redux";
 import { Socket } from "socket.io-client";
 import geckos, { ClientChannel } from '@geckos.io/client'
+import Serializer from "array-buffer-serializer";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import Game from "../game/Game";
@@ -68,8 +69,10 @@ export const startHandlingGameBattleSocket = (
                 // получаем изменения игрового состояния
                 UDPChann.on(
                     String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                    (changes: Shared.Interfaces.INotReliableStateChanges) => {
-                        game.onNotReliableStateChanges(changes);
+                    (buffer: ArrayBuffer) => {
+                        game.onNotReliableStateChanges(
+                           Serializer.fromBuffer(buffer) 
+                        );
                     }
                 )
             });
@@ -79,7 +82,12 @@ export const startHandlingGameBattleSocket = (
     // получаем изменения игрового состояния
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-        (changes: any[]) => game.onReliableStateChanges(changes, dispatch)
+        (buffer: ArrayBuffer) => {
+            game.onReliableStateChanges(
+                Serializer.fromBuffer(buffer), 
+                dispatch
+            )
+        }
     )
 
     // высчитываем сетевую задержку

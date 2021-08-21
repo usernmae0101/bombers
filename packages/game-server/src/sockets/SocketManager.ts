@@ -1,6 +1,7 @@
 import { GeckosServer } from "@geckos.io/server";
 import io, { Server } from "socket.io";
 import { Socket } from "socket.io-client";
+import Serializer from "array-buffer-serializer";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import AppSocketHandler from "./AppSocketHandler";
@@ -114,7 +115,7 @@ export default class SocketManager {
         if (Object.keys(stateChanges.notReliable).length) {
             this.serverSocketUDP.emit(
                 String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                stateChanges.notReliable
+                Serializer.toBuffer(stateChanges.notReliable)
             );
         }
 
@@ -122,7 +123,7 @@ export default class SocketManager {
         if (stateChanges.reliable.length) {
             this.serverSocketTCP.of("battle").to("room").emit(
                 String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                stateChanges.reliable
+                Serializer.toBuffer(stateChanges.reliable)
             );
         }
     }

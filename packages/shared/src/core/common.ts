@@ -2,7 +2,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision";
 
 /**
- * Перебирает идентификаторы игровых сущностей 
+ * Перебирает идентификаторы игровых сущностей
  * из ячейки, с которой игрок пересёкся. Удаляет
  * поднятый бонусный предмет с карты.
  * 
@@ -155,8 +155,8 @@ export const movePlayer = (
         player.direction = direction;
     }
 
-    // FIXME: доделать формулу, по которой прибавлять скорость
-    player[axisAlongWhichPlayerMoves] += (player.speed + 6) * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
+	// передвигаем игрока
+    player[axisAlongWhichPlayerMoves] += (player.speed * 2) * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
 
     if (isOutOfBorder(player)) {
         alignPlayer(player, axisAlongWhichPlayerMoves);
@@ -168,6 +168,7 @@ export const movePlayer = (
     if (overlapData && isPlayerCollide(map[overlapData.row][overlapData.col])) {
         alignPlayer(player, axisAlongWhichPlayerMoves);
     }
+
     else if (isDirectionChanged && !atEdgeOfBorder) {
         alignPlayer(player, axisAlongWhichPlayerMoves === "x" ? "y" : "x");
     }
@@ -221,7 +222,6 @@ export const destroyBoxFromMap = (map: number[][][], row: number, col: number) =
  */
 export const addEntityToMap = (entityId: number, map: number[][][], row: number, col: number) => {
     const entities = [...map[row][col]];
-
     entities.push(entityId);
     map[row][col] = entities;
 };
@@ -237,7 +237,6 @@ export const addEntityToMap = (entityId: number, map: number[][][], row: number,
 export const removeEntityFromMap = (entityId: number, map: number[][][], row: number, col: number) => {
     const entities = [...map[row][col]];
     const entitityIndex = entities.findIndex(id => id === entityId);
-
     entities.splice(entitityIndex, 1);
     map[row][col] = entities;
 };

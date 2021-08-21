@@ -21,6 +21,7 @@ export default class SocketManager {
      */
     public removeUserFromState(userData: Shared.Interfaces.IUser) {
         --this.state.online;
+
         this.io.of("client").emit(
             String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE),
             this.state.online
@@ -70,6 +71,7 @@ export default class SocketManager {
      */
     public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
         this.state.lobby.push(server);
+
         this.io.of("client").emit(
             String(Shared.Enums.SocketChannels.APP_ON_SET_GAME_SERVERS_COUNT),
             this.state.lobby.length
@@ -85,6 +87,7 @@ export default class SocketManager {
      */
     public addUserToState(userData: Shared.Interfaces.IUser) {
         ++this.state.online;
+        
         this.io.of("client").emit(
             String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE),
             this.state.online

@@ -159,7 +159,7 @@ export default class Game {
         for (let color in this._snapshotBuffer) {
             const enemy = this._state.players[+color];
             const buffer = this._snapshotBuffer[color];
-            
+
             // FIXME: удалить все снимки
             if (!enemy) continue;
 
@@ -169,7 +169,8 @@ export default class Game {
                 const ratio = (renderTime - s1.timestamp) / (s2.timestamp - s1.timestamp);
 
                 enemy.direction = buffer[1].snapshot.direction;
-
+                
+                // FIXME: проверить дистанцию?
                 enemy.x = Shared.Maths.lerp(s1.snapshot.x, s2.snapshot.x, ratio);
                 enemy.y = Shared.Maths.lerp(s1.snapshot.y, s2.snapshot.y, ratio);
             }
