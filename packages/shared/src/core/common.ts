@@ -2,14 +2,13 @@ import * as Shared from "@bombers/shared/src/idnex";
 import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision";
 
 /**
- * Перебирает идентификаторы игровых сущностей
- * из ячейки, с которой игрок пересёкся. Удаляет
- * поднятый бонусный предмет с карты.
+ * Перебирает идентификаторы игровых сущностей из ячейки, с которой 
+ * игрок пересёкся. Удаляет поднятый бонусный предмет с карты.
  * 
  * @param overlapData - данные о пересечении
  * @param state - игровое состояние
  * @param color - цвет игрока
- * @param bombsState - состояние бомб
+ * @param bombsState
  */
 export const filterOverlapData = (
     overlapData: Shared.Interfaces.IOverlapData,
@@ -29,10 +28,10 @@ export const filterOverlapData = (
     for (let entityId of cellEntities) {
         switch (entityId) {
             case EntityNumbers.FIRE_CENTER:
-            case EntityNumbers.FIRE_BOTTOM:
-            case EntityNumbers.FIRE_LEFT:
-            case EntityNumbers.FIRE_TOP:
-            case EntityNumbers.FIRE_RIGHT:
+                case EntityNumbers.FIRE_BOTTOM:
+                case EntityNumbers.FIRE_LEFT:
+                case EntityNumbers.FIRE_TOP:
+                case EntityNumbers.FIRE_RIGHT:
             case EntityNumbers.FIRE_MIDDLE_X:
             case EntityNumbers.FIRE_MIDDLE_Y:
                 tryToDamagePlayer(state, color);
@@ -48,9 +47,8 @@ export const filterOverlapData = (
 };
 
 /**
- * Наносит урон игроку, который коснулся пламени.
- * Если у игрока кончилось здоровье, удаляет его 
- * из игового сотояния.
+ * Наносит урон игроку, который коснулся пламени. Если у игрока кончилось 
+ * здоровье, удаляет его из игового сотояния.
  * 
  * @param state - игровое состояние
  * @param color - цвет игрока
@@ -82,13 +80,13 @@ export const tryToDamagePlayer = (
 };
 
 /**
- * Применяет бонусный предмет на игрока, 
- * если у игрока не достигнуты лимиты на предмет.
+ * Применяет бонусный предмет на игрока, если у игрока 
+ * не достигнуты лимиты на предмет.
  * 
- * @param entityId - идентификатор игровой сущности предмета
- * @param player - игрок
+ * @param entityId
+ * @param player
  * @param color - цвет игрока
- * @param bombsState - состояние бомб
+ * @param bombsState
  */
 export const pickUpBonusItem = (
     entityId: Shared.Enums.EntityNumbers,
@@ -136,27 +134,26 @@ export const pickUpBonusItem = (
  * обновляет направление и выравнивает игрока по оси обратной его движению: 
  * если движется по Y - выравнивает по X, а если движется по X - выравнивает по Y.
  * 
- * @param player - игрок
- * @param direction - направление движения
- * @param map - состояние игровой карты
+ * @param player
+ * @param direction
+ * @param map
  * @returns данные о ячейке, пресеbчённой игроком
  */
 export const movePlayer = (
     player: Shared.Interfaces.IGameStatePlayer,
     direction: Shared.Enums.MoveDirections,
-    map: number[][][]
+    map: number[][][],
 ): Shared.Interfaces.IOverlapData => {
     const { UP, RIGHT, DOWN } = Shared.Enums.MoveDirections;
 
     const axisAlongWhichPlayerMoves = [UP, DOWN].includes(direction) ? "y" : "x";
     const isDirectionChanged = player.direction !== direction;
 
-    if (isDirectionChanged) {
+    if (isDirectionChanged) 
         player.direction = direction;
-    }
 
 	// передвигаем игрока
-    player[axisAlongWhichPlayerMoves] += (player.speed * 2) * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
+    player[axisAlongWhichPlayerMoves] += (player.speed * 4) * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
 
     if (isOutOfBorder(player)) {
         alignPlayer(player, axisAlongWhichPlayerMoves);
@@ -165,13 +162,11 @@ export const movePlayer = (
 
     const [overlapData, atEdgeOfBorder] = checkPlayerOverlap(player, map);
 
-    if (overlapData && isPlayerCollide(map[overlapData.row][overlapData.col])) {
+    if (overlapData && isPlayerCollide(map[overlapData.row][overlapData.col])) 
         alignPlayer(player, axisAlongWhichPlayerMoves);
-    }
 
-    else if (isDirectionChanged && !atEdgeOfBorder) {
+    else if (isDirectionChanged && !atEdgeOfBorder) 
         alignPlayer(player, axisAlongWhichPlayerMoves === "x" ? "y" : "x");
-    }
 
     return overlapData;
 };
@@ -179,23 +174,22 @@ export const movePlayer = (
 /**
  * Выравнивает игрока в клетке, большую часть которой он занимает.
  * 
- * @param player - игрок
- * @param axis - по какой оси выравнивать (X или Y)
+ * @param player
+ * @param axis
  */
 export const alignPlayer = (player: Shared.Interfaces.IGameStatePlayer, axis: "x" | "y") => {
     const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
-
+    
     player[axis] = Math.round(player[axis] / GAME_RESOLUTION_TILE_SIZE) * GAME_RESOLUTION_TILE_SIZE;
 };
 
 /**
- * Удаляет коробку с игровой карты. С вероятностью, заданной
- * константным значением, выбрасывает из коробки случайный
- * предмет и добавляет его на карту.
+ * Удаляет коробку с игровой карты. С вероятностью, заданной константным 
+ * значением, выбрасывает из коробки случайный предмет и добавляет его на карту.
  * 
- * @param map - игровая карта
- * @param row - ряд ячейки на карте
- * @param col - ряд колонки на карте
+ * @param map
+ * @param row
+ * @param col
  */
 export const destroyBoxFromMap = (map: number[][][], row: number, col: number) => {
     const { EntityNumbers } = Shared.Enums;
@@ -215,10 +209,10 @@ export const destroyBoxFromMap = (map: number[][][], row: number, col: number) =
 /**
  * Меняет состояние карты. Добавляет игровую сущность в ячейку.
  * 
- * @param entityId - идентификатор игровой сущности
- * @param map - игровая карта
- * @param row - ряд ячейки
- * @param col - колонка ячейки
+ * @param entityId
+ * @param map
+ * @param row
+ * @param col
  */
 export const addEntityToMap = (entityId: number, map: number[][][], row: number, col: number) => {
     const entities = [...map[row][col]];
@@ -229,10 +223,10 @@ export const addEntityToMap = (entityId: number, map: number[][][], row: number,
 /**
  * Меняет состояние карты. Удаляет игровую сущность из ячейки.
  * 
- * @param entityId - идентификатор игровой сущности
- * @param map - игровая карта
- * @param row - ряд ячейки
- * @param col - колонка ячейки
+ * @param entityId
+ * @param map
+ * @param row
+ * @param col
  */
 export const removeEntityFromMap = (entityId: number, map: number[][][], row: number, col: number) => {
     const entities = [...map[row][col]];
@@ -269,8 +263,8 @@ export const tryToMovePlayer = (keys: number[]): [boolean, number] => {
  * 
  * @param keys - нажатые клавиши
  * @param state - игровое состояние
- * @param bombsState - состояние бомб
- * @param color - цвет игрока, пытающегося поставить бомбу
+ * @param bombsState
+ * @param color - цвет игрока
  * @returns можно ли ставить бомбу: да или нет
  */
 export const tryToPlaceBomb = (

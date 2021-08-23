@@ -12,7 +12,7 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
     protected entities: IEntityCollector<T> = {};
     protected entityIds: number[];
 
-    public abstract update(state: Shared.Interfaces.IGameState, localPlayerColor?: number): void;
+    public abstract update(state: Shared.Interfaces.IGameState, localPlayerColor?: number, dt?: number): void;
 
     constructor(layer: number, entityIds: number[] = []) {
         super();

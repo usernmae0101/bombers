@@ -6,8 +6,8 @@ const { EntityNumbers } = Shared.Enums;
 /**
  * Проверяет, вышел ли игрок за границу канваса.
  * 
- * @param player - игрок
- * @returns вышел ли за границу: да или нет
+ * @param player
+ * @returns да или нет
  */
 export function isOutOfBorder(player: Shared.Interfaces.IGameStatePlayer): boolean {
     const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
@@ -23,11 +23,11 @@ export function isOutOfBorder(player: Shared.Interfaces.IGameStatePlayer): boole
 };
 
 /**
- * Проверяет, находится ли в ячейке идентификатор 
- * игровой сущности, с которой игрок сталкивается.
+ * Проверяет, находится ли в ячейке идентификатор игровой сущности, 
+ * с которой игрок сталкивается.
  * 
  * @param cellEntities - список идентификаторов сущностей в ячейке
- * @returns столкнулся ли игрок с чем-то: да или нет
+ * @returns да или нет
  */
 export const isPlayerCollide = (cellEntities: number[]): boolean => {
     for (let entityId of cellEntities) {
@@ -47,12 +47,11 @@ export const isPlayerCollide = (cellEntities: number[]): boolean => {
 };
 
 /**
- * Проверяет пересечение игрока с ячейкой на карте.
- * Если ячейка не пустая, высчитывает дистанцию пересечения 
- * и расположение ячейки на карте.
+ * Проверяет пересечение игрока с ячейкой на карте. Если ячейка не пустая, 
+ * высчитывает дистанцию пересечения и расположение ячейки на карте.
  * 
- * @param player - игрок
- * @param map - карта
+ * @param player
+ * @param map
  * @returns [информация о ячейке, у границы канваса ли игрок: да, нет]
  */
  export const checkPlayerOverlap = (
@@ -60,7 +59,11 @@ export const isPlayerCollide = (cellEntities: number[]): boolean => {
     map: number[][][]
 ): [Shared.Interfaces.IOverlapData, boolean] => {
     const { UP, LEFT, RIGHT, DOWN } = Shared.Enums.MoveDirections;
-    const { GAME_RESOLUTION_TILE_LENGTH_X, GAME_RESOLUTION_TILE_LENGTH_Y, GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
+    const {
+        GAME_RESOLUTION_TILE_LENGTH_X, 
+        GAME_RESOLUTION_TILE_LENGTH_Y, 
+        GAME_RESOLUTION_TILE_SIZE 
+    } = Shared.Constants;
 
     const [playerRow, playerCol] = calculatePlayerCellPosition(player);
 
@@ -70,14 +73,16 @@ export const isPlayerCollide = (cellEntities: number[]): boolean => {
     switch (player.direction) {
         case UP:
             // у верхнего края канваса
-            if (playerRow === 0) return [undefined, true];
+            if (playerRow === 0)
+                return [undefined, true];
 
             cellRow = playerRow - 1;
         case DOWN:
             cellRow = cellRow ?? playerRow + 1;
 
             // у нижнего края канваса
-            if (player.direction === DOWN && playerRow === GAME_RESOLUTION_TILE_LENGTH_Y - 1) return [undefined, true];
+            if (player.direction === DOWN && playerRow === GAME_RESOLUTION_TILE_LENGTH_Y - 1)
+                return [undefined, true];
 
             // если ячейка не пустая
             if (map[cellRow][playerCol].length) {
@@ -101,14 +106,16 @@ export const isPlayerCollide = (cellEntities: number[]): boolean => {
             return [undefined, false];
         case LEFT:
             // у левого края канваса
-            if (playerCol === 0) return [undefined, true];
+            if (playerCol === 0) 
+                return [undefined, true];
 
             cellCol = playerCol - 1;
         case RIGHT:
             cellCol = cellCol ?? playerCol + 1;
 
             // у правого края канваса
-            if (player.direction === RIGHT && playerCol === GAME_RESOLUTION_TILE_LENGTH_X - 1) return [undefined, true];
+            if (player.direction === RIGHT && playerCol === GAME_RESOLUTION_TILE_LENGTH_X - 1) 
+                return [undefined, true];
 
             // если ячейка не пустая
             if (map[playerRow][cellCol].length) {

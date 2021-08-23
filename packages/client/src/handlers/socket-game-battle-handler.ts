@@ -69,9 +69,9 @@ export const startHandlingGameBattleSocket = (
                 // получаем изменения игрового состояния
                 UDPChann.on(
                     String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                    (buffer: ArrayBuffer) => {
+                    (buffer: any) => {
                         game.onNotReliableStateChanges(
-                           Serializer.fromBuffer(buffer) 
+                           buffer
                         );
                     }
                 )
@@ -82,9 +82,9 @@ export const startHandlingGameBattleSocket = (
     // получаем изменения игрового состояния
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-        (buffer: ArrayBuffer) => {
+        (buffer: any) => {
             game.onReliableStateChanges(
-                Serializer.fromBuffer(buffer), 
+                buffer, 
                 dispatch
             )
         }

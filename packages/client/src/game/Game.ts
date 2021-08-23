@@ -122,13 +122,13 @@ export default class Game {
     public onReliableStateChanges(changes: any[], dispatch: Dispatch) {
         for (let _changes of changes) {
             // удалён игрок из игрового состояния
-            if ("delete" in _changes) {
+            if ("delete" in _changes)
                 delete this._state.players[_changes.delete];
-            }
+           
             // поменялась карта
-            else if ("row" in _changes) {
+            else if ("row" in _changes)
                 this._state.map[_changes.row][_changes.col] = _changes.entities;
-            }
+            
             // поменялись хар-ки игрока или добавлен игрок
             else {
                 if (_changes.color === "players") {
@@ -198,7 +198,7 @@ export default class Game {
             }
 
             const enemy = this._state.players[+color];
-
+            
             const { x: currentX, y: currentY, } = enemy;
 
             if (!(color in this._snapshotBuffer))
@@ -259,8 +259,8 @@ export default class Game {
             // FIXME: ограничить буфер?
             if (isInsertPrediction) {
                 this._predictionBuffer[this._tick] = {
-                    x: player.x,
-                    y: player.y,
+                    x: _player.x,
+                    y: _player.y,
                     keys
                 };
             }
@@ -282,7 +282,7 @@ export default class Game {
         // отрисовака
         this._app.ticker.add(() => {
             this._interpolateEnemies();
-            this._renderer.render(this._state, this._color);
+            this._renderer.render(this._app.ticker.deltaTime, this._state, this._color);
         });
     }
 

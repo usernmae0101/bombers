@@ -1,11 +1,11 @@
 /**
- * Функция линейной интерполяции (нахождние
- * промежуточного значения между двумя точками).
+ * Функция линейной интерполяции (нахождние промежуточного 
+ * значения между двумя точками).
  * 
  * @param from - точка-начало
  * @param to точка-конец
  * @param ratio - коэффициент (от 0.0 до 1.0)
- * @returns помежуточное значение
+ * @returns промежуточное значение 
  */
 export function lerp(from: number, to: number, ratio: number): number {
     return from + (to - from) * ratio;
@@ -17,7 +17,7 @@ export function lerp(from: number, to: number, ratio: number): number {
  * 
  * @param min - минимум
  * @param max - максимум
- * @returns целое число в диапазоне
+ * @returns целое число 
  */
 export function getRandomBetween(min: number, max: number): number {
     return Math.floor(Math.random( ) * (max - min + 1)) + min;

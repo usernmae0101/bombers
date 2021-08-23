@@ -1628,6 +1628,11 @@ arr-union@^3.1.0:
   resolved "https://registry.yarnpkg.com/arr-union/-/arr-union-3.1.0.tgz#e39b09aea9def866a8f206e288af63919bae39c4"
   integrity sha1-45sJrqne+Gao8gbiiK9jkZuuOcQ=
 
+array-buffer-serializer@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/array-buffer-serializer/-/array-buffer-serializer-0.1.0.tgz#4c59134bdfd4a6998cf65788401f704fdcd318e6"
+  integrity sha512-8cpr5g9a1F3rlUtBjd0rW+2l4Tl0sGjocMGHPvPzWA+S20ZMbGndSJKT2OesWoSFXUsyeJMZtg+ALLO90UOYEw==
+
 array-filter@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/array-filter/-/array-filter-1.0.0.tgz#baf79e62e6ef4c2a4c0b831232daffec251f9d83"

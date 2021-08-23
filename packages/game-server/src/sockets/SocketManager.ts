@@ -115,7 +115,7 @@ export default class SocketManager {
         if (Object.keys(stateChanges.notReliable).length) {
             this.serverSocketUDP.emit(
                 String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                Serializer.toBuffer(stateChanges.notReliable)
+                stateChanges.notReliable
             );
         }
 
@@ -123,7 +123,7 @@ export default class SocketManager {
         if (stateChanges.reliable.length) {
             this.serverSocketTCP.of("battle").to("room").emit(
                 String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                Serializer.toBuffer(stateChanges.reliable)
+                stateChanges.reliable
             );
         }
     }

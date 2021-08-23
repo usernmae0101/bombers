@@ -6,7 +6,7 @@ const { PlayerColors, EntityNumbers, MoveDirections } = Shared.Enums;
 /**
  * Определяет в какой ячейке на карте находится игрок.
  * 
- * @param player - игрок
+ * @param player
  * @returns [ряд ячейки, колонка ячейки]
  */
 export const calculatePlayerCellPosition = (
@@ -116,9 +116,9 @@ export const getAllBombsIds = (): Shared.Enums.EntityNumbers[] => {
 /**
  * Получает список игровых сущностей на карте в определенной ячейке.
  * 
- * @param map - игровая карта
- * @param row - ряд ячейки
- * @param col - колонка ячейки
+ * @param map
+ * @param row
+ * @param col
  * @returns идентификаторы игровых сущностей
  */
 export const getAllEntitiesInCell = (map: number[][][], row: number, col: number): number[] => {

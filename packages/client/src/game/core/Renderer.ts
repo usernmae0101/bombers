@@ -27,9 +27,9 @@ export default class Renderer {
      * @param state - игровое состояние
      * @param localPlayerColor - цвет локального игрока
      */
-    public render(state: Shared.Interfaces.IGameState, localPlayerColor: number) {
+    public render(dt: number, state: Shared.Interfaces.IGameState, localPlayerColor: number) {
         for (let container of this._containers) {
-            container.update(state, localPlayerColor);
+            container.update(state, localPlayerColor, dt);
         }
     }
 }

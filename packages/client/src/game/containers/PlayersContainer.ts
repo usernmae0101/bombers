@@ -27,10 +27,10 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
         super(Shared.Enums.ContainerLayers.PLAYERS);
     }
 
-    update(state: Shared.Interfaces.IGameState, localPlayerColor: number) {
+    update(state: Shared.Interfaces.IGameState, localPlayerColor: number, dt: number) {
         this._addPlayers(state.players);
         this._removePlayers(state.players);
-        this._updatePlayers(state.players, localPlayerColor);
+        this._updatePlayers(state.players, localPlayerColor, dt);
     }
 
     /**
@@ -40,7 +40,8 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
      */
     private _removePlayers(players: Shared.Interfaces.IGameStatePlayers) {
         for (let color in this._players) {
-            if (Object.keys(players).includes(color)) continue;
+            if (Object.keys(players).includes(color))
+                continue;
 
             this._players[color].player.destroy();
             delete this._players[color];
@@ -49,7 +50,8 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
     private _addPlayers(players: Shared.Interfaces.IGameStatePlayers) {
         for (let color in players) {
-            if (Object.keys(this._players).includes(color)) continue;
+            if (Object.keys(this._players).includes(color))
+                continue;
 
             const { x: frameX, y: frameY } = getEntityFrame(EntityNumbers.PLAYER, +color, players[color].direction);
             const player = new PlayerEntity(frameX, frameY, +color);
@@ -61,8 +63,8 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
             this._players[color] = {
                 player,
                 cache: {
-                    x: null,
-                    y: null,
+                    x: players[color].x,
+                    y: players[color].y,
                     direction: MoveDirections.DOWN
                 }
             };
@@ -71,7 +73,8 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
     private _updatePlayers(
         players: Shared.Interfaces.IGameStatePlayers,
-        localPlayerColor: number
+        localPlayerColor: number,
+        dt: number
     ) {
         for (let color in players) {
             const isXPosChanged = this._players[color].cache.x !== players[color].x;
@@ -79,13 +82,22 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
             // меняем позицию игрока
             if (isXPosChanged || isYPosChanged) {
-                this._players[color].player.setPosition(
-                    players[color].x,
-                    players[color].y
-                );
+                if (+color === localPlayerColor) {
+                    const ratio = 1 / dt;
 
-                this._players[color].cache.x = players[color].x;
-                this._players[color].cache.y = players[color].y;
+                    this._players[color].cache.x = Shared.Maths.lerp(this._players[color].cache.x, players[color].x, ratio > 1 ? 1 : ratio);
+                    this._players[color].cache.y = Shared.Maths.lerp(this._players[color].cache.y, players[color].y, ratio > 1 ? 1 : ratio);
+                }
+
+                else {
+                    this._players[color].cache.x = players[color].x; 
+                    this._players[color].cache.y = players[color].y;
+                }
+
+                this._players[color].player.setPosition(
+                    this._players[color].cache.x, 
+                    this._players[color].cache.y
+                );
             }
 
             // обновляем локального игрока 
