@@ -152,8 +152,31 @@ export const movePlayer = (
     if (isDirectionChanged) 
         player.direction = direction;
 
+    let offset;
+    switch (player.speed) {
+        case 1: offset = 4;
+            break;
+        case 2: offset = 7;
+            break;
+        case 3: offset = 10;
+            break;
+        case 4: offset = 12;
+            break;
+        case 5: offset = 14;
+            break;
+        case 6: offset = 18;
+            break;
+        case 7: offset = 21;
+            break;
+        case 8: offset = 23;
+            break;
+        case 9: offset = 27;
+            break;
+        case 10: offset = 31;
+    }
+
 	// передвигаем игрока
-    player[axisAlongWhichPlayerMoves] += (player.speed * 4) * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
+    player[axisAlongWhichPlayerMoves] += offset * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
 
     if (isOutOfBorder(player)) {
         alignPlayer(player, axisAlongWhichPlayerMoves);

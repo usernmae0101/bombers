@@ -39,7 +39,6 @@ export default class Game {
     /** Игровое состояние. */
     private _state: Shared.Interfaces.IGameState;
     private _app: Application;
-    private _updateInterval: NodeJS.Timeout;
     private _predictionBuffer: IPredctionBuffer = {};
     private _snapshotBuffer: ISnapshotBuffer = {};
     private _keys: Shared.Enums.InputKeys[] = [];
@@ -193,7 +192,7 @@ export default class Game {
         for (let color in changes) {
             // для локального игрока выполняем согласование с сервером
             if (+color === this._color) {
-                this._serverReconciliation(changes[color]);
+                //this._serverReconciliation(changes[color]);
                 continue;
             }
 
@@ -273,25 +272,31 @@ export default class Game {
 
         this._renderer.init(this._app.stage);
 
-        // считываение клавиш
-        this._updateInterval = setInterval(
-            () => { this._update(); },
-            1000 / Shared.Constants.GAME_CLIENT_UPDATE_RATE
-        );
+        let accumulator = 0;
 
-        // отрисовака
         this._app.ticker.add(() => {
+            let frameTime = this._app.ticker.elapsedMS;
+            if (frameTime > Shared.Constants.GAME_MAXIMUM_DELTA_TIME)
+                frameTime = Shared.Constants.GAME_MAXIMUM_DELTA_TIME;
+
+            accumulator += frameTime;
+
+            while (accumulator >= Shared.Constants.GAME_FIXED_DELTA_TIME) {
+               this._update();
+               accumulator -= Shared.Constants.GAME_FIXED_DELTA_TIME;
+            }
+
+            const ratio = accumulator / Shared.Constants.GAME_FIXED_DELTA_TIME;
+        
             this._interpolateEnemies();
-            this._renderer.render(this._app.ticker.deltaTime, this._state, this._color);
+            this._renderer.render(ratio, this._state, this._color);
         });
     }
 
     private _update() {
         // если локального игрока больше нет в состоянии
-        if (!(this._color in this._state.players)) {
-            clearInterval(this._updateInterval);
+        if (!(this._color in this._state.players))
             return;
-        }
 
         this._handleInputs();
         this._sendInputKeysToServer();

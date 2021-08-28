@@ -23,19 +23,6 @@ export const getEntityFrame = (entity: number, color?: number, direction?: numbe
     }
 };
 
-export const getBombByThePlayersColor = (color: number): number => {
-    switch (color) {
-        case PlayerColors.BLUE:
-            return EntityNumbers.BOMB_BLUE;
-        case PlayerColors.PURPLE:
-            return EntityNumbers.BOMB_PURPLE;
-        case PlayerColors.RED:
-            return EntityNumbers.BOMB_RED;
-        case PlayerColors.YELLOW:
-            return EntityNumbers.BOMB_YELLOW;
-    }
-};
-
 interface IFrames {
     static: {
         [color: number]: {

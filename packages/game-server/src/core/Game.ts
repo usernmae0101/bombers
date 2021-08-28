@@ -14,40 +14,33 @@ export default class Game {
     private _bombsState: Shared.Interfaces.IBombsState;
     public keysBuffer: IKeysBuffer = {};
 
-    private _updatePlayers() {
-        for (let color in this._proxyState.players) {
-            if (this.keysBuffer[color].length) {
-                const { keys, tick } = this.keysBuffer[color].shift();
+    private _updatePlayer(keys: number[], tick: number, color: string) {
+        const player = this._proxyState.players[+color];
 
-                const player = this._proxyState.players[color];
+        const [isPlayerMove, direction] = Shared.Core.tryToMovePlayer(keys);
+        if (isPlayerMove) {
+            const _player = { ...player };
 
-                const [isPlayerMove, direction] = Shared.Core.tryToMovePlayer(keys);
-                if (isPlayerMove) {
-                    const _player = { ...player };
-
-                    const overlapData = Shared.Core.movePlayer(_player, direction, this._state.map);
-                    if (overlapData) {
-                        // перебираем пересечённые игровые сущности
-                        Shared.Core.filterOverlapData(overlapData, this._proxyState, +color, this._bombsState);
+            const overlapData = Shared.Core.movePlayer(_player, direction, this._state.map);
+            if (overlapData) {
+                // перебираем пересечённые игровые сущности
+                Shared.Core.filterOverlapData(overlapData, this._proxyState, +color, this._bombsState);
                         
-                        // если игрок был удалён из игрового сосояния
-                        if (!(color in this._state.players)) 
-                            continue;
-                    } 
+                // если игрок был удалён из игрового сосояния
+                if (!(color in this._state.players)) 
+                   return;
+            } 
 
-                    player.x = _player.x;
-                    player.y = _player.y;
-                    player.direction = _player.direction;
-                }
-
-                const isPlaceBomb = Shared.Core.tryToPlaceBomb(keys, this._state, this._bombsState, +color);
-                if (isPlaceBomb) {
-                    Shared.Core.placeBombToMap(this._proxyState, this._bombsState, +color);
-                }
-
-                this._proxyState.players[color].tick = tick;
-            }
+            player.x = _player.x;
+            player.y = _player.y;
+            player.direction = _player.direction;
         }
+
+        const isPlaceBomb = Shared.Core.tryToPlaceBomb(keys, this._state, this._bombsState, +color);
+        if (isPlaceBomb)
+            Shared.Core.placeBombToMap(this._proxyState, this._bombsState, +color);
+
+        this._proxyState.players[+color].tick = tick;
     }
 
     /**
@@ -67,7 +60,13 @@ export default class Game {
      * Обновляет игровое состояние.
      */
     public update() {
-        this._updatePlayers();
+        for (let color in this._proxyState.players) {
+            if (this.keysBuffer[color].length) {
+                const { keys, tick } = this.keysBuffer[color].shift();
+
+                this._updatePlayer(keys, tick, color);
+            }
+        }
     }
 
     /** 

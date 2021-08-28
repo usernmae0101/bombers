@@ -8,28 +8,27 @@ export default class Renderer {
     constructor(private _containers: BaseContainer<BaseEntity>[]) { }
 
     /**
-     * Инициализация перед началом отрисовки.
-     * Добавляет контейнеры на главную сцену.
+     * Инициализация перед началом отрисовки. Добавляет 
+     * контейнеры на главную сцену.
      * 
-     * @param stage - главная сцена канваса
+     * @param stage
      */
     public init(stage: Container) {
         stage.sortableChildren = true;
 
-        for (let container of this._containers) {
+        for (let container of this._containers)
             stage.addChild(container);
-        }
     }
 
     /**
      * Отрисовывает каждый контейнер на сцене.
      * 
-     * @param state - игровое состояние
-     * @param localPlayerColor - цвет локального игрока
+     * @param dt
+     * @param state
+     * @param localPlayerColor
      */
     public render(dt: number, state: Shared.Interfaces.IGameState, localPlayerColor: number) {
-        for (let container of this._containers) {
+        for (let container of this._containers)
             container.update(state, localPlayerColor, dt);
-        }
     }
 }

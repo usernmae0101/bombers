@@ -63,8 +63,8 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
             this._players[color] = {
                 player,
                 cache: {
-                    x: players[color].x,
-                    y: players[color].y,
+                    x: null,
+                    y: null,
                     direction: MoveDirections.DOWN
                 }
             };
@@ -82,11 +82,9 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
             // меняем позицию игрока
             if (isXPosChanged || isYPosChanged) {
-                if (+color === localPlayerColor) {
-                    const ratio = 1 / dt;
-
-                    this._players[color].cache.x = Shared.Maths.lerp(this._players[color].cache.x, players[color].x, ratio > 1 ? 1 : ratio);
-                    this._players[color].cache.y = Shared.Maths.lerp(this._players[color].cache.y, players[color].y, ratio > 1 ? 1 : ratio);
+                if (+color === localPlayerColor && this._players[color].cache.x !== null) {
+                    this._players[color].cache.x = Shared.Maths.lerp(this._players[color].cache.x, players[color].x, dt);
+                    this._players[color].cache.y = Shared.Maths.lerp(this._players[color].cache.y, players[color].y, dt);
                 }
 
                 else {

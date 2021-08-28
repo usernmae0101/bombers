@@ -106,10 +106,15 @@ export const GAME_SERVER_BROADCAST_RATE = 10;
  */
 export const GAME_CANVAS_VIEW_ID = "game-cnv";
 
-/**
- * Частота бновления локального сотояния и отправки клавиш на сервер в секунду.
+/** 
+ * Фиксированное значение времени в миллисекундах на обновление игрового состояния за кадр.
  */
-export const GAME_CLIENT_UPDATE_RATE = 45;
+export const GAME_FIXED_DELTA_TIME = 20;
+
+/**
+ * Максимальная допустимая задержка в миллисекундах между кадрами.
+ */
+export const GAME_MAXIMUM_DELTA_TIME = 250;
 
 
 /***************************************
