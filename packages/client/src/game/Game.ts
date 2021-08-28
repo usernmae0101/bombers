@@ -192,7 +192,7 @@ export default class Game {
         for (let color in changes) {
             // для локального игрока выполняем согласование с сервером
             if (+color === this._color) {
-                //this._serverReconciliation(changes[color]);
+                this._serverReconciliation(changes[color]);
                 continue;
             }
 
@@ -217,7 +217,8 @@ export default class Game {
     }
 
     private _serverReconciliation(changes: Shared.Interfaces.INotReliableStateData) {
-        if (!changes.tick) return;
+        if (!changes.tick) 
+            return;
 
         for (let tick in this._predictionBuffer) {
             if (+tick < changes.tick) {
@@ -227,7 +228,7 @@ export default class Game {
 
             if (+tick === changes.tick) {
                 const { x: predictedX, y: predictedY } = this._predictionBuffer[tick];
-
+                
                 const authX = changes.x ?? predictedX;
                 const authY = changes.y ?? predictedY;
 
@@ -275,10 +276,10 @@ export default class Game {
         let accumulator = 0;
 
         this._app.ticker.add(() => {
-            let frameTime = this._app.ticker.elapsedMS;
-            if (frameTime > Shared.Constants.GAME_MAXIMUM_DELTA_TIME)
-                frameTime = Shared.Constants.GAME_MAXIMUM_DELTA_TIME;
-
+            let frameTime = this._app.ticker.elapsedMS > Shared.Constants.GAME_MAXIMUM_DELTA_TIME 
+                ? Shared.Constants.GAME_MAXIMUM_DELTA_TIME
+                : this._app.ticker.elapsedMS; 
+            
             accumulator += frameTime;
 
             while (accumulator >= Shared.Constants.GAME_FIXED_DELTA_TIME) {

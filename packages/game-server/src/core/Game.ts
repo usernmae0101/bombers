@@ -14,7 +14,11 @@ export default class Game {
     private _bombsState: Shared.Interfaces.IBombsState;
     public keysBuffer: IKeysBuffer = {};
 
-    private _updatePlayer(keys: number[], tick: number, color: string) {
+    private _updatePlayer(
+        keys: number[], 
+        tick: number, 
+        color: string
+    ) {
         const player = this._proxyState.players[+color];
 
         const [isPlayerMove, direction] = Shared.Core.tryToMovePlayer(keys);

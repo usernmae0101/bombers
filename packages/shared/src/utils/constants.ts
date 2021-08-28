@@ -94,12 +94,12 @@ export const CHAT_MESSAGES_BUFFER_SIZE = 20;
 /**
  * Частота обновления игрового состояния на сервере в секунду.
  */
-export const GAME_SERVER_TICK_RATE = 45;
+export const GAME_SERVER_TICK_RATE = 70;
 
 /**
  * Частота отправки игрового состояния подключенным сокетам в секунду.
  */
-export const GAME_SERVER_BROADCAST_RATE = 10;
+export const GAME_SERVER_BROADCAST_RATE = 20;
 
 /**
  * Идентификатор html-элемента для канваса с игрой.

@@ -37,9 +37,9 @@ interface IDirectionBlazeState {
  * бомб у игрока, поставившего бомбу. Через таймаут вызывает функцию
  * удаления бомбы.
  * 
- * @param state - игровое состояние
- * @param bombsState - состояние бомб
- * @param color - цвет игрока, поставившего бомбу
+ * @param state
+ * @param bombsState
+ * @param color
  */
 export const placeBombToMap = (
     state: Shared.Interfaces.IGameState, 
@@ -52,6 +52,7 @@ export const placeBombToMap = (
     --bombsState[color];
 
     const args = [[playerRow, playerCol], state, bombsState, color];
+    
     // удаляем бомбу через таймаут
     setTimeout(removeBombFromMap, Shared.Constants.GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT, ...args);
 };
@@ -61,10 +62,10 @@ export const placeBombToMap = (
  * доступных бомб у игрока, поставившего бомбу. Добавляет 
  * кратер на карту. Вызывает функцию взрыва бомбы.
  * 
- * @param epicetner - эпицентр взрыва на карте [ряд ячеки, колонка ячейки]
- * @param state - игровое состояние
- * @param bombsState - состояние бомб
- * @param color - цвет игрока, поставившего бомбу
+ * @param epicetner - [ряд ячеки, колонка ячейки]
+ * @param state
+ * @param bombsState
+ * @param color
  */
 export const removeBombFromMap = (
     epicenter: [number, number],
@@ -89,9 +90,9 @@ export const removeBombFromMap = (
  * Взрывает бомбу. Расчитывает радиус по каждому направлению и
  * добавляет идентификаторы пламени в ячейки на игровой карте.
  * 
- * @param epicenter - эпицентр взрыва на карте [ряд ячеки, колонка ячейки]
- * @param map - игровая карта
- * @param radius - радиус взрыва у игрока, поставившего бомбу
+ * @param epicenter - [ряд ячеки, колонка ячейки]
+ * @param map
+ * @param radius
  */
 export const detonateBomb = (
     epicenter: [number, number],
@@ -267,8 +268,8 @@ export const detonateBomb = (
  * Обновляет состояние пламени на карте. Добавляет
  * или удаляет, в зависимости от переданного коллбека.
  * 
- * @param blaze - пламя (список с информацией о заполнении)
- * @param map - игровая карта
+ * @param blaze
+ * @param map
  * @param callback - функция удаляения или добавления сущности на карту
  */
 export const updateBlazeDependsCallback = (

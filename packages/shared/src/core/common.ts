@@ -5,9 +5,9 @@ import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision"
  * Перебирает идентификаторы игровых сущностей из ячейки, с которой 
  * игрок пересёкся. Удаляет поднятый бонусный предмет с карты.
  * 
- * @param overlapData - данные о пересечении
- * @param state - игровое состояние
- * @param color - цвет игрока
+ * @param overlapData 
+ * @param state
+ * @param color 
  * @param bombsState
  */
 export const filterOverlapData = (
@@ -50,8 +50,8 @@ export const filterOverlapData = (
  * Наносит урон игроку, который коснулся пламени. Если у игрока кончилось 
  * здоровье, удаляет его из игового сотояния.
  * 
- * @param state - игровое состояние
- * @param color - цвет игрока
+ * @param state
+ * @param color
  */
 export const tryToDamagePlayer = (
     state: Shared.Interfaces.IGameState,
@@ -85,7 +85,7 @@ export const tryToDamagePlayer = (
  * 
  * @param entityId
  * @param player
- * @param color - цвет игрока
+ * @param color
  * @param bombsState
  */
 export const pickUpBonusItem = (
@@ -144,7 +144,7 @@ export const movePlayer = (
     direction: Shared.Enums.MoveDirections,
     map: number[][][],
 ): Shared.Interfaces.IOverlapData => {
-    const { UP, RIGHT, DOWN } = Shared.Enums.MoveDirections;
+    const { UP, LEFT, DOWN } = Shared.Enums.MoveDirections;
 
     const axisAlongWhichPlayerMoves = [UP, DOWN].includes(direction) ? "y" : "x";
     const isDirectionChanged = player.direction !== direction;
@@ -152,31 +152,33 @@ export const movePlayer = (
     if (isDirectionChanged) 
         player.direction = direction;
 
-    let offset;
+    let speed;
     switch (player.speed) {
-        case 1: offset = 4;
+        case 1: speed = 0.15;
             break;
-        case 2: offset = 7;
+        case 2: speed = 0.20;
             break;
-        case 3: offset = 10;
+        case 3: speed = 0.25;
             break;
-        case 4: offset = 12;
+        case 4: speed = 0.30;
             break;
-        case 5: offset = 14;
+        case 5: speed = 0.35;
             break;
-        case 6: offset = 18;
+        case 6: speed = 0.40;
             break;
-        case 7: offset = 21;
+        case 7: speed = 0.45;
             break;
-        case 8: offset = 23;
+        case 8: speed = 0.50;
             break;
-        case 9: offset = 27;
+        case 9: speed = 0.55;
             break;
-        case 10: offset = 31;
+        case 10: speed = 0.60;
     }
 
-	// передвигаем игрока
-    player[axisAlongWhichPlayerMoves] += offset * ([RIGHT, DOWN].includes(direction) ? 1 : - 1);
+    // передвигаем игрока
+    let offset = +(speed * Shared.Constants.GAME_FIXED_DELTA_TIME).toFixed(4);
+    offset *= [UP, LEFT].includes(direction) ? -1 : 1;
+    player[axisAlongWhichPlayerMoves] += offset;
 
     if (isOutOfBorder(player)) {
         alignPlayer(player, axisAlongWhichPlayerMoves);
