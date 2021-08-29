@@ -7,7 +7,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import AppSocketHandler from "./AppSocketHandler";
 import LobbyTCPClientSocketHandler from "./LobbyTCPClientSocketHandler";
 import UDPClientSocketHandler from "./UDPClientSocketHandler";
-import Room from "../core/Room";
+import Room from "../Room";
 
 export default class SocketManager {
     public UDP_port: number;

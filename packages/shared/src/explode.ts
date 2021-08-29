@@ -1,6 +1,6 @@
 import * as Shared from "@bombers/shared/src/idnex";
-import { addEntityToMap, destroyBoxFromMap, removeEntityFromMap } from ".";
-import { calculatePlayerCellPosition, getBombIdByPlayerColor } from "../utils/helpers";
+import { addEntityToMap, destroyBoxFromMap, removeEntityFromMap } from "./common";
+import { calculatePlayerCellPosition, getBombIdByPlayerColor } from "./utils/helpers";
 
 const { EntityNumbers } = Shared.Enums;
 

@@ -1,8 +1,5 @@
 import { IServerAppState } from "@bombers/shared/src/utils/interfaces";
 
-/**
- * Состояние приложения на сервере.
- */
 export const state: IServerAppState = {
     /**
      * Количество подключенных пользователей.

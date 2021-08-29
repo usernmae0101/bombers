@@ -1,8 +1,8 @@
 import Game from "./Game";
 import * as Shared from "@bombers/shared/src/idnex";
-import SocketManager from "../sockets/SocketManager";
+import SocketManager from "./sockets/SocketManager";
 import { createState } from "./game-state";
-import { createMapById } from "@bombers/shared/src/core";
+import { createMapById } from "@bombers/shared/src/maps";
 
 export default class Room {
     /** Общее количество игровых слотов. */
@@ -107,14 +107,7 @@ export default class Room {
      */
     private _startGame() {
         this._game.isStarted = true;
-
-        // FIXME: передалеать 
-        // инициализируем начальное состояние бомб для игроков
-        const bombsState: Shared.Interfaces.IBombsState = {};
-        for (let { color } of Object.values(this._users)) {
-            bombsState[color] = 1;
-        }
-        this._game.bombsState = bombsState;
+        this._game.bombsState = Shared.Helpers.createBombsState(this._users);
 
         // широковещание игрового состояния
         this._broadcastInterval = setInterval(() => {
@@ -122,12 +115,30 @@ export default class Room {
             this._resetStateChanges();
         }, 1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE);
 
+
+        let accumulator = 0;
+        let then = +(new Date());
+
         // обновление игрового состояния
         this._updateInterval = setInterval(() => {
-            if (!this._game.isStarted)
+            const now = +(new Date());
+            let frameTime = now - then;
+            frameTime = frameTime > Shared.Constants.GAME_MAXIMUM_DELTA_TIME 
+                ? Shared.Constants.GAME_MAXIMUM_DELTA_TIME 
+                : frameTime;
+            then = now;
+
+            accumulator += frameTime;
+
+            if (!this._game.isStarted) {
                 this._endGame();
-            else
+                return;
+            }
+            
+            while (accumulator >= Shared.Constants.GAME_FIXED_DELTA_TIME) {
                 this._game.update();
+                accumulator -= Shared.Constants.GAME_FIXED_DELTA_TIME;
+            }
         }, 1000 / Shared.Constants.GAME_SERVER_TICK_RATE);
 
         this._socketManager.serverSocketTCP.of("battle").to("room").emit(
@@ -178,7 +189,7 @@ export default class Room {
         const stateHandler: ProxyHandler<any> = {
             get: (target, key) => {
                 if (typeof target[key] === "object" && target[key] !== null) {
-                    // записываем ключ, чтобы понять, что поменялось
+                    // записываем ключ, чтобы понять что поменялось
                     this._lastChangedStateKey = key as string;
 
                     return new Proxy(target[key], stateHandler);
@@ -197,6 +208,7 @@ export default class Room {
                         }
                     );
                 }
+
                 // поменяли координаты игрока - передаём ненадёжно
                 else if (["x", "y", "tick", "direction"].includes(key as string)) {
                     if (!(this._lastChangedStateKey in this._stateChanges.notReliable))
@@ -206,6 +218,7 @@ export default class Room {
 
                     this._stateChanges.notReliable[this._lastChangedStateKey][_key] = value;
                 }
+
                 // какие-то другие хар-ки игрока (или сам игрок) - передаём надёжно
                 else {
                     this._stateChanges.reliable.push(

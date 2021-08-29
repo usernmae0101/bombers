@@ -21,30 +21,36 @@ export default class Game {
     ) {
         const player = this._proxyState.players[+color];
 
-        const [isPlayerMove, direction] = Shared.Core.tryToMovePlayer(keys);
+        const [isPlayerMove, direction] = Shared.Common.tryToMovePlayer(keys);
         if (isPlayerMove) {
             const _player = { ...player };
 
-            const overlapData = Shared.Core.movePlayer(_player, direction, this._state.map);
+            const overlapData = Shared.Common
+                                    .movePlayer(_player, direction, this._state.map);
             if (overlapData) {
                 // перебираем пересечённые игровые сущности
-                Shared.Core.filterOverlapData(overlapData, this._proxyState, +color, this._bombsState);
+                Shared.Common
+                    .filterOverlapData(overlapData, this._proxyState, this._state, +color, this._bombsState);
                         
                 // если игрок был удалён из игрового сосояния
-                if (!(color in this._state.players)) 
-                   return;
+                if (!(color in this._state.players)) {
+                    console.log("debugger Game.ts: 35", "removed", this._state.players, color);
+                    return;
+                }
             } 
 
             player.x = _player.x;
             player.y = _player.y;
             player.direction = _player.direction;
+            
+            this._proxyState.players[+color].tick = tick;
         }
 
-        const isPlaceBomb = Shared.Core.tryToPlaceBomb(keys, this._state, this._bombsState, +color);
-        if (isPlaceBomb)
-            Shared.Core.placeBombToMap(this._proxyState, this._bombsState, +color);
-
-        this._proxyState.players[+color].tick = tick;
+        const isPlaceBomb = Shared.Common
+                                .tryToPlaceBomb(keys, this._state, this._bombsState, +color);
+        if (isPlaceBomb) 
+            Shared.Explode
+                .placeBombToMap(this._proxyState, this._bombsState, +color);
     }
 
     /**

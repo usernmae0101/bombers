@@ -196,10 +196,10 @@ export default class Game {
                 continue;
             }
 
+            try { // DEBUGGER: REMOVE!!!
             const enemy = this._state.players[+color];
-            
+                        
             const { x: currentX, y: currentY, } = enemy;
-
             if (!(color in this._snapshotBuffer))
                 this._snapshotBuffer[color] = [];
 
@@ -213,6 +213,7 @@ export default class Game {
                     y: changes[color].y ?? currentY
                 }
             });
+            } catch(e) {console.log(changes, color, this._state.players); }
         }
     }
 
@@ -234,6 +235,8 @@ export default class Game {
 
                 if (authX === predictedX && authY === predictedY)
                     break;
+                
+                console.log("debugger Game.ts: 238", changes, "x - " + predictedX, "y - " + predictedY);
 
                 this._state.players[this._color].x = authX;
                 this._state.players[this._color].y = authY;
@@ -246,11 +249,11 @@ export default class Game {
     private _updateLocalPlayer(keys: number[], isInsertPrediction: boolean) {
         const player = this._state.players[this._color];
 
-        const [isPlayerMove, direction] = Shared.Core.tryToMovePlayer(keys);
+        const [isPlayerMove, direction] = Shared.Common.tryToMovePlayer(keys);
         if (isPlayerMove) {
             const _player = { ...player };
 
-            Shared.Core.movePlayer(_player, direction, this._state.map);
+            Shared.Common.movePlayer(_player, direction, this._state.map);
 
             player.x = _player.x;
             player.y = _player.y;

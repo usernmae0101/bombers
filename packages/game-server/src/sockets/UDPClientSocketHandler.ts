@@ -1,7 +1,7 @@
 import { ServerChannel } from "@geckos.io/server";
 
 import * as Shared from "@bombers/shared/src/idnex";
-import Room from "../core/Room";
+import Room from "../Room";
 
 export default class UDPClientSocketHandler {    
     public static handle(socket: ServerChannel, gameRoom: Room) {

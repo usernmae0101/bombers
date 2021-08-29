@@ -94,7 +94,7 @@ export const CHAT_MESSAGES_BUFFER_SIZE = 20;
 /**
  * Частота обновления игрового состояния на сервере в секунду.
  */
-export const GAME_SERVER_TICK_RATE = 70;
+export const GAME_SERVER_TICK_RATE = 50;
 
 /**
  * Частота отправки игрового состояния подключенным сокетам в секунду.

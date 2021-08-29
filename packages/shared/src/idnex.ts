@@ -1,5 +1,8 @@
 export * as Enums from "./utils/enums";
-export * as Core from "./core";
+export * as Collision from "./collision";
+export * as Common from "./common";
+export * as Maps from "./maps";
+export * as Explode from "./explode";
 export * as Helpers from "./utils/helpers";
 export * as Interfaces from "./utils/interfaces";
 export * as Maths from "./utils/maths";

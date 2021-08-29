@@ -1,5 +1,5 @@
 import * as Shared from "@bombers/shared/src/idnex";
-import { calculatePlayerCellPosition, calculateOverlapDistance } from "./../utils/helpers";
+import { calculatePlayerCellPosition, calculateOverlapDistance } from "./utils/helpers";
 
 const { EntityNumbers } = Shared.Enums;
 

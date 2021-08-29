@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 
 import SocketManager from "./SocketManager";
 import * as Shared from "@bombers/shared/src/idnex";
-import Room from "../core/Room";
+import Room from "../Room";
 
 /**
  * Обрабатыает сообщения клиента по веб-сокету (подключенного к игровой команте).

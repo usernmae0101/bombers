@@ -1,4 +1,4 @@
-import * as Enums from "./../utils/enums";
+import * as Enums from "./utils/enums";
 
 /** Коробка. */
 const B = [Enums.EntityNumbers.BOX];

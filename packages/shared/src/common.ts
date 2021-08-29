@@ -6,12 +6,14 @@ import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision"
  * игрок пересёкся. Удаляет поднятый бонусный предмет с карты.
  * 
  * @param overlapData 
+ * @param proxyState
  * @param state
  * @param color 
  * @param bombsState
  */
 export const filterOverlapData = (
     overlapData: Shared.Interfaces.IOverlapData,
+    proxyState: Shared.Interfaces.IGameState,
     state: Shared.Interfaces.IGameState,
     color: Shared.Enums.PlayerColors,
     bombsState: Shared.Interfaces.IBombsState
@@ -28,20 +30,20 @@ export const filterOverlapData = (
     for (let entityId of cellEntities) {
         switch (entityId) {
             case EntityNumbers.FIRE_CENTER:
-                case EntityNumbers.FIRE_BOTTOM:
-                case EntityNumbers.FIRE_LEFT:
-                case EntityNumbers.FIRE_TOP:
-                case EntityNumbers.FIRE_RIGHT:
+            case EntityNumbers.FIRE_BOTTOM:
+            case EntityNumbers.FIRE_LEFT:
+            case EntityNumbers.FIRE_TOP:
+            case EntityNumbers.FIRE_RIGHT:
             case EntityNumbers.FIRE_MIDDLE_X:
             case EntityNumbers.FIRE_MIDDLE_Y:
-                tryToDamagePlayer(state, color);
+                tryToDamagePlayer(proxyState, color);
                 break;
             case EntityNumbers.ITEM_BOMB:
             case EntityNumbers.ITEM_HEALTH:
             case EntityNumbers.ITEM_RADIUS:
             case EntityNumbers.ITEM_SPEED:
-                pickUpBonusItem(entityId, state.players[color], color, bombsState);
-                removeEntityFromMap(entityId, state.map, overlapData.row, overlapData.col);
+                pickUpBonusItem(entityId, state, proxyState.players[color], color, bombsState);
+                removeEntityFromMap(entityId, proxyState.map, overlapData.row, overlapData.col);
         }
     }
 };
@@ -84,12 +86,14 @@ export const tryToDamagePlayer = (
  * не достигнуты лимиты на предмет.
  * 
  * @param entityId
+ * @param state
  * @param player
  * @param color
  * @param bombsState
  */
 export const pickUpBonusItem = (
     entityId: Shared.Enums.EntityNumbers,
+    state: Shared.Interfaces.IGameState,
     player: Shared.Interfaces.IGameStatePlayer,
     color: Shared.Enums.PlayerColors,
     bombsState: Shared.Interfaces.IBombsState
@@ -104,26 +108,26 @@ export const pickUpBonusItem = (
 
     // подобрали бомбу
     if (entityId === EntityNumbers.ITEM_BOMB) {
-        if (player.bombs < GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT) {
+        if (state.players[color].bombs < GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT) {
             ++player.bombs;
             ++bombsState[color];
         }
     }
     // подобрали скорость
     else if (entityId === EntityNumbers.ITEM_SPEED) {
-        if (player.speed < GAME_GAMEPLAY_PLAYER_PROPERTY_SPEED_LIMIT) {
+        if (state.players[color].speed < GAME_GAMEPLAY_PLAYER_PROPERTY_SPEED_LIMIT) {
             ++player.speed;
         }
     }
     // подобрали здоровье
     else if (entityId === EntityNumbers.ITEM_HEALTH) {
-        if (player.health < GAME_GAMEPLAY_PLAYER_PROPERTY_HEALTH_LIMIT) {
+        if (state.players[color].health < GAME_GAMEPLAY_PLAYER_PROPERTY_HEALTH_LIMIT) {
             ++player.health;
         }
     }
     // подобрали радиус
     else if (entityId === EntityNumbers.ITEM_RADIUS) {
-        if (player.radius < GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT) {
+        if (state.players[color].radius < GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT) {
             ++player.radius;
         }
     }
@@ -154,25 +158,25 @@ export const movePlayer = (
 
     let speed;
     switch (player.speed) {
-        case 1: speed = 0.15;
+        case 1: speed = 0.150;
             break;
-        case 2: speed = 0.20;
+        case 2: speed = 0.155;
             break;
-        case 3: speed = 0.25;
+        case 3: speed = 0.160;
             break;
-        case 4: speed = 0.30;
+        case 4: speed = 0.165;
             break;
-        case 5: speed = 0.35;
+        case 5: speed = 0.170;
             break;
-        case 6: speed = 0.40;
+        case 6: speed = 0.175;
             break;
-        case 7: speed = 0.45;
+        case 7: speed = 0.180;
             break;
-        case 8: speed = 0.50;
+        case 8: speed = 0.185;
             break;
-        case 9: speed = 0.55;
+        case 9: speed = 0.190;
             break;
-        case 10: speed = 0.60;
+        case 10: speed = 0.195;
     }
 
     // передвигаем игрока

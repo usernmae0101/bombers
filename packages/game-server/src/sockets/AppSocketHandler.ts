@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 
 import SocketManager from "./SocketManager";
 import * as Shared from "@bombers/shared/src/idnex";
-import Room from "../core/Room";
+import Room from "../Room";
 import BattleTCPClientSocketHandler from "./BattleTCPClientSocketHandler";
 
 /**

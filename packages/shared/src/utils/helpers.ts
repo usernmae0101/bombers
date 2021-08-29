@@ -55,6 +55,23 @@ export const calculateCanvasHeight = (): number => {
 };
 
 /**
+ * Создает состояние бомб для игроков, инициализируя начальным значением.
+ *
+ * @param users - список подключеннык к комнате
+ * @returns bombsState
+ */
+export const createBombsState = (
+    users: Shared.Interfaces.IRoomUsers
+): Shared.Interfaces.IBombsState => {
+    const bombsState: Shared.Interfaces.IBombsState = {};
+    
+    for (let { color } of Object.values(users))
+        bombsState[color] = 1;
+    
+    return bombsState;
+};
+
+/**
  * Делает копию объекта, включая все вложенные объекты.
  * 
  * @param object - объект, который нужно скопировать
