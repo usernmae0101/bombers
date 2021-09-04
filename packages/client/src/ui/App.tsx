@@ -27,7 +27,7 @@ const Main = () => {
         // Режим разработки. Задаём невалидные данные, чтобы создать новый аккаунт.
         if (isDevMode) {
             dispatch(UserActions.action_user_set_social_type("vk"));
-            dispatch(UserActions.action_uesr_set_social_uid(Math.round(Math.random() * 10_000)));
+            dispatch(UserActions.action_uesr_set_social_uid(window.crypto.getRandomValues(new Uint16Array(1))[0]));
             dispatch(UserActions.action_user_set_auth_is_social(true));
         }
     }, []);

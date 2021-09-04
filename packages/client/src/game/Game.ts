@@ -196,7 +196,6 @@ export default class Game {
                 continue;
             }
 
-            try { // DEBUGGER: REMOVE!!!
             const enemy = this._state.players[+color];
                         
             const { x: currentX, y: currentY, } = enemy;
@@ -213,7 +212,6 @@ export default class Game {
                     y: changes[color].y ?? currentY
                 }
             });
-            } catch(e) {console.log(changes, color, this._state.players); }
         }
     }
 
@@ -236,8 +234,6 @@ export default class Game {
                 if (authX === predictedX && authY === predictedY)
                     break;
                 
-                console.log("debugger Game.ts: 238", changes, "x - " + predictedX, "y - " + predictedY);
-
                 this._state.players[this._color].x = authX;
                 this._state.players[this._color].y = authY;
             }

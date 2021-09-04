@@ -1,7 +1,7 @@
 import * as Shared from "./../idnex";
 import { getRandomBetween } from "./maths";
 
-const { PlayerColors, EntityNumbers, MoveDirections } = Shared.Enums;
+const { PlayerColors, EntityNumbers } = Shared.Enums;
 
 /**
  * Определяет в какой ячейке на карте находится игрок.

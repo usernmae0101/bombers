@@ -1,7 +1,6 @@
 import { Dispatch } from "redux";
 import { Socket } from "socket.io-client";
 import geckos, { ClientChannel } from '@geckos.io/client'
-import Serializer from "array-buffer-serializer";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import Game from "../game/Game";

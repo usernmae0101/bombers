@@ -1,7 +1,6 @@
 import { GeckosServer } from "@geckos.io/server";
 import io, { Server } from "socket.io";
 import { Socket } from "socket.io-client";
-import Serializer from "array-buffer-serializer";
 
 import * as Shared from "@bombers/shared/src/idnex";
 import AppSocketHandler from "./AppSocketHandler";
