@@ -1,8 +1,8 @@
-import { Core, Enums, Constants } from "@bombers/shared/src/idnex";
+import { Maps, Enums, Constants } from "@bombers/shared/src/idnex";
 
 describe("should creates maps correctly", () => {
-    const map1 = Core.createMapById(Enums.GameMaps.MAP_1);  
-    const map2 = Core.createMapById(Enums.GameMaps.MAP_2);  
+    const map1 = Maps.createMapById(Enums.GameMaps.MAP_1);  
+    const map2 = Maps.createMapById(Enums.GameMaps.MAP_2);  
 
     it("should have correct value of rows", () => {
         expect(map1.length).toBe(Constants.GAME_RESOLUTION_TILE_LENGTH_Y);

@@ -1,5 +1,5 @@
 import { Helpers, Constants, Enums } from "@bombers/shared/src/idnex";
-import { createPlayer } from "@bombers/game-server/src/core/game-state";
+import { createPlayer } from "@bombers/game-server/src/game-state";
 
 describe("helpers should works correctly", () => {
     it("should calculates correct players cell position", () => {
