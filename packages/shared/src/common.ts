@@ -7,14 +7,12 @@ import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision"
  * 
  * @param overlapData 
  * @param proxyState
- * @param state
  * @param color 
  * @param bombsState
  */
 export const filterOverlapData = (
     overlapData: Shared.Interfaces.IOverlapData,
     proxyState: Shared.Interfaces.IGameState,
-    state: Shared.Interfaces.IGameState,
     color: Shared.Enums.PlayerColors,
     bombsState: Shared.Interfaces.IBombsState
 ) => {
@@ -25,7 +23,7 @@ export const filterOverlapData = (
     if (overlapData.distance <= GAME_RESOLUTION_TILE_OFFSET * 2)
         return;
 
-    const cellEntities = state.map[overlapData.row][overlapData.col];
+    const cellEntities = proxyState.map[overlapData.row][overlapData.col];
 
     for (let entityId of cellEntities) {
         switch (entityId) {
@@ -42,7 +40,7 @@ export const filterOverlapData = (
             case EntityNumbers.ITEM_HEALTH:
             case EntityNumbers.ITEM_RADIUS:
             case EntityNumbers.ITEM_SPEED:
-                pickUpBonusItem(entityId, state, proxyState.players[color], color, bombsState);
+                pickUpBonusItem(entityId, proxyState.players[color], color, bombsState);
                 removeEntityFromMap(entityId, proxyState.map, overlapData.row, overlapData.col);
         }
     }
@@ -60,6 +58,9 @@ export const tryToDamagePlayer = (
     color: Shared.Enums.PlayerColors
 ) => {
     const { GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL } = Shared.Constants;
+    
+    if (state.players[color] === undefined)
+        return;
 
     if (!state.players[color].isImmortal) {
         // удаляем игрока из состояния
@@ -86,14 +87,12 @@ export const tryToDamagePlayer = (
  * не достигнуты лимиты на предмет.
  * 
  * @param entityId
- * @param state
  * @param player
  * @param color
  * @param bombsState
  */
 export const pickUpBonusItem = (
     entityId: Shared.Enums.EntityNumbers,
-    state: Shared.Interfaces.IGameState,
     player: Shared.Interfaces.IGameStatePlayer,
     color: Shared.Enums.PlayerColors,
     bombsState: Shared.Interfaces.IBombsState
@@ -108,26 +107,26 @@ export const pickUpBonusItem = (
 
     // подобрали бомбу
     if (entityId === EntityNumbers.ITEM_BOMB) {
-        if (state.players[color].bombs < GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT) {
+        if (player.bombs < GAME_GAMEPLAY_PLAYER_PROPERTY_BOMBS_LIMIT) {
             ++player.bombs;
             ++bombsState[color];
         }
     }
     // подобрали скорость
     else if (entityId === EntityNumbers.ITEM_SPEED) {
-        if (state.players[color].speed < GAME_GAMEPLAY_PLAYER_PROPERTY_SPEED_LIMIT) {
+        if (player.speed < GAME_GAMEPLAY_PLAYER_PROPERTY_SPEED_LIMIT) {
             ++player.speed;
         }
     }
     // подобрали здоровье
     else if (entityId === EntityNumbers.ITEM_HEALTH) {
-        if (state.players[color].health < GAME_GAMEPLAY_PLAYER_PROPERTY_HEALTH_LIMIT) {
+        if (player.health < GAME_GAMEPLAY_PLAYER_PROPERTY_HEALTH_LIMIT) {
             ++player.health;
         }
     }
     // подобрали радиус
     else if (entityId === EntityNumbers.ITEM_RADIUS) {
-        if (state.players[color].radius < GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT) {
+        if (player.radius < GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT) {
             ++player.radius;
         }
     }
@@ -229,10 +228,9 @@ export const destroyBoxFromMap = (map: number[][][], row: number, col: number) =
     // удаляем коробку
     removeEntityFromMap(EntityNumbers.BOX, map, row, col);
 
-    if (GAME_GAMEPLAY_DROP_ITEM_PERCENT <= getRandomBetween(1, 100)) {
-        // добавляем случайный предмет
+    // добавляем случайный предмет
+    if (GAME_GAMEPLAY_DROP_ITEM_PERCENT <= getRandomBetween(1, 100)) 
         addEntityToMap(chooseRandomBonusItem(), map, row, col);
-    }
 };
 
 /**

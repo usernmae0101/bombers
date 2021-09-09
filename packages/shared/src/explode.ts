@@ -1,5 +1,5 @@
 import * as Shared from "@bombers/shared/src/idnex";
-import { addEntityToMap, destroyBoxFromMap, removeEntityFromMap } from "./common";
+import { addEntityToMap, tryToDamagePlayer, destroyBoxFromMap, removeEntityFromMap } from "./common";
 import { calculatePlayerCellPosition, getBombIdByPlayerColor } from "./utils/helpers";
 
 const { EntityNumbers } = Shared.Enums;
@@ -51,7 +51,7 @@ export const placeBombToMap = (
     addEntityToMap(getBombIdByPlayerColor(color), state.map, playerRow, playerCol);
     --bombsState[color];
 
-    const args = [[playerRow, playerCol], state, bombsState, color];
+    const args = [[playerRow, playerCol], state, bombsState, color, state.players[color].radius];
     
     // удаляем бомбу через таймаут
     setTimeout(removeBombFromMap, Shared.Constants.GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT, ...args);
@@ -63,27 +63,28 @@ export const placeBombToMap = (
  * кратер на карту. Вызывает функцию взрыва бомбы.
  * 
  * @param epicetner - [ряд ячеки, колонка ячейки]
- * @param state
+ * @param proxyState
  * @param bombsState
  * @param color
+ * @param radius
  */
 export const removeBombFromMap = (
     epicenter: [number, number],
-    state: Shared.Interfaces.IGameState,
+    proxyState: Shared.Interfaces.IGameState,
     bombsState: Shared.Interfaces.IBombsState,
-    color: Shared.Enums.PlayerColors
+    color: Shared.Enums.PlayerColors,
+    radius: number
 ) => {
     const [epicenterRow, epicenterCol] = epicenter;
 
-    removeEntityFromMap(getBombIdByPlayerColor(color), state.map, epicenterRow, epicenterCol);
+    removeEntityFromMap(getBombIdByPlayerColor(color), proxyState.map, epicenterRow, epicenterCol);
     ++bombsState[color];
 
     // добавляем кратер, если его нет в ячейке на карте
-    if (!state.map[epicenterRow][epicenterCol].includes(EntityNumbers.CRATER)) {
-        addEntityToMap(EntityNumbers.CRATER, state.map, epicenterRow, epicenterCol);
-    }
+    if (!proxyState.map[epicenterRow][epicenterCol].includes(EntityNumbers.CRATER))
+        addEntityToMap(EntityNumbers.CRATER, proxyState.map, epicenterRow, epicenterCol);
 
-    detonateBomb([epicenterRow, epicenterCol], state.map, state.players[color].radius);
+    detonateBomb([epicenterRow, epicenterCol], proxyState, radius);
 };
 
 /**
@@ -91,14 +92,17 @@ export const removeBombFromMap = (
  * добавляет идентификаторы пламени в ячейки на игровой карте.
  * 
  * @param epicenter - [ряд ячеки, колонка ячейки]
- * @param map
+ * @param proxyState
  * @param radius
  */
 export const detonateBomb = (
     epicenter: [number, number],
-    map: number[][][],
+    proxyState: Shared.Interfaces.IGameState,
     radius: number
 ) => {
+    const map = proxyState.map;
+    const players = proxyState.players;
+
     const { EntityNumbers } = Shared.Enums;
     const { GAME_RESOLUTION_TILE_LENGTH_Y, GAME_RESOLUTION_TILE_LENGTH_X, GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW } = Shared.Constants;
 
@@ -135,7 +139,7 @@ export const detonateBomb = (
             middle: EntityNumbers.FIRE_MIDDLE_Y,
             row: epicenterRow,
             increaseBy: - 1,
-            col: epicenterCol,
+                    col: epicenterCol,
             spreadBy: "row",
             limitSpread: 0
         },
@@ -253,6 +257,60 @@ export const detonateBomb = (
         argumentsToUpdateBlazeFunc[1] as number[][][],
         addEntityToMap
     );
+
+    // проверяем, задело ли кого-нибудь из игроков
+    for (let color in players) {
+        const xPos = players[+color].x;
+        const yPos = players[+color].y;
+
+        const [pRow, pCol] = Shared.Helpers.calculatePlayerCellPosition(players[+color])
+
+        const xRem = xPos % Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+        const yRem = yPos % Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+
+        // занимаемые ячейки
+        const takes: { row: number; col: number; }[] = [{ col: pCol, row: pRow }];
+
+        // занимает одну ячейку
+        if (!(xRem === 0 && yRem === 0)) {
+            // воровнен по Y
+            if (xRem !== 0) {
+                const rest = xPos - (pCol * Shared.Constants.GAME_RESOLUTION_TILE_SIZE);     
+                if (Math.abs(rest) > Shared.Constants.GAME_RESOLUTION_TILE_OFFSET) {
+                    takes.push({
+                        row: pRow,
+                        col: rest > 0 ? pCol + 1 : pCol - 1
+                    });
+                }
+            }
+
+            // выровнен по X
+            else {
+                const rest = yPos - (pRow * Shared.Constants.GAME_RESOLUTION_TILE_SIZE);     
+                if (Math.abs(rest) > Shared.Constants.GAME_RESOLUTION_TILE_OFFSET) {
+                    takes.push({
+                        col: pCol,
+                        row: rest > 0 ? pRow + 1 : pRow - 1
+                    });
+                }
+            }
+        }
+
+        for (let { row, col } of takes) {
+            for (let entity of map[row][col]) {
+                if ([
+                    EntityNumbers.FIRE_CENTER,
+                    EntityNumbers.FIRE_BOTTOM,
+                    EntityNumbers.FIRE_LEFT,
+                    EntityNumbers.FIRE_TOP,
+                    EntityNumbers.FIRE_RIGHT,
+                    EntityNumbers.FIRE_MIDDLE_X,
+                    EntityNumbers.FIRE_MIDDLE_Y
+                ].includes(entity))
+                    tryToDamagePlayer(proxyState, +color);
+            }     
+        }
+    }
 
     // удаляем пламя через таймаут
     setTimeout(

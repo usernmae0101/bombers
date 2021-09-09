@@ -62,7 +62,7 @@ export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
 /**
  * Отступ при отрисовке спрайта в пикселях.
  */
-export const GAME_RESOLUTION_TILE_OFFSET = 3;
+export const GAME_RESOLUTION_TILE_OFFSET = 4;
 
 /**
  * Количество игровых тайлов на карте в высоту.

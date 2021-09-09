@@ -26,7 +26,7 @@ export default class Game {
             const overlapData = Shared.Common.movePlayer(_player, direction, this._state.map);
             if (overlapData) {
                 // перебираем пересечённые игровые сущности
-                Shared.Common.filterOverlapData(overlapData, this._proxyState, this._state, +color, this._bombsState);
+                Shared.Common.filterOverlapData(overlapData, this._proxyState, +color, this._bombsState);
                         
                 // если игрок был удалён из игрового сосояния
                 if (!(color in this._state.players))

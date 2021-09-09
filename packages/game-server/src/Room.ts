@@ -115,7 +115,6 @@ export default class Room {
             this._resetStateChanges();
         }, 1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE);
 
-
         let accumulator = 0;
         let then = +(new Date());
 
