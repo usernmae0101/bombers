@@ -54,7 +54,7 @@ const socketManager = new SocketManager(
     serverSocketUDP,
     clientSocketTCP
 );
-socketManager.handle(gameServerPortUDP, iceServers);
+socketManager.handle( gameServerPortUDP, iceServers);
 
 serverSocketUDP.listen(gameServerPortUDP);
 console.log(`game server UDP handling as ${gameServerAddress}:${gameServerPortUDP}`);

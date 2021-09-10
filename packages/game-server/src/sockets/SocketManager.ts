@@ -6,6 +6,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import AppSocketHandler from "./AppSocketHandler";
 import LobbyTCPClientSocketHandler from "./LobbyTCPClientSocketHandler";
 import UDPClientSocketHandler from "./UDPClientSocketHandler";
+import BattleTCPClientSocketHandler from "./BattleTCPClientSocketHandler";
 import Room from "../Room";
 
 export default class SocketManager {
@@ -50,7 +51,11 @@ export default class SocketManager {
 
             // если пользователь переподключился (например, вылетел)
             if (token as string in room.users) {
-                // TODO: доделать
+                room.onReconnect(token, socket);
+                
+                // подключаем сокет к комнате
+                socket.join("room");
+                BattleTCPClientSocketHandler.handle(socket, this, room);
                 return;
             }
 
@@ -65,7 +70,7 @@ export default class SocketManager {
                 String(Shared.Enums.SocketChannels.APP_ON_GAME_AUTH),
                 {
                     token,
-                    socketId: socket.id
+                    socketId: socket.id,
                 }
             );
         });
@@ -101,6 +106,24 @@ export default class SocketManager {
         this.serverSocketTCP.of("battle").to("room").emit(
             String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_ROOM_SLOTS),
             slots
+        );
+    }
+    
+    public sendRoomDataToConnectedUser(
+        socket: any, 
+        gameRoom: Room,
+        userColor: number
+    ) {
+        socket.emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_CONNECT_ROOM_DATA),
+            {
+                color: userColor,
+                iceServers: this.iceServers,
+                UDP_port: this.UDP_port,
+                slots: gameRoom.slots,
+                gameState: gameRoom.gameState,
+                isGameStarted: gameRoom.isGameStarted
+            }
         );
     }
 

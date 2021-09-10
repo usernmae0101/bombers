@@ -20,7 +20,7 @@ export default class BattleTCPClientSocketHandler {
         // отвечаем на пинг
         socket.on(
             String(Shared.Enums.SocketChannels.GAME_ON_PING_PONG), 
-            () => manager.pong("battle")
+            () => manager.pong("battle") 
         );  
 
         // принимаем готовность к игре

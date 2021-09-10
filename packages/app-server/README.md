@@ -5,10 +5,12 @@
 ```bash
 .
 └── src
-    ├── controllers
-    ├── middlewares
-    ├── models
-    ├── routes
+    ├── api
+    │   ├── controllers
+    │   ├── middlewares
+    │   ├── models
+    │   ├── routes
+    │   └── services
     └── sockets
 ```
 

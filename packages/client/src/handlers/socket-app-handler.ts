@@ -13,7 +13,11 @@ type InitialStateType = {
 	totalServers: number;
 };
 
-export const startHandlingAppSocket = (socket: Socket, dispatch: Dispatch) => {
+export const startHandlingAppSocket = (
+	socket: Socket, 
+	dispatch: Dispatch,
+	setRoomToRedirect: (server: string) => void
+) => {
 	// изменение онлайна
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE),
@@ -47,6 +51,14 @@ export const startHandlingAppSocket = (socket: Socket, dispatch: Dispatch) => {
 		String(Shared.Enums.SocketChannels.APP_ON_SET_GAME_SERVERS_COUNT), 
 		(count: number) => {
 			dispatch(DashboardActions.action_dashboard_set_total_servers(count));
+		}
+	);
+
+	// переподключение к комнате
+	socket.on(
+		String(Shared.Enums.SocketChannels.GAME_ON_ROOM_RECONNECT),
+		(connectionData: Shared.Interfaces.IAppPlayersData) => {
+			setRoomToRedirect(connectionData.server);		
 		}
 	);
 

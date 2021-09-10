@@ -62,9 +62,10 @@ export default class Room {
 
     }
 
-    // TODO:
-    public onReconnect() {
-
+    public onReconnect(token: string, socket: any) {
+        const color = this._users[token].color;
+        
+        this._socketManager.sendRoomDataToConnectedUser(socket, this, color);
     }
     
     public onEmotionChange(token: string, emotion: number) {

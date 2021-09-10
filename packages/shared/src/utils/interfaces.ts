@@ -143,6 +143,14 @@ export interface IRoomUsers {
     [token: string]: IRoomUser;
 }
 
+export interface IAppPlayersData {
+    server: string;
+}
+
+export interface IAppPlayers {
+    [token: string]: IAppPlayersData;
+}
+
 export interface ILobbyServer {
     /** Порт TCP сокет-сервера. */
     TCP_port: number;

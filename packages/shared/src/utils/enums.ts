@@ -80,6 +80,10 @@ export enum SocketChannels {
      */
     GAME_ON_END,
     /**
+     * Переподключение к комнате.
+     */
+    GAME_ON_ROOM_RECONNECT,
+    /**
      * Обновление количества подключенных пользователей.
      */
     APP_ON_SET_ONLINE,

@@ -9,8 +9,13 @@ export default class SocketManager {
     /**
      * @param io - socket.io instance 
      * @param state - общее состояние приложения
+     * @param _roomConnection - список пользователей, которые находятся в комнате
      */
-    constructor(public io: Server, public state: Shared.Interfaces.IServerAppState) { }
+    constructor(
+        public io: Server, 
+        public state: Shared.Interfaces.IServerAppState,
+        private _roomConnection: Shared.Interfaces.IAppPlayers = {}
+    ) { }
 
     /**
      * Меняет состояние приложения при отключении пользователя от сокета. 
@@ -84,25 +89,39 @@ export default class SocketManager {
      * в список участников чата. Отправляет обновлённое состояние всем подключенным сокетам.
      * 
      * @param userData - данные подключеннного пользователя
+     * @param isPlaying - находится ли пользователь уже в комнате
      */
-    public addUserToState(userData: Shared.Interfaces.IUser) {
+    public addUserToState(
+        userData: Shared.Interfaces.IUser, 
+        isPlaying: boolean
+    ) {
         ++this.state.online;
         
         this.io.of("client").emit(
             String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE),
             this.state.online
         );
-
-        // TODO: добавить проверку, в игре ли пользователь (вылетел)
-        // если в игре, то переместить сразу в игровую команту
-
-        if (true) {
+        
+        if (!isPlaying) {
             this.state.chat.members.push(userData);
             this.io.of("client").emit(
                 String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER),
                 userData
             );
         }
+    }
+
+    public findUserRoomConnection(token: string): Shared.Interfaces.IAppPlayersData  {
+        return this._roomConnection[token]; 
+    }
+
+
+    public setUserToRoomConnection(token: string, server: string) {
+        this._roomConnection[token] = { server };
+    }
+
+    public removeUserFromRoomConnection(token: string) {
+        delete this._roomConnection[token];
     }
 
     /**
@@ -120,15 +139,29 @@ export default class SocketManager {
                         if (!user) socket.disconnect(true);
                         else {
                             const currentSocketUserData = this.parseUserData(user);
+                            const roomConnectionData = this.findUserRoomConnection(authToken as string);
 
-                            this.addUserToState(currentSocketUserData);
+                            this.addUserToState(currentSocketUserData, roomConnectionData !== undefined);
 
                             // отправляем подключенному пользователю текущее состояние приложения
-                            socket.emit(String(Shared.Enums.SocketChannels.APP_ON_SET_STATE), {
-                                online: this.state.online,
-                                chat: this.state.chat,
-                                totalServers: this.state.lobby.length
-                            });
+                            if (roomConnectionData === undefined) {
+                                socket.emit(
+                                    String(Shared.Enums.SocketChannels.APP_ON_SET_STATE), 
+                                    {
+                                        online: this.state.online,
+                                        chat: this.state.chat,
+                                        totalServers: this.state.lobby.length,
+                                    }
+                                );
+                            }
+
+                            // отправляем данные для подключения к комнате
+                            else {
+                               socket.emit(
+                                   String(Shared.Enums.SocketChannels.GAME_ON_ROOM_RECONNECT), 
+                                   roomConnectionData
+                               );
+                            }
 
                             ClientSocketHandler.handle(socket, this, currentSocketUserData);
                         }
@@ -140,12 +173,11 @@ export default class SocketManager {
 
         // Соединение инициировал игровой сервер.
         this.io.of("game-server").on("connection", socket => {
-            const { gameServer } = socket.handshake.query;
-
-            if (gameServer !== undefined) {
-                this.addGameServerToState(JSON.parse(gameServer as string));
-
-                GameServerSocketHandler.handle(socket, this);
+            if (socket.handshake.query.gameServer !== undefined) {
+                const gameServer = JSON.parse(socket.handshake.query.gameServer as string);
+                this.addGameServerToState(gameServer);
+                
+                GameServerSocketHandler.handle(socket, this, `${gameServer.address}/${gameServer.TCP_port}`);
             } 
             
             else socket.disconnect(true);

@@ -39,17 +39,15 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
 
         dispatch(GameActions.action_game_set_tcp_socket(gameSocketTCP));
 
-        const getPingIntervalAndUDPChann = startHandlingGameBattleSocket(
-            userToken, address, game, gameSocketTCP, dispatch
-        );
+        const getPingIntervalAndUDPChann = startHandlingGameBattleSocket(userToken, address, game, gameSocketTCP, dispatch);
 
         return () => {
             Keyboard.unsubscribe();
 
             const [pingInterval, gameSocketUDP] = getPingIntervalAndUDPChann();
             
-            gameSocketTCP.disconnect();
-            gameSocketUDP.close();
+            gameSocketTCP && gameSocketTCP.disconnect();
+            gameSocketUDP && gameSocketUDP.close();
 
             clearInterval(pingInterval);
         };

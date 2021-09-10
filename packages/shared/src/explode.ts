@@ -139,7 +139,7 @@ export const detonateBomb = (
             middle: EntityNumbers.FIRE_MIDDLE_Y,
             row: epicenterRow,
             increaseBy: - 1,
-                    col: epicenterCol,
+            col: epicenterCol,
             spreadBy: "row",
             limitSpread: 0
         },
@@ -271,9 +271,9 @@ export const detonateBomb = (
         // занимаемые ячейки
         const takes: { row: number; col: number; }[] = [{ col: pCol, row: pRow }];
 
-        // занимает одну ячейку
+        // если занимает две ячейки
         if (!(xRem === 0 && yRem === 0)) {
-            // воровнен по Y
+            // выровнен по Y
             if (xRem !== 0) {
                 const rest = xPos - (pCol * Shared.Constants.GAME_RESOLUTION_TILE_SIZE);     
                 if (Math.abs(rest) > Shared.Constants.GAME_RESOLUTION_TILE_OFFSET) {

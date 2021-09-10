@@ -1,5 +1,5 @@
 import React from "react";
-import {Switch, Route} from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import IndexPage from "./pages/IndexPage";
 import ProfilePage from "./pages/ProfilePgae";
@@ -16,13 +16,28 @@ export type RoutesPropsType = {
 	}
 };
 
-const Routes = () => (
-	<Switch>
-		<Route exact path="/" component={IndexPage} />
-		<Route exact path="/rating" component={RatingPage} />
-		<Route path="/profile/:nickname" component={ProfilePage} />
-		<Route path="/room/:address/:port" component={RoomPage} />
-	</Switch>
-);
+const checkoutRedirect = (
+	roomToRedirect: string,
+	Component: React.FC
+) => {
+	if (roomToRedirect.length)
+		return <Redirect to={"/room/" + roomToRedirect} />;
+
+	return <Component />
+};
+
+const Routes: React.FC<{ roomToRedirect: string}> = ({ 
+	roomToRedirect 
+}) => {
+
+	return (
+		<Switch>
+			<Route exact path="/" render={() => checkoutRedirect(roomToRedirect, IndexPage)} />
+			<Route path="/rating" render={() => checkoutRedirect(roomToRedirect, RatingPage)} />
+			<Route path="/profile/:nickname" render={() => checkoutRedirect(roomToRedirect, ProfilePage)} />
+			<Route path="/room/:address/:port" component={RoomPage} />
+		</Switch>
+	);
+};
 
 export default Routes;

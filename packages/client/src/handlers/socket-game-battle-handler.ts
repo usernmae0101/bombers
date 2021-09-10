@@ -94,7 +94,6 @@ export const startHandlingGameBattleSocket = (
         String(Shared.Enums.SocketChannels.GAME_ON_PING_PONG),
         () => {
             const latency = Date.now() - pingTimestamp;
-
             dispatch(GameActions.action_game_set_ping(latency));
 
             if (!isConnected) {

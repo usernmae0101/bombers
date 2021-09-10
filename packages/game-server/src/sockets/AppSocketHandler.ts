@@ -30,22 +30,14 @@ export default class AppSocketHandler {
                     }
 
                     gameRoom.onJoin(responseData.token, responseData.userData);
-                    
+                   
+                    // подключаем сокет к комнате
                     authSocket.join("room");
 
                     // отправляем данные подключенному сокету
-                    authSocket.emit(
-                        String(Shared.Enums.SocketChannels.GAME_ON_CONNECT_ROOM_DATA),
-                        {
-                            color: gameRoom.users[responseData.token].color,
-                            iceServers: manager.iceServers,
-                            UDP_port: manager.UDP_port,
-                            slots: gameRoom.slots,
-                            gameState: gameRoom.gameState,
-                            isGameStarted: gameRoom.isGameStarted
-                        }
-                    );
-
+                    const userColor = gameRoom.users[responseData.token].color;
+                    manager.sendRoomDataToConnectedUser(authSocket, gameRoom, userColor);
+   
                     BattleTCPClientSocketHandler.handle(authSocket, manager, gameRoom);
                 }
             }

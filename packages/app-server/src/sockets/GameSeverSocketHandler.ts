@@ -8,7 +8,11 @@ import { UserModel } from "../api/models";
  * Обрабатывает сообщения игрового сервера по веб-сокету.
  */
 export default class GameServerSocketHandler {
-    public static handle(socket: Socket, manager: SocketManager) {
+    public static handle(
+        socket: Socket, 
+        manager: SocketManager, 
+        server: string
+    ) {
         // аутентифицируем пользователя с игрового сервера
         socket.on(
             String(Shared.Enums.SocketChannels.APP_ON_GAME_AUTH),
@@ -22,6 +26,8 @@ export default class GameServerSocketHandler {
                             responseData.success = true;
                             responseData.token = token;
                             responseData.userData = manager.parseUserData(user);
+                            
+                            manager.setUserToRoomConnection(token, server);
                         }
 
                         // отправляем данные обратно на игровой сервер

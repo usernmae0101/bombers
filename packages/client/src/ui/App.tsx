@@ -13,6 +13,7 @@ import Loader from "./components/Loader";
 
 const Main = () => {
     const dispatch = useDispatch();
+    const [roomToRedirect, setRoomToRedirect] = React.useState(``);
 
     const isAuthViaSocial = useSelector(UserSelectors.select_user_auth_is_social);
     const authToken = useSelector(UserSelectors.select_user_auth_token);
@@ -27,7 +28,8 @@ const Main = () => {
         // Режим разработки. Задаём невалидные данные, чтобы создать новый аккаунт.
         if (isDevMode) {
             dispatch(UserActions.action_user_set_social_type("vk"));
-            dispatch(UserActions.action_uesr_set_social_uid(window.crypto.getRandomValues(new Uint16Array(1))[0]));
+            //dispatch(UserActions.action_uesr_set_social_uid(window.crypto.getRandomValues(new Uint16Array(1))[0]));
+            dispatch(UserActions.action_uesr_set_social_uid(1));
             dispatch(UserActions.action_user_set_auth_is_social(true));
         }
     }, []);
@@ -72,18 +74,19 @@ const Main = () => {
                     }
                 });
                 
-                startHandlingAppSocket(_socket, dispatch);
+                startHandlingAppSocket(_socket, dispatch, setRoomToRedirect);
 
                 dispatch(UserActions.action_user_set_socket_instance(_socket));
             }
         })();
     }, [isAuth]);
 
-    if (!isAuth || !socket) return (<Loader />);
+    if (!isAuth || !socket) 
+        return (<Loader />);
 
     return (
         <BrowserRouter>
-            <Routes />
+            <Routes roomToRedirect={roomToRedirect} />
         </BrowserRouter>
     );
 };
