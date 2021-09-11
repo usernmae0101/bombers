@@ -52,6 +52,10 @@ export enum SocketChannels {
      */
     GAME_ON_UPDATE_GAME_ROOM_SLOTS,
     /**
+     * Выход и комнаты.
+     */
+    GAME_ON_LEAVVE_ROOM,
+    /**
      * Обновление игрового состояния.
      */
     GAME_ON_UPDATE_GAME_STATE,

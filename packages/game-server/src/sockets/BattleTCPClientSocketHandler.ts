@@ -16,6 +16,21 @@ export default class BattleTCPClientSocketHandler {
             String(Shared.Enums.SocketChannels.GAME_ON_EMOTION_UPDATE),
             (emotion: number) => gameRoom.onEmotionChange(token, emotion)
         );
+        
+        // покидаем комнату
+        socket.on(
+            String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
+            () => {
+                // улаояем пользователя из комнаты на центральном сервере
+                manager.clientSocketTCP.emit(
+                    String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
+                    token
+                );
+
+                gameRoom.onLeave(token);
+                socket.disconnect(true);
+            }
+        );
 
         // отвечаем на пинг
         socket.on(

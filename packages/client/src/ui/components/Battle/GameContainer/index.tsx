@@ -116,7 +116,9 @@ const GameContainer = () => {
     };
 
     React.useEffect(() => {
-        initMenuCanvas(localColor, TCPSocket);
+        // если игрок не подтведил готовность, рисуем менюшку
+        if (!gameSlots[localColor].isReady)
+            initMenuCanvas(localColor, TCPSocket);
     }, [localColor]);
 
     return (

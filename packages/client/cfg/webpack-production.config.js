@@ -26,7 +26,10 @@ module.exports = merge(commonConfig, {
     },
     plugins: [
         new DefinePlugin({
-            isDevMode: false
+            isDevMode: false,
+            'process.env': {
+                'NODE_ENV': '"production"'
+            }
         }),
         new MiniCssExtractPlugin({
             filename: "[name].[contenthash].css"

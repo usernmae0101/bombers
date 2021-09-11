@@ -82,7 +82,8 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
             // меняем позицию игрока
             if (isXPosChanged || isYPosChanged) {
-                if (+color === localPlayerColor && this._players[color].cache.x !== null) {
+                // если не первая отрисовка
+                if (this._players[color].cache.x !== null) {
                     this._players[color].cache.x = Shared.Maths.lerp(this._players[color].cache.x, players[color].x, dt);
                     this._players[color].cache.y = Shared.Maths.lerp(this._players[color].cache.y, players[color].y, dt);
                 }

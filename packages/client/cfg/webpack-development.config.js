@@ -35,7 +35,10 @@ module.exports = merge(commonConfig, {
     },
     plugins: [
         new DefinePlugin({
-            isDevMode: true
+            isDevMode: true,
+            'process.env': {
+                'NODE_ENV': '"development"'
+            }
         })
     ]
 });

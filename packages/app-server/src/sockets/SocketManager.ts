@@ -75,6 +75,15 @@ export default class SocketManager {
      * @param server - подключеный игровой сервер
      */
     public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
+        // проверяем дубликаты (переподключение)
+        for (let i = 0; i < this.state.lobby.length; i++) {
+            const isSameAddress = this.state.lobby[i].address === server.address;
+            const isSameTCPPort = this.state.lobby[i].TCP_port === server.TCP_port;
+
+            if (isSameAddress && isSameTCPPort)
+                return;
+        }
+
         this.state.lobby.push(server);
 
         this.io.of("client").emit(
@@ -175,9 +184,9 @@ export default class SocketManager {
         this.io.of("game-server").on("connection", socket => {
             if (socket.handshake.query.gameServer !== undefined) {
                 const gameServer = JSON.parse(socket.handshake.query.gameServer as string);
-                this.addGameServerToState(gameServer);
                 
                 GameServerSocketHandler.handle(socket, this, `${gameServer.address}/${gameServer.TCP_port}`);
+                this.addGameServerToState(gameServer);
             } 
             
             else socket.disconnect(true);

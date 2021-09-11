@@ -7,8 +7,6 @@
 ├── assets
 │   └── images
 ├── cfg
-├── dist
-│   └── images
 └── src
     ├── api
     │   ├── clans

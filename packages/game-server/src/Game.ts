@@ -11,6 +11,7 @@ export default class Game {
     /** Cтатус игры: начата или нет. */
     private _isStarted: boolean = false;
     private _proxyState: Shared.Interfaces.IGameState;
+    private _queuePlayersToRemove: number[] = [];
     private _bombsState: Shared.Interfaces.IBombsState;
     public keysBuffer: IKeysBuffer = {};
 
@@ -19,6 +20,10 @@ export default class Game {
         tick: number, 
         color: string
     ) {
+        // если пакет пришел с опоздланием
+        if (tick < this._state.players[+color].tick)
+            return;
+
         const [isPlayerMove, direction] = Shared.Common.tryToMovePlayer(keys);
         if (isPlayerMove) {
             const _player = { ...this._state.players[+color] };
@@ -52,7 +57,17 @@ export default class Game {
     public addPlayerToState(color: number) {
         this._proxyState.players[color] = PlayerFactory.create(color);
     }
-    
+
+    public removePlayerFromState(color: number) {
+        // добавляем в очередь, чтобы не получить ошибку
+        if (this._isStarted) {
+            this._queuePlayersToRemove.push(color);
+            return;
+        }
+
+        delete this._proxyState.players[color];
+    }
+
     public updatePlayerEmotion(color: number, emotion: number) {
         this._proxyState.players[color].emotion = emotion;
     }
@@ -64,10 +79,14 @@ export default class Game {
         for (let color in this._proxyState.players) {
             if (this.keysBuffer[color].length) {
                 const { keys, tick } = this.keysBuffer[color].shift();
-
+                
                 this._updatePlayer(keys, tick, color);
             }
         }
+
+        // удаляем игроков, которые отключились
+        for (let color of this._queuePlayersToRemove)
+            delete this._proxyState.players[color];
     }
 
     /** 

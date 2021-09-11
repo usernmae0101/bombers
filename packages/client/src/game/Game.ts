@@ -101,7 +101,8 @@ export default class Game {
 
         if (Keyboard.keys["Space"] && !Keyboard.locked["Space"]) {
             this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_SPACE);
-
+            
+            // чтобы не реaгировать на кнопку при зажатии
             Keyboard.locked["Space"] = true;
         }
     }
@@ -114,7 +115,7 @@ export default class Game {
                     keys: this._keys,
                     tick: this._tick
                 }
-            )
+            );
         }
     }
 
@@ -139,11 +140,17 @@ export default class Game {
 
                 if (+_changes.color === this._color) {
                     if (_changes.key === "bombs")
-                        dispatch(GameActions.action_game_set_bombs(_changes.value));
+                        dispatch(
+                            GameActions.action_game_set_bombs(_changes.value)
+                        );
                     else if (_changes.key === "speed")
-                        dispatch(GameActions.action_game_set_speed(_changes.value));
+                        dispatch(
+                            GameActions.action_game_set_speed(_changes.value)
+                        );
                     else if (_changes.key === "radius")
-                        dispatch(GameActions.action_game_set_radius(_changes.value));
+                        dispatch(
+                            GameActions.action_game_set_radius(_changes.value)
+                        );
                 }
 
                 // @ts-ignore 
@@ -197,8 +204,8 @@ export default class Game {
             }
 
             const enemy = this._state.players[+color];
-                        
             const { x: currentX, y: currentY, } = enemy;
+
             if (!(color in this._snapshotBuffer))
                 this._snapshotBuffer[color] = [];
 

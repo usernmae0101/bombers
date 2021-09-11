@@ -8,6 +8,7 @@ import LobbyTCPClientSocketHandler from "./LobbyTCPClientSocketHandler";
 import UDPClientSocketHandler from "./UDPClientSocketHandler";
 import BattleTCPClientSocketHandler from "./BattleTCPClientSocketHandler";
 import Room from "../Room";
+import { debug } from "@bombers/shared/src/tools/debugger";
 
 export default class SocketManager {
     public UDP_port: number;
@@ -36,6 +37,8 @@ export default class SocketManager {
 
         // Срабатывает при подключении пользователя по TCP из игрового лобби.
         this.serverSocketTCP.of("lobby").on("connection", socket => {
+            debug("Socket connected to lobby");
+
             // передаём состояние игровой комнаты подключенному сокету
             socket.emit(
                 String(Shared.Enums.SocketChannels.GAME_ON_SET_ROOM_STATE),
@@ -52,15 +55,17 @@ export default class SocketManager {
             // если пользователь переподключился (например, вылетел)
             if (token as string in room.users) {
                 room.onReconnect(token, socket);
-                
+
                 // подключаем сокет к комнате
                 socket.join("room");
+
                 BattleTCPClientSocketHandler.handle(socket, this, room);
                 return;
             }
 
             // если игровая комната закрыта
             if (room.isLocked) {
+                // TODO: отправить сообщение соккету
                 socket.disconnect();
                 return;
             }
@@ -143,7 +148,7 @@ export default class SocketManager {
 
         // если есть изменения для TCP
         if (stateChanges.reliable.length) {
-            this.serverSocketTCP.of("battle").to("room").emit(
+           this.serverSocketTCP.of("battle").to("room").emit(
                 String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
                 stateChanges.reliable
             );

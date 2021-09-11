@@ -57,9 +57,20 @@ export default class Room {
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
-    // TODO:
-    public onLeave() {
+    public onLeave(token: string) {
+        const color = this._users[token].color;
+       
+        // если пользователь подтвердил готовность
+        if (this._slots[this._users[token].color].isReady)
+            --this._readyCounter;
 
+        delete this._users[token];
+        this._slots[color] = Shared.Helpers.makeCopyObject(Shared.Slots.emptySlot);
+        this._game.removePlayerFromState(color);
+        this._availableColors.push(color);
+        --this._activeSlots;
+
+        this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
     public onReconnect(token: string, socket: any) {
@@ -83,7 +94,7 @@ export default class Room {
      */
     public onKeys(token: string, keysData: Shared.Interfaces.IKeysData) {
         const color = this._users[token].color;
-
+       
         // FIXME: ограничить буфер
         this._game.keysBuffer[color].push(keysData);
     }
@@ -107,6 +118,7 @@ export default class Room {
      * Запускает игру, начинает обновлять игровое состояние.
      */
     private _startGame() {
+        this._isLocked = true;
         this._game.isStarted = true;
         this._game.bombsState = Shared.Helpers.createBombsState(this._users);
 

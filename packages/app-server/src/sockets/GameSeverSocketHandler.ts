@@ -38,5 +38,11 @@ export default class GameServerSocketHandler {
                     });
             }
         )
+
+        // улаояем пользователя из комнаты на центральном сервере
+        socket.on(
+            String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
+            (token: string) => manager.removeUserFromRoomConnection(token) 
+        );
     }
 }
