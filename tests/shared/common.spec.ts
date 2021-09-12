@@ -12,6 +12,7 @@ describe("common module should works correctly", () => {
         beforeEach(() => {
             overlapData.distance = Constants.GAME_RESOLUTION_TILE_OFFSET * 3;
             state.players[1] = createPlayer(0, 0);
+            state.players[2] = createPlayer(100, 100);
             player = state.players[1];
         });
 
