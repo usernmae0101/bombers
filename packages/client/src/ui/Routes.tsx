@@ -18,12 +18,13 @@ export type RoutesPropsType = {
 
 const checkoutRedirect = (
 	roomToRedirect: string,
-	Component: React.FC
+	Component: React.FC,
+	props?: any
 ) => {
 	if (roomToRedirect.length)
 		return <Redirect to={"/room/" + roomToRedirect} />;
-
-	return <Component />
+	
+	return <Component {...props} />
 };
 
 const Routes: React.FC<{ roomToRedirect: string}> = ({ 
@@ -32,7 +33,7 @@ const Routes: React.FC<{ roomToRedirect: string}> = ({
 
 	return (
 		<Switch>
-			<Route exact path="/" render={() => checkoutRedirect(roomToRedirect, IndexPage)} />
+			<Route exact path="/" render={(props: any) => checkoutRedirect(roomToRedirect, IndexPage, props)} />
 			<Route path="/rating" render={() => checkoutRedirect(roomToRedirect, RatingPage)} />
 			<Route path="/profile/:nickname" render={() => checkoutRedirect(roomToRedirect, ProfilePage)} />
 			<Route path="/room/:address/:port" component={RoomPage} />

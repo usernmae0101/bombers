@@ -20,7 +20,7 @@ export default class Game {
         tick: number, 
         color: string
     ) {
-        // если пакет пришел с опоздланием
+        // если пакет пришел с опозданием
         if (tick < this._state.players[+color].tick)
             return;
 

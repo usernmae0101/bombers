@@ -59,7 +59,7 @@ export const tryToDamagePlayer = (
 ) => {
     const { GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL } = Shared.Constants;
     
-    if (state.players[color] === undefined)
+    if (state.players[color] === undefined || Object.keys(state.players).length === 1)
         return;
 
     if (!state.players[color].isImmortal) {

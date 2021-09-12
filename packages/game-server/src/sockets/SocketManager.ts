@@ -148,7 +148,7 @@ export default class SocketManager {
 
         // если есть изменения для TCP
         if (stateChanges.reliable.length) {
-           this.serverSocketTCP.of("battle").to("room").emit(
+            this.serverSocketTCP.of("battle").to("room").emit(
                 String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
                 stateChanges.reliable
             );

@@ -8,23 +8,25 @@ export default class Room {
     /** Общее количество игровых слотов. */
     private readonly _totalSlots = 4;
     /** Количество занятых игровых слотов. */
-    private _activeSlots: number = 0;
+    private _activeSlots: number;
     /** Статус комнаты: открыта или закрыта. */
-    private _isLocked: boolean = false;
+    private _isLocked: boolean;
     /** Идентификатор игровой карты. */
     private _mapId: Shared.Enums.GameMaps;
     /** Игровые слоты. */
-    private _slots: Shared.Interfaces.IGameSlots = Shared.Slots.slots;
+    private _slots: Shared.Interfaces.IGameSlots;
     private _availableColors: Shared.Enums.PlayerColors[];
     /** Количество готовых к игре пользователей. */
-    private _readyCounter: number = 0;
-    private _users: Shared.Interfaces.IRoomUsers = {};
+    private _readyCounter: number;
+    private _users: Shared.Interfaces.IRoomUsers;
     private _socketManager: SocketManager;
     private _updateInterval: NodeJS.Timeout = null;
     private _broadcastInterval: NodeJS.Timeout = null;
     private _game: Game;
     private _stateChanges: Shared.Interfaces.IStateChanges;
     private _lastChangedStateKey: string;
+    private _tokens: { [color: number]: string };
+    private _battleResult: { [place: number]: string; }; 
 
     constructor(socketManager: SocketManager, mapId: Shared.Enums.GameMaps) {
         this._socketManager = socketManager;
@@ -46,6 +48,7 @@ export default class Room {
         this._users[token] = { color };
         this._slots[color].user = userData;
         this._game.addPlayerToState(color);
+        this._tokens[color] = token;
         ++this._activeSlots;
 
         this._game.keysBuffer[color] = [];
@@ -93,10 +96,12 @@ export default class Room {
      * @param keysData - нажатые клавиши и номер такта
      */
     public onKeys(token: string, keysData: Shared.Interfaces.IKeysData) {
-        const color = this._users[token].color;
+        if (this.isGameStarted) {
+            const color = this._users[token].color;
        
-        // FIXME: ограничить буфер
-        this._game.keysBuffer[color].push(keysData);
+            // FIXME: ограничить буфер
+            this._game.keysBuffer[color].push(keysData);
+        }
     }
 
     /**
@@ -112,6 +117,21 @@ export default class Room {
 
         // FIXME: передавать только изменение (статус готовности) 
         this._socketManager.broadcastGameRoomSlots(this._slots);
+    }
+
+    public onResult(result: Shared.Interfaces.IUser[]) {
+        this._socketManager.serverSocketTCP.of("battle").to("room").emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_END),
+            result
+        );
+
+        this._disconnectAllUsers();
+        this._configurate();
+    }
+
+    // TODO:
+    private _disconnectAllUsers() {
+
     }
 
     /**
@@ -142,11 +162,6 @@ export default class Room {
 
             accumulator += frameTime;
 
-            if (!this._game.isStarted) {
-                this._endGame();
-                return;
-            }
-            
             while (accumulator >= Shared.Constants.GAME_FIXED_DELTA_TIME) {
                 this._game.update();
                 accumulator -= Shared.Constants.GAME_FIXED_DELTA_TIME;
@@ -165,8 +180,12 @@ export default class Room {
         clearInterval(this._broadcastInterval);
         clearInterval(this._updateInterval);
 
-        this._socketManager.serverSocketTCP.of("battle").to("room").emit(
-            String(Shared.Enums.SocketChannels.GAME_ON_END)
+        this._game.isStarted = false;
+
+        // отправляем сообщение на центральный сервер
+        this._socketManager.clientSocketTCP.emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_END),
+            this._battleResult
         );
     }
 
@@ -191,6 +210,13 @@ export default class Room {
 
     private _configurate() {
         this._setAvailableColors();
+        this._game.isStarted = false;
+        this._activeSlots = 0;
+        this._readyCounter = 0;
+        this._battleResult = {};
+        this._tokens = {};
+        this._users = {};
+        this._slots = Shared.Slots.slots;
         this._resetStateChanges();
 
         const state = createState(
@@ -245,13 +271,25 @@ export default class Room {
             },
             deleteProperty: (target, key) => {
                 Reflect.deleteProperty(target, key);
-
+               
                 // удалили игрока из состояния - передаём надёжно
                 this._stateChanges.reliable.push(
                     {
                         delete: key
                     }
-                );
+                ); 
+
+                // цвета оставшихся игроков
+                const playerColors = Object.keys(this._game.state.players);
+
+                // записываем занимаемое место игрока, который был удалён
+                this._battleResult[playerColors.length + 1] = this._tokens[+(key as string)];
+
+                // завершаем игру, если сотался один игрок
+                if (playerColors.length === 1) {
+                    this._battleResult[1] = this._tokens[+playerColors[0]];
+                    this._endGame();
+                }
 
                 return true;
             }

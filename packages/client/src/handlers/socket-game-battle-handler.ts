@@ -34,7 +34,8 @@ export const startHandlingGameBattleSocket = (
     address: string,
     game: Game,
     socket: Socket,
-    dispatch: Dispatch
+    dispatch: Dispatch,
+    setBattleResult: (result: Shared.Interfaces.IUser[]) => void
 ): () => [NodeJS.Timeout, ClientChannel] => {
     let gameSocketUDP: ClientChannel;
     let isConnected: boolean = false;
@@ -116,6 +117,12 @@ export const startHandlingGameBattleSocket = (
         String(Shared.Enums.SocketChannels.GAME_ON_START),
         () => game.start()
     )
+    
+    // завершаем игру
+    socket.on(
+        String(Shared.Enums.SocketChannels.GAME_ON_END),
+        (result: Shared.Interfaces.IUser[]) => setBattleResult(result)
+    );
 
     return function () {
         return [pingInterval, gameSocketUDP];

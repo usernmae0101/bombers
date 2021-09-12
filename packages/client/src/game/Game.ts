@@ -102,7 +102,7 @@ export default class Game {
         if (Keyboard.keys["Space"] && !Keyboard.locked["Space"]) {
             this._keys.push(Shared.Enums.InputKeys.INPUT_KEY_SPACE);
             
-            // чтобы не реaгировать на кнопку при зажатии
+            // чтобы не реaгировать на клавишу при зажатии
             Keyboard.locked["Space"] = true;
         }
     }

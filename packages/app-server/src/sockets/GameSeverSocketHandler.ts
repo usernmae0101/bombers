@@ -3,6 +3,7 @@ import { Socket } from "socket.io";
 import SocketManager from "./SocketManager";
 import * as Shared from "@bombers/shared/src/idnex";
 import { UserModel } from "../api/models";
+import { debug } from "@bombers/shared/src/tools/debugger"; 
 
 /**
  * Обрабатывает сообщения игрового сервера по веб-сокету.
@@ -39,10 +40,49 @@ export default class GameServerSocketHandler {
             }
         )
 
-        // улаояем пользователя из комнаты на центральном сервере
+        // удаяем пользователя из комнаты на центральном сервере
         socket.on(
             String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
             (token: string) => manager.removeUserFromRoomConnection(token) 
+        );
+
+        // заканчиваем игру
+        socket.on(
+            String(Shared.Enums.SocketChannels.GAME_ON_END),
+            async (
+                battleResult: { [place: number]: string; }
+            ): Promise<void> => {
+                const result: any = [];
+                
+                for (let place in battleResult) {
+                    const token = battleResult[place];
+                    
+                    try {
+                        const user = await UserModel.findOne({ _id: token });
+                        if (user) {
+                            // обновляем рейтинг
+                            user.rating += place === "1" ? + 10 : -10;
+                           
+                            result.push({
+                                rating: user.rating,
+                                avatar: user.avatar,
+                                nickname: user.nickname
+                            });
+                            
+                            // сохраняем изменения в документе
+                            user.save();
+                        }
+                    } catch (error) {
+                        debug("Error occured while trying update battle data", error);
+                    }
+                }
+                
+                // отправляем обновлённые данные обнатно на игровой сервер
+                socket.emit(
+                    String(Shared.Enums.SocketChannels.GAME_ON_END),
+                    result
+                );
+            }
         );
     }
 }

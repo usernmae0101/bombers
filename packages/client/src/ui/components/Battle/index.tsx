@@ -1,5 +1,6 @@
 import React from "react";
 import { io } from "socket.io-client";
+import { Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./battle.module.scss";
@@ -8,6 +9,7 @@ import RoomBar from "./RoomBar";
 import RoomSlots from "./RoomSlots";
 import GameContainer from "./GameContainer";
 import GameHUD from "./GameHUD";
+import * as Shared from "@bombers/shared/src/idnex";
 import * as GameSelectors from "../../redux/selectors/game-selectors";
 import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import Game from "../../../game/Game";
@@ -23,6 +25,7 @@ type BattlePropsType = {
 const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
     const dispatch = useDispatch();
 
+    const [battleResult, setBattleResult] = React.useState([] as Shared.Interfaces.IUser[]);
     const isLoading = useSelector(GameSelectors.select_game_loading);
     const userToken = useSelector(UserSelectors.select_user_auth_token);
 
@@ -39,7 +42,14 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
 
         dispatch(GameActions.action_game_set_tcp_socket(gameSocketTCP));
 
-        const getPingIntervalAndUDPChann = startHandlingGameBattleSocket(userToken, address, game, gameSocketTCP, dispatch);
+        const getPingIntervalAndUDPChann = startHandlingGameBattleSocket(
+            userToken, 
+            address, 
+            game, 
+            gameSocketTCP, 
+            dispatch,
+            setBattleResult
+        );
 
         return () => {
             Keyboard.unsubscribe();
@@ -53,7 +63,16 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
         };
     }, []);
 
-    if (isLoading) return <Loader />
+    if (isLoading) 
+        return <Loader />;
+
+    if (battleResult.length)
+        return <Redirect 
+            to={{
+                pathname: "/",
+                state: { battleResult }
+            }} 
+        />
 
     return (
         <div className={styles.battle}>
