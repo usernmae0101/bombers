@@ -29,16 +29,22 @@ export default function userReducer(
     actions: UserTypes.UserActionsType
 ): UserTypes.UserStateType {
     switch (actions.type) {
+        case UserTypes.ACTION_TYPE_USER_SET_DATA_RATING:
+            return { 
+                ...state, data: { ...state.data, rating: actions.payload } 
+            };
         case UserTypes.ACTION_TYPE_USER_SET_AUTH_TYPE:
-            return {
-                ...state, auth: { ...state.auth, isAuthViaSocial: actions.payload }
+            return { 
+                ...state, auth: { ...state.auth, isAuthViaSocial: actions.payload } 
             };
         case UserTypes.ACTION_TYPE_USER_SET_AUTH_TOKEN:
             return {
                 ...state, auth: { ...state.auth, token: actions.payload }
             };
         case UserTypes.ACTION_TYPE_USER_SET_SOCIAL_UID:
-            return { ...state, social: { ...state.social, uid: actions.payload } };
+            return { 
+                ...state, social: { ...state.social, uid: actions.payload } 
+            };
         case UserTypes.ACTION_TYPE_USER_SET_SOCIAL_TYPE:
             return { ...state, social: { ...state.social, social: actions.payload } };
         case UserTypes.ACTION_TYPE_USER_SET_DATA:

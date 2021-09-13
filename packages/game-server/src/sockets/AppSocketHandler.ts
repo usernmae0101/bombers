@@ -46,7 +46,7 @@ export default class AppSocketHandler {
         // получаем результат игры
         socket.on(
             String(Shared.Enums.SocketChannels.GAME_ON_END),
-            (result: Shared.Interfaces.IUser[]) => gameRoom.onResult(result)
+            (result: any[]) => gameRoom.onResult(result)
         );
     }
 }

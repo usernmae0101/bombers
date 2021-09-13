@@ -21,7 +21,7 @@ export default class BattleTCPClientSocketHandler {
         socket.on(
             String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
             () => {
-                // улаояем пользователя из комнаты на центральном сервере
+                // удаяем пользователя из комнаты на центральном сервере
                 manager.clientSocketTCP.emit(
                     String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
                     token

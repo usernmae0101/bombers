@@ -17,6 +17,13 @@ export const action_user_set_socket_instance = (
     payload: socket
 });
 
+export const action_user_set_data_rating = (
+    rating: number
+): UserTypes.UserSetDataRatingActionType => ({
+    type: UserTypes.ACTION_TYPE_USER_SET_DATA_RATING,
+    payload: rating
+});
+
 export const action_user_set_auth = (
     isAuth: boolean
 ): UserTypes.UserSetAuthActionType => ({

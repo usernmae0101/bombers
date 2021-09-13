@@ -1,5 +1,11 @@
 import { getRandomBetween } from "./../utils/maths";
 
+/**
+ * Имитация сетевой задержки.
+ * 
+ * @param ping - сетевая задержка в млсек.
+ * @param send - пакет
+ */
 export const simulateLatency = async (
     ping: number,
     send: () => void
@@ -12,6 +18,13 @@ export const simulateLatency = async (
     globalThis.setTimeout(() => send(), ping);
 };
 
+/**
+ * Имитация потери пакетов.
+ *
+ * @param percent - процент потери
+ * @param ping - сетевая задержка в млсек.
+ * @param send - пакет
+ */
 export const simulatePackageLoss = (
     percent: number,
     ping: number,
@@ -22,6 +35,6 @@ export const simulatePackageLoss = (
         return;
     }
 
-    if (getRandomBetween(0, 100) > percent) 
+    if (getRandomBetween(1, 100) > percent) 
         simulateLatency(ping, send);
 };

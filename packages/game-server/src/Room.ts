@@ -3,6 +3,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import SocketManager from "./sockets/SocketManager";
 import { createState } from "./game-state";
 import { createMapById } from "@bombers/shared/src/maps";
+import { simulatePackageLoss } from "@bombers/shared/src/tools/network";
 
 export default class Room {
     /** Общее количество игровых слотов. */
@@ -60,6 +61,11 @@ export default class Room {
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
+    /**
+     * Отключает пользователя от комнаты, если он её покинул.
+     *
+     * @param token - токен пользователя
+     */
     public onLeave(token: string) {
         const color = this._users[token].color;
        
@@ -76,16 +82,19 @@ export default class Room {
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
+    /**
+     * Переподключает пользователя к комнате, если
+     * он её не покинул. Отправляет ему состояние комнаты.
+     * 
+     * @param token - токен пользователя
+     * @param socket - TCP-сокет пользователя
+     */
     public onReconnect(token: string, socket: any) {
-        const color = this._users[token].color;
-        
-        this._socketManager.sendRoomDataToConnectedUser(socket, this, color);
+        this._socketManager.sendRoomDataToConnectedUser(socket, this, this._users[token].color);
     }
     
     public onEmotionChange(token: string, emotion: number) {
-        const color = this._users[token].color;
-        
-        this._game.updatePlayerEmotion(color, emotion);
+        this._game.updatePlayerEmotion(this._users[token].color, emotion);
     }
 
     /**
@@ -96,12 +105,13 @@ export default class Room {
      * @param keysData - нажатые клавиши и номер такта
      */
     public onKeys(token: string, keysData: Shared.Interfaces.IKeysData) {
-        if (this.isGameStarted) {
-            const color = this._users[token].color;
+        if (!this.isGameStarted)
+            return;
        
+        simulatePackageLoss(0, 100, () => {
             // FIXME: ограничить буфер
-            this._game.keysBuffer[color].push(keysData);
-        }
+            this._game.keysBuffer[this._users[token].color].push(keysData);
+        });
     }
 
     /**
@@ -119,19 +129,13 @@ export default class Room {
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
-    public onResult(result: Shared.Interfaces.IUser[]) {
+    public onResult(result: any[]) {
         this._socketManager.serverSocketTCP.of("battle").to("room").emit(
             String(Shared.Enums.SocketChannels.GAME_ON_END),
             result
         );
 
-        this._disconnectAllUsers();
         this._configurate();
-    }
-
-    // TODO:
-    private _disconnectAllUsers() {
-
     }
 
     /**

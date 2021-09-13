@@ -57,16 +57,21 @@ export default class GameServerSocketHandler {
                 for (let place in battleResult) {
                     const token = battleResult[place];
                     
+                    // удаляем пользователя из списка подключенных
+                    manager.removeUserFromRoomConnection(token);
+
                     try {
                         const user = await UserModel.findOne({ _id: token });
                         if (user) {
-                            // обновляем рейтинг
-                            user.rating += place === "1" ? + 10 : -10;
+                            const points = place === "1" ? + 10 : -10;
+
+                            // обновляем рейтинг в документе
+                            user.rating += points;                           
                            
                             result.push({
                                 rating: user.rating,
-                                avatar: user.avatar,
-                                nickname: user.nickname
+                                nickname: user.nickname,
+                                points 
                             });
                             
                             // сохраняем изменения в документе

@@ -6,6 +6,7 @@ export const ACTION_TYPE_USER_CREATE_SOCIAL = "USER/CREATE_SOCIAL";
 export const ACTION_TYPE_USER_SET_DATA = "USER/SET_DATA";
 export const ACTION_TYPE_USER_SET_AUTH_TOKEN = "USER/SET_AUTH_TOKEN";
 export const ACTION_TYPE_USER_SET_AUTH_TYPE = "USER/SET_AUTH_TYPE";
+export const ACTION_TYPE_USER_SET_DATA_RATING = "USER/SET_DATA_RATING";
 export const ACTION_TYPE_USER_SET_ERROR_CODE = "USER/SET_ERROR_CODE";
 export const ACTION_TYPE_USER_SET_SOCIAL_TYPE = "USER/SET_SOCIAL_TYPE";
 export const ACTION_TYPE_USER_SET_SOCIAL_UID = "USER/SET_SOCIAL_UID";
@@ -43,6 +44,11 @@ export type UserStateType = {
 export type UserSetDataActionType = {
     type: typeof ACTION_TYPE_USER_SET_DATA;
     payload: Shared.Interfaces.IUser;
+};
+
+export type UserSetDataRatingActionType = {
+    type: typeof ACTION_TYPE_USER_SET_DATA_RATING;
+    payload: number;
 };
 
 export type UserSetSocketInstanceActionType = {
@@ -99,4 +105,4 @@ export type UserSetAuthTypeActionType = {
 
 export type UserActionsType = UserSetSocialUidActionType | UserSetSocialTypeActionType | UserSetErrorCodeActionType
     | UserSetAuthActionType | UserSetDataActionType | UserSetAuthTokenActionType | UserSetAuthTypeActionType |
-    UserSetSocketInstanceActionType | UserSetErrorMessageActionType;
+    UserSetSocketInstanceActionType | UserSetErrorMessageActionType | UserSetDataRatingActionType;

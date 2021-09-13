@@ -5,6 +5,7 @@ import geckos, { ClientChannel } from '@geckos.io/client'
 import * as Shared from "@bombers/shared/src/idnex";
 import Game from "../game/Game";
 import * as GameActions from "../ui/redux/actions/game-actions";
+import { simulatePackageLoss, simulateLatency } from "@bombers/shared/src/tools/network";
 
 interface IConnectRoomData {
     /** Цвет игрока, выделенный сервером для пользователя. */
@@ -35,7 +36,7 @@ export const startHandlingGameBattleSocket = (
     game: Game,
     socket: Socket,
     dispatch: Dispatch,
-    setBattleResult: (result: Shared.Interfaces.IUser[]) => void
+    setBattleResult: (result: any[]) => void
 ): () => [NodeJS.Timeout, ClientChannel] => {
     let gameSocketUDP: ClientChannel;
     let isConnected: boolean = false;
@@ -69,10 +70,10 @@ export const startHandlingGameBattleSocket = (
                 // получаем изменения игрового состояния
                 UDPChann.on(
                     String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                    (buffer: any) => {
-                        game.onNotReliableStateChanges(
-                           buffer
-                        );
+                    (changes: any) => {
+                        simulatePackageLoss(0, 100, () => {
+                            game.onNotReliableStateChanges(changes);
+                        });
                     }
                 )
             });
@@ -82,11 +83,10 @@ export const startHandlingGameBattleSocket = (
     // получаем изменения игрового состояния
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-        (buffer: any) => {
-            game.onReliableStateChanges(
-                buffer, 
-                dispatch
-            )
+        (changes: any) => {
+            simulateLatency(100, () => {
+                game.onReliableStateChanges(changes, dispatch);
+            });
         }
     )
 
@@ -121,7 +121,7 @@ export const startHandlingGameBattleSocket = (
     // завершаем игру
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_END),
-        (result: Shared.Interfaces.IUser[]) => setBattleResult(result)
+        (result: any[]) => setBattleResult(result)
     );
 
     return function () {

@@ -291,16 +291,17 @@ export default class Game {
             while (accumulator >= Shared.Constants.GAME_FIXED_DELTA_TIME) {
                this._update();
                accumulator -= Shared.Constants.GAME_FIXED_DELTA_TIME;
-            }
-
+            }    
+            
             const ratio = accumulator / Shared.Constants.GAME_FIXED_DELTA_TIME;
         
-            this._interpolateEnemies();
             this._renderer.render(ratio, this._state, this._color);
         });
     }
 
     private _update() {
+        this._interpolateEnemies();
+        
         // если локального игрока больше нет в состоянии
         if (!(this._color in this._state.players))
             return;
@@ -308,7 +309,7 @@ export default class Game {
         this._handleInputs();
         this._sendInputKeysToServer();
         this._updateLocalPlayer(this._keys, true);
-
+        
         this._keys = [];
 
         this._tick++;
