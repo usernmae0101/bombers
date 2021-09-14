@@ -4,3 +4,5 @@ public/
 database/
 
 dist/
+
+.env
