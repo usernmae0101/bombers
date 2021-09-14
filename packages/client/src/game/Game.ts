@@ -7,6 +7,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import Renderer from "./core/Renderer";
 import * as Containers from "./containers/";
 import Keyboard from "./core/Keyboard";
+import { debug } from "@bombers/shared/src/tools/debugger";
 
 interface IPredctionBuffer {
     [tick: number]: {
@@ -20,7 +21,7 @@ interface IPredctionBuffer {
 }
 
 interface ISnapshot {
-    /** ВременнАя метка получения изменений. */
+    /** ВременнАя метка изменений на сервере. */
     timestamp: number;
     /** Изменения, полученные с сервера. */
     snapshot: Shared.Interfaces.INotReliableStateData;
@@ -160,14 +161,19 @@ export default class Game {
     }
 
     private _interpolateEnemies() {
-        const renderTime = Date.now() - (1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE);
+        const renderTime = Date.now() - ((1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE) * 3);
 
         for (let color in this._snapshotBuffer) {
             const enemy = this._state.players[+color];
             const buffer = this._snapshotBuffer[color];
 
-            // FIXME: удалить все снимки
-            if (!enemy) continue;
+            if (!enemy) {
+                delete this._snapshotBuffer[color];
+                continue;
+            }
+            
+            while (buffer.length > 1 && buffer[1].timestamp <= renderTime)
+                buffer.shift();
 
             if (buffer.length > 1 && buffer[0].timestamp <= renderTime && renderTime <= buffer[1].timestamp) {
                 const [s1, s2] = buffer;
@@ -175,31 +181,23 @@ export default class Game {
                 const ratio = (renderTime - s1.timestamp) / (s2.timestamp - s1.timestamp);
 
                 enemy.direction = buffer[1].snapshot.direction;
-                
-                // FIXME: проверить дистанцию?
                 enemy.x = Shared.Maths.lerp(s1.snapshot.x, s2.snapshot.x, ratio);
                 enemy.y = Shared.Maths.lerp(s1.snapshot.y, s2.snapshot.y, ratio);
             }
 
-            else {
-                while (buffer.length > 1 && buffer[1].timestamp <= renderTime)
-                    buffer.shift();
-
-                if (buffer.length === 1) {
-                    enemy.direction = buffer[0].snapshot.direction;
-
-                    enemy.x = buffer[0].snapshot.x;
-                    enemy.y = buffer[0].snapshot.y;
-                }
+            else if (buffer.length) {
+                enemy.direction = buffer[0].snapshot.direction;
+                enemy.x = buffer[0].snapshot.x;
+                enemy.y = buffer[0].snapshot.y;
             }
         }
     }
 
     public onNotReliableStateChanges(changes: Shared.Interfaces.INotReliableStateChanges) {
-        for (let color in changes) {
+        for (let color in changes.s) {
             // для локального игрока выполняем согласование с сервером
             if (+color === this._color) {
-                this._serverReconciliation(changes[color]);
+                this._serverReconciliation(changes.s[color]);
                 continue;
             }
 
@@ -211,12 +209,12 @@ export default class Game {
 
             // сохраняем снимок для остальных игроков
             this._snapshotBuffer[color].push({
-                timestamp: Date.now(),
+                timestamp: changes.t,
                 snapshot: {
-                    ...changes[color],
-                    direction: changes[color].direction ?? enemy.direction,
-                    x: changes[color].x ?? currentX,
-                    y: changes[color].y ?? currentY
+                    ...changes.s[color],
+                    direction: changes.s[color].direction ?? enemy.direction,
+                    x: changes.s[color].x ?? currentX,
+                    y: changes.s[color].y ?? currentY
                 }
             });
         }
@@ -241,6 +239,13 @@ export default class Game {
                 if (authX === predictedX && authY === predictedY)
                     break;
                 
+                debug(
+                    "Client misprediction", 
+                    `at tick: ${changes.tick}`,
+                    `predicted: [${predictedX}, ${predictedY}]`, 
+                    `auth: [${authX}, ${authY}]`
+                );
+
                 this._state.players[this._color].x = authX;
                 this._state.players[this._color].y = authY;
             }
@@ -295,13 +300,12 @@ export default class Game {
             
             const ratio = accumulator / Shared.Constants.GAME_FIXED_DELTA_TIME;
         
+            this._interpolateEnemies();
             this._renderer.render(ratio, this._state, this._color);
         });
     }
 
     private _update() {
-        this._interpolateEnemies();
-        
         // если локального игрока больше нет в состоянии
         if (!(this._color in this._state.players))
             return;

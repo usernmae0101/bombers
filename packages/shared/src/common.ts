@@ -190,9 +190,13 @@ export const movePlayer = (
 
     const [overlapData, atEdgeOfBorder] = checkPlayerOverlap(player, map);
 
+    // если игрок пересёкся с объктом, о который бьется (collided), 
+    // выравнивам игрока по оси движения
     if (overlapData && isPlayerCollide(map[overlapData.row][overlapData.col])) 
         alignPlayer(player, axisAlongWhichPlayerMoves);
 
+    // если игрок не столкнулся, направление движения поменялось 
+    // и не у края канваса, выравниваем игрока по оси обратной его движению
     else if (isDirectionChanged && !atEdgeOfBorder) 
         alignPlayer(player, axisAlongWhichPlayerMoves === "x" ? "y" : "x");
 

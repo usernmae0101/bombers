@@ -85,7 +85,11 @@ export interface INotReliableStateData {
 }
 
 export interface INotReliableStateChanges {
-    [color: string]: INotReliableStateData;
+    s: {
+        [color: string]: INotReliableStateData;
+    };
+    /** ВременнАя метка */
+    t?: number;
 }
 
 export interface IStateChanges {

@@ -108,10 +108,14 @@ export default class Room {
         if (!this.isGameStarted)
             return;
        
-        simulatePackageLoss(0, 100, () => {
-            // FIXME: ограничить буфер
-            this._game.keysBuffer[this._users[token].color].push(keysData);
-        });
+        simulatePackageLoss(
+            Shared.Constants.DEV_NETWORK_PACKAGE_LOSS_CLIENT, 
+            Shared.Constants.DEV_NETWORK_PING_SIMULATION, 
+            () => {
+                // FIXME: сделать буфер циклическим
+                this._game.keysBuffer[this._users[token].color].push(keysData);
+            }
+        );
     }
 
     /**
@@ -209,7 +213,7 @@ export default class Room {
     }
 
     private _resetStateChanges() {
-        this._stateChanges = { reliable: [], notReliable: {} };
+        this._stateChanges = { reliable: [], notReliable: { s: {} } };
     }
 
     private _configurate() {
@@ -253,12 +257,12 @@ export default class Room {
 
                 // поменяли координаты игрока - передаём ненадёжно
                 else if (["x", "y", "tick", "direction"].includes(key as string)) {
-                    if (!(this._lastChangedStateKey in this._stateChanges.notReliable))
-                        this._stateChanges.notReliable[this._lastChangedStateKey] = {};
+                    if (!(this._lastChangedStateKey in this._stateChanges.notReliable.s))
+                        this._stateChanges.notReliable.s[this._lastChangedStateKey] = {};
 
                     const _key = key as keyof Shared.Interfaces.INotReliableStateData;
 
-                    this._stateChanges.notReliable[this._lastChangedStateKey][_key] = value;
+                    this._stateChanges.notReliable.s[this._lastChangedStateKey][_key] = value;
                 }
 
                 // какие-то другие хар-ки игрока (или сам игрок) - передаём надёжно

@@ -139,10 +139,13 @@ export default class SocketManager {
      */
     public broadcastStateChanges(stateChanges: Shared.Interfaces.IStateChanges) {
         // если есть изменения для UDP
-        if (Object.keys(stateChanges.notReliable).length) {
+        if (Object.keys(stateChanges.notReliable.s).length) {
             this.serverSocketUDP.emit(
                 String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
-                stateChanges.notReliable
+                { 
+                    ...stateChanges.notReliable, 
+                    t: Date.now() 
+                }
             );
         }
 

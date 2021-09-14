@@ -1,7 +1,8 @@
 import { getRandomBetween } from "./../utils/maths";
+import { debug } from "./debugger";
 
 /**
- * Имитация сетевой задержки.
+ * Имитация сетевой задержки в режиме разработки.
  * 
  * @param ping - сетевая задержка в млсек.
  * @param send - пакет
@@ -15,11 +16,14 @@ export const simulateLatency = async (
         return;
     }
 
-    globalThis.setTimeout(() => send(), ping);
+    globalThis.setTimeout(
+        () => send(), 
+        ping
+    );
 };
 
 /**
- * Имитация потери пакетов.
+ * Имитация потери пакетов в режиме разработки.
  *
  * @param percent - процент потери
  * @param ping - сетевая задержка в млсек.
@@ -34,7 +38,11 @@ export const simulatePackageLoss = (
         send();
         return;
     }
+    
+    if (getRandomBetween(1, 100) <= percent) {
+        debug("Drops UDP package", `percent: ${percent}`);
+        return;
+    }
 
-    if (getRandomBetween(1, 100) > percent) 
-        simulateLatency(ping, send);
+    simulateLatency(ping, send);
 };

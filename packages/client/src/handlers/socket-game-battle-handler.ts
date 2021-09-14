@@ -71,9 +71,13 @@ export const startHandlingGameBattleSocket = (
                 UDPChann.on(
                     String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
                     (changes: any) => {
-                        simulatePackageLoss(0, 100, () => {
-                            game.onNotReliableStateChanges(changes);
-                        });
+                        simulatePackageLoss(
+                            Shared.Constants.DEV_NETWORK_PACKAGE_LOSS_SERVER,
+                            Shared.Constants.DEV_NETWORK_PING_SIMULATION, 
+                            () => {
+                                game.onNotReliableStateChanges(changes);
+                            }
+                        );
                     }
                 )
             });
@@ -84,9 +88,12 @@ export const startHandlingGameBattleSocket = (
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_STATE),
         (changes: any) => {
-            simulateLatency(100, () => {
-                game.onReliableStateChanges(changes, dispatch);
-            });
+            simulateLatency(
+                Shared.Constants.DEV_NETWORK_PING_SIMULATION, 
+                () => {
+                    game.onReliableStateChanges(changes, dispatch);
+                }
+            );
         }
     )
 

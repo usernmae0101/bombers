@@ -93,13 +93,15 @@ export const CHAT_MESSAGES_BUFFER_SIZE = 20;
 
 /**
  * Частота обновления игрового состояния на сервере в секунду.
+ * 
+ * @deprecated
  */
 export const GAME_SERVER_TICK_RATE = 50;
 
 /**
  * Частота отправки игрового состояния подключенным сокетам в секунду.
  */
-export const GAME_SERVER_BROADCAST_RATE = 20;
+export const GAME_SERVER_BROADCAST_RATE = 40;
 
 /**
  * Идентификатор html-элемента для канваса с игрой.
@@ -131,3 +133,24 @@ export const GAME_RESOURCES_IMAGE_GRASS = "/images/grass.png";
  * Абсолютный путь (от index.html) к изображению набора тайлов.
  */
 export const GAME_RESOURCES_IMAGE_TILESET = "/images/tilemap_72x72.png";
+
+
+/***************************************
+ * DEVELOPMENT-------------------------*
+ ***************************************/
+
+
+/**
+ * Сетевая задержка в миллисекундах.
+ */
+export const DEV_NETWORK_PING_SIMULATION = 100;
+
+/**
+ * Потеря пакетов на сервере в процентах.
+ */
+export const DEV_NETWORK_PACKAGE_LOSS_SERVER = 4;
+
+/**
+ * Потеря пакетов на клиенте в процентах.
+ */
+export const DEV_NETWORK_PACKAGE_LOSS_CLIENT = 3;
