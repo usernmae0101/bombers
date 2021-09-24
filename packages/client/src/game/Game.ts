@@ -165,7 +165,9 @@ export default class Game {
 
         for (let color in this._snapshotBuffer) {
             const enemy = this._state.players[+color];
-            const buffer = this._snapshotBuffer[color];
+            const buffer = this._snapshotBuffer[color].sort((a, b) => {
+                return a.timestamp - b.timestamp
+            });
 
             if (!enemy) {
                 delete this._snapshotBuffer[color];

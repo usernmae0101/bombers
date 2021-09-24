@@ -16,14 +16,20 @@ function* userFetchDataSocail(action: UserTypes.UserFetchDataSocialActionType) {
         const { nickname, rating, avatar, token } = response;
 
         // Устанавливаем пользовательские данные.
-        yield put(UserActions.action_user_set_data({ nickname, rating, avatar }));
-        // Устанавливаем авторизационный токен.
+        yield put(
+            UserActions.action_user_set_data({ 
+                nickname, 
+                rating, 
+                avatar 
+            })
+        );
         yield put(UserActions.action_user_set_auth_token(token))
-        // Меняем статус авторизации на успешный.
         yield put(UserActions.action_user_set_auth(true));
     } catch (err) {
-        // Сервер вернул код в диапазоне 300-599. Диспатчим код ошибки в стор.
-        yield put(UserActions.action_user_set_error_code(err.response.data.code));
+        // Сервер вернул код в диапазоне 3xx-5xx. Диспатчим код ошибки в стор.
+        yield put(
+            UserActions.action_user_set_error_code(err.response.data.code)
+        );
     }
 };
 

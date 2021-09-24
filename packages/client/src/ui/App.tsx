@@ -1,4 +1,5 @@
 import React from "react";
+import bridge from '@vkontakte/vk-bridge';
 import { BrowserRouter } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
@@ -27,9 +28,24 @@ const Main = () => {
     React.useEffect(() => {
         // Режим разработки. Задаём невалидные данные, чтобы создать новый аккаунт.
         if (isDevMode) {
+            const id = window.crypto.getRandomValues(new Uint16Array(1))[0];
             dispatch(UserActions.action_user_set_social_type("vk"));
-            dispatch(UserActions.action_uesr_set_social_uid(window.crypto.getRandomValues(new Uint16Array(1))[0]));
+            dispatch(UserActions.action_uesr_set_social_uid(id));
             dispatch(UserActions.action_user_set_auth_is_social(true));
+        }
+        
+        // Авторизация через IFrame.
+        else if (window.parent != window) {
+            const host = window.parent.location.host;
+
+            if (host === "vk.com") {
+                bridge.send(`VKWebAppInit`).then(async () => {
+                    const { id } = await bridge.send("VKWebAppGetUserInfo");
+                    dispatch(UserActions.action_user_set_social_type("vk"));
+                    dispatch(UserActions.action_uesr_set_social_uid(id));
+                    dispatch(UserActions.action_user_set_auth_is_social(true));
+                });
+            }
         }
     }, []);
     
@@ -37,12 +53,15 @@ const Main = () => {
     React.useEffect(() => {
         // Авторизация выполнена через социальную сеть, получаем данные через API.
         if (isAuthViaSocial === true) {
-            dispatch(UserActions.action_user_fetch_data_social({
-                uid: userUid,
-                social: userSocialType
-            }));
+            dispatch(
+                UserActions.action_user_fetch_data_social({
+                    uid: userUid,
+                    social: userSocialType
+                })
+            );
         }
-
+        
+        // TODO:
         if (isAuthViaSocial === false) { }
     }, [isAuthViaSocial]);
   
@@ -51,13 +70,15 @@ const Main = () => {
         switch (errorCode) { 
             // Пользователь не был найден в базе данных - создаём.
             case Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL:
-                dispatch(UserActions.action_user_create_social({
-                    uid: userUid,
-                    social: userSocialType,
-                    data: {
-                        nickname: `user${userUid}`
-                    }
-                }));
+                dispatch(
+                    UserActions.action_user_create_social({
+                        uid: userUid,
+                        social: userSocialType,
+                        data: {
+                            nickname: `user${userUid}`
+                        }
+                    })
+                );
                 break;
         }
     }, [errorCode]);

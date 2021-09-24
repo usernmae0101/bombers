@@ -12,8 +12,7 @@ import Result from "../components/Battle/Result";
 const IndexPage: React.FC<{ location?: any; }> = ({ location }) => {
 	const isChatLoaded = useSelector(ChatSelectors.select_chat_ready); 
 	
-	if (!isChatLoaded)
-		return <Loader />
+	if (!isChatLoaded) return <Loader />;
 
 	return (
 		<main>

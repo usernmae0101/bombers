@@ -7,10 +7,9 @@ import * as ChatSelectors from "../redux/selectors/chat-selectors";
 import Loader from "../components/Loader";
 
 const RatingPage = () => {
-	const isChatLoaded = useSelector(ChatSelectors.select_chat_ready); 
+    const isChatLoaded = useSelector(ChatSelectors.select_chat_ready); 
 	
-	if (!isChatLoaded)
-		return <Loader />
+    if (!isChatLoaded) return <Loader />;
 
     return (
         <main>

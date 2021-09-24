@@ -53,7 +53,11 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
             if (Object.keys(this._players).includes(color))
                 continue;
 
-            const { x: frameX, y: frameY } = getEntityFrame(EntityNumbers.PLAYER, +color, players[color].direction);
+            const { x: frameX, y: frameY } = getEntityFrame(
+                EntityNumbers.PLAYER, 
+                +color, 
+                players[color].direction
+            );
             const player = new PlayerEntity(frameX, frameY, +color);
     
             // устанавливаем эмоцию игрока
@@ -82,10 +86,18 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
             // меняем позицию игрока
             if (isXPosChanged || isYPosChanged) {
-                // если не первая отрисовка
+                // если локальный игрок и не первая отрисовка
                 if (+color === localPlayerColor && this._players[color].cache.x !== null) {
-                    this._players[color].cache.x = Shared.Maths.lerp(this._players[color].cache.x, players[color].x, dt);
-                    this._players[color].cache.y = Shared.Maths.lerp(this._players[color].cache.y, players[color].y, dt);
+                    this._players[color].cache.x = Shared.Maths.lerp(
+                        this._players[color].cache.x, 
+                        players[color].x, 
+                        dt
+                    );
+                    this._players[color].cache.y = Shared.Maths.lerp(
+                        this._players[color].cache.y, 
+                        players[color].y, 
+                        dt
+                    );
                 }
 
                 else {
@@ -116,7 +128,10 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
             // меняем направление игрока и обновляем эмоцию
             if (this._players[color].cache.direction !== players[color].direction) {
                 this._players[color].player.setDirection(players[color].direction);
-                this._players[color].player.updateEmotion(players[color].emotion, players[color].direction);
+                this._players[color].player.updateEmotion(
+                    players[color].emotion, 
+                    players[color].direction
+                );
 
                 this._players[color].cache.direction = players[color].direction;
             }

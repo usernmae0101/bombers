@@ -67,6 +67,6 @@ export const request_select_create_user_socail_data = (req: Request) => {
  */
 export const request_select_auth_user_socail_data = (req: Request) => {
     return {
-        uid: Number(req.params.uid)
+        uid: Number(req.header("X-Uid"))
     }
 };

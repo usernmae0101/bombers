@@ -1,15 +1,12 @@
 import { Router } from "express";
 
-import * as Middlewares from "../middlewares/";
-import userRouter from "./user-router";
+import socialRouter from "./social-router";
+import nativeRouter from "./native-router";
 
 const apiRouter = Router();
 
-// middlewares
-apiRouter.use(Middlewares.middleware_vk_auth);
-apiRouter.use(Middlewares.middleware_ok_auth);
-
 // routes
-apiRouter.use('/users', userRouter);
+apiRouter.use('/social', socialRouter);
+apiRouter.use('/native', nativeRouter);
 
 export default apiRouter;
