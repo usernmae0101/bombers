@@ -7,7 +7,7 @@ import { config } from "dotenv";
 import { Server } from "socket.io";
 import rateLimit from "express-rate-limit";
 
-import apiRouter from "./api/routes";
+import apiRouter from "./api/routers";
 import SocketManager from "./sockets/SocketManager";
 import { state } from "./app-state";
 
@@ -36,10 +36,12 @@ app.use(urlencoded({
     extended: true
 }));
 
-// routes
+// routers
 app.use("/api", apiRouter);
 app.use("*", appRateLimiter, (_, res) => {
-    res.sendFile(path.resolve(staticPath, "index.html"));
+    res.sendFile(
+    	path.resolve(staticPath, "index.html")
+    );
 });
 
 // http-server

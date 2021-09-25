@@ -3,14 +3,42 @@ import { Socket } from "socket.io";
 import SocketManager from "./SocketManager";
 import * as Shared from "@bombers/shared/src/idnex";
 import Room from "../Room";
+import { debug } from "@bombers/shared/src/tools/debugger";
 
 /**
  * Обрабатыает сообщения клиента по веб-сокету (подключенного к игровой команте).
  */
 export default class BattleTCPClientSocketHandler {
+    public static connections: { [token: string]: any; } = {}
+    
+    /**
+     * Добавляет сокет в список подключенных к серверу.  Если сокет уже 
+     * есть в списке, отключает предыдущий и перезписывает новым подключением.
+     *
+     * @param token - авторизационный токен пользователя
+     * @param socket - подключенный сокет пользователя
+     */
+    public static addSocketToConnectionSotre(token: string, socket: any) {
+        if (this.connections[token]) {
+            debug(
+                "Socket TCP already in connection list",
+                `token: ${token}`,
+                "Disconnecting..."
+            );
+
+            this.connections[token].disconnect();
+        }
+
+        this.connections[token] = socket;
+        
+        debug("Socket connected", `token: ${token}`);
+    }
+    
     public static handle(socket: Socket, manager: SocketManager, gameRoom: Room) {
         const token: string = socket.handshake.auth.token;
-        
+   
+        this.addSocketToConnectionSotre(token, socket);
+
         // меняем эмоцию игрока
         socket.on(
             String(Shared.Enums.SocketChannels.GAME_ON_EMOTION_UPDATE),
@@ -27,8 +55,10 @@ export default class BattleTCPClientSocketHandler {
                     token
                 );
 
+                debug("Leaves room", `token: ${token}`);
+                
                 gameRoom.onLeave(token);
-                socket.disconnect(true);
+                socket.disconnect();
             }
         );
 

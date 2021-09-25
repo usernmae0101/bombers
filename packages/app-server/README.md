@@ -6,11 +6,11 @@
 .
 └── src
     ├── api
-    │   ├── controllers
-    │   ├── middlewares
-    │   ├── models
-    │   ├── routes
-    │   └── services
+    │   ├── controllers
+    │   ├── middlewares
+    │   ├── models
+    │   ├── routers
+    │   └── services
     └── sockets
 ```
 

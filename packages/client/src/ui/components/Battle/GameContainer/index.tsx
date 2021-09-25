@@ -100,7 +100,8 @@ const initMenuCanvas = (color: number, TCPSocket: Socket) => {
     }
 
     app.stage.addChild(playerEntity);
-
+    
+    document.getElementById("menu-cnv").innerHTML = null;
     document.getElementById("menu-cnv").appendChild(app.view);
 };
 

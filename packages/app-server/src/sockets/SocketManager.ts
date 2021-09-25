@@ -4,6 +4,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import { UserModel, IDocumentUser } from "../api/models";
 import ClientSocketHandler from "./ClientSocketHandler";
 import GameServerSocketHandler from "./GameSeverSocketHandler";
+import { debug } from "@bombers/shared/src/tools/debugger";
 
 export default class SocketManager {
     /**
@@ -150,7 +151,10 @@ export default class SocketManager {
                             const currentSocketUserData = this.parseUserData(user);
                             const roomConnectionData = this.findUserRoomConnection(authToken as string);
 
-                            this.addUserToState(currentSocketUserData, roomConnectionData !== undefined);
+                            this.addUserToState(
+                                currentSocketUserData, 
+                                roomConnectionData !== undefined
+                            );
 
                             // отправляем подключенному пользователю текущее состояние приложения
                             if (roomConnectionData === undefined) {
@@ -166,13 +170,15 @@ export default class SocketManager {
 
                             // отправляем данные для подключения к комнате
                             else {
-                               socket.emit(
-                                   String(Shared.Enums.SocketChannels.GAME_ON_ROOM_RECONNECT), 
-                                   roomConnectionData
-                               );
+                                debug("User already in a room", roomConnectionData);
+
+                                socket.emit(
+                                    String(Shared.Enums.SocketChannels.GAME_ON_ROOM_RECONNECT), 
+                                    roomConnectionData
+                                );
                             }
 
-                            ClientSocketHandler.handle(socket, this, currentSocketUserData);
+                            ClientSocketHandler.handle(socket, this, currentSocketUserData, authToken as string);
                         }
                     });
             } 
@@ -187,7 +193,7 @@ export default class SocketManager {
                 
                 GameServerSocketHandler.handle(socket, this, `${gameServer.address}/${gameServer.TCP_port}`);
                 this.addGameServerToState(gameServer);
-            } 
+            }
             
             else socket.disconnect(true);
         });

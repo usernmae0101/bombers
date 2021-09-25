@@ -14,7 +14,8 @@ const RoomBar = () => {
         TCPSocket.emit(
             String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM)
         );
-        setIsRedirectToIndexPage(true);
+        
+        setTimeout(() => setIsRedirectToIndexPage(true), 350);
     };
 
     if (isRedirectToIndexPage)
