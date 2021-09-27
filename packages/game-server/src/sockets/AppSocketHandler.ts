@@ -48,5 +48,15 @@ export default class AppSocketHandler {
             String(Shared.Enums.SocketChannels.GAME_ON_END),
             (result: any[]) => gameRoom.onResult(result)
         );
+
+        // игрок покидает комнату
+        socket.on(
+            String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
+            (token: string) => {
+                BattleTCPClientSocketHandler.confirmUserDisconnection(token)
+
+                gameRoom.onLeave(token);
+            }
+        );
     }
 }

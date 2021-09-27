@@ -30,7 +30,7 @@ const Main = () => {
         if (isDevMode) {
             const id = window.crypto.getRandomValues(new Uint16Array(1))[0];
             dispatch(UserActions.action_user_set_social_type("vk"));
-            dispatch(UserActions.action_uesr_set_social_uid(1));
+            dispatch(UserActions.action_uesr_set_social_uid(id));
             dispatch(UserActions.action_user_set_auth_is_social(true));
         }
         
@@ -94,9 +94,15 @@ const Main = () => {
                     }
                 });
                 
-                startHandlingAppSocket(_socket, dispatch, setRoomToRedirect);
+                startHandlingAppSocket(
+                    _socket, 
+                    dispatch, 
+                    setRoomToRedirect
+                );
 
-                dispatch(UserActions.action_user_set_socket_instance(_socket));
+                dispatch(
+                    UserActions.action_user_set_socket_instance(_socket)
+                );
             }
         })();
     }, [isAuth]);

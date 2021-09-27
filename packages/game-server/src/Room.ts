@@ -119,27 +119,46 @@ export default class Room {
     }
 
     /**
-     * Меняет статус готовности пользователя к игре.
+     * Если игра не запущена, меняет статус готовности пользователя 
+     * к игре и обновляет количество готовых игроков. Запускает игру,
+     * если готовы больше одного игрока.
      * 
      * @param token - токен пользователя
      */
     public onReady(token: string) {
+        if (this._game.isStarted)
+            return;
+
         this._slots[this._users[token].color].isReady = true;
 
-        if (++this._readyCounter > 1 && !this._game.isStarted)
-            this._startGame();
+        ++this._readyCounter > 1 && this._startGame();
 
         // FIXME: передавать только изменение (статус готовности) 
         this._socketManager.broadcastGameRoomSlots(this._slots);
     }
 
+    /**
+     * Отправляет результат игры всем подключенным к комнате
+     * сокетам. Отключает каждый сокет. Обновляет состояние 
+     * игрового сервера.
+     *
+     * @param result - результат игры
+     */
     public onResult(result: any[]) {
-        this._socketManager.serverSocketTCP.of("battle").to("room").emit(
-            String(Shared.Enums.SocketChannels.GAME_ON_END),
-            result
-        );
-
-        this._configurate();
+        this._socketManager.serverSocketTCP.of("battle").in("room").allSockets()
+            .then(sockets => {
+                sockets.forEach(socketId => {
+                    const socket = this._socketManager.getTCPSocketById(socketId);
+                    
+                    socket.emit(
+                        String(Shared.Enums.SocketChannels.GAME_ON_END),
+                        result
+                    );
+                    socket.disconnect();
+                });  
+                
+                this._configurate();
+            });
     }
 
     /**
@@ -182,9 +201,13 @@ export default class Room {
     }
 
     /**
-     * Останавливает игру, перестаёт обновлять игровое состояние.
+     * Останавливает игру. Перестаёт обновлять игровое состояние
+     * и выполнять широковещание. Отправляет на центральный сервер
+     * занимаемое место и токен игрока.
      */
     private _endGame() {
+        this._socketManager.broadcastStateChanges(this._stateChanges);
+
         clearInterval(this._broadcastInterval);
         clearInterval(this._updateInterval);
 

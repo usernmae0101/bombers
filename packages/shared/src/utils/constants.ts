@@ -41,7 +41,7 @@ export const GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT = 10;
 /**
  * На сколько миллисекунд делать игрока неязвимым после получения урона.
  */
-export const GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL = 1_000;
+export const GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL = 1_300;
 
 
 /***************************************
@@ -125,15 +125,22 @@ export const GAME_MAXIMUM_DELTA_TIME = 250;
 
 
 /**
- * Абсолютный путь (от index.html) к изображению травы.
+ * Путь к изображению травы.
  */
 export const GAME_RESOURCES_IMAGE_GRASS = "/images/grass.png";
 
 /**
- * Абсолютный путь (от index.html) к изображению набора тайлов.
+ * Путь к изображению набора тайлов.
  */
 export const GAME_RESOURCES_IMAGE_TILESET = "/images/tilemap_72x72.png";
 
+/**
+ * Путь к таблице спрайтов со взрывом.
+ */
+export const GAME_RESOURCES_SPRITESHEET_EXPLOSION = "/images/explosion.json";
+
+/**
+ *
 
 /***************************************
  * DEVELOPMENT-------------------------*

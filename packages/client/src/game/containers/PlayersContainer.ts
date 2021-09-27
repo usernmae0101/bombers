@@ -1,3 +1,5 @@
+import { AnimatedSprite, Loader } from "pixi.js";
+
 import * as Shared from "@bombers/shared/src/idnex";
 import BaseContainer from "../core/BaseContainer";
 import { getEntityFrame } from "../core/frames";
@@ -27,7 +29,11 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
         super(Shared.Enums.ContainerLayers.PLAYERS);
     }
 
-    update(state: Shared.Interfaces.IGameState, localPlayerColor: number, dt: number) {
+    update(
+        state: Shared.Interfaces.IGameState, 
+        localPlayerColor: number, 
+        dt: number
+    ) {
         this._addPlayers(state.players);
         this._removePlayers(state.players);
         this._updatePlayers(state.players, localPlayerColor, dt);
@@ -35,17 +41,49 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
     /**
      * Удаляет игроков, если их больше нет в игровом состоянии. 
-     * 
+     *
      * @param players - игроки из состояния
      */
     private _removePlayers(players: Shared.Interfaces.IGameStatePlayers) {
         for (let color in this._players) {
             if (Object.keys(players).includes(color))
                 continue;
+            
+            this._animateExplosion(
+                this._players[color].cache.x,
+                this._players[color].cache.y
+            );
 
             this._players[color].player.destroy();
             delete this._players[color];
         }
+    }
+
+    /**
+     * Запускает анимацию взрыва после смерти игрока.
+     * 
+     * @param x - позиция взрыва на канвасе по X
+     * @param y - позиция взрыва на канвасе по Y
+     */
+    private _animateExplosion(x: number, y: number) {
+        const explosionTextures = [];
+        const name = Shared.Constants.GAME_RESOURCES_SPRITESHEET_EXPLOSION;
+        const sheet = Loader.shared.resources[name].spritesheet;
+        for (let i = 0; i < 26; i++) {
+            const texture = sheet.textures[`Explosion_Sequence_A ${i + 1}.png`];
+            explosionTextures.push(texture);
+        }
+
+        const explosion = new AnimatedSprite(explosionTextures);
+        explosion.x = x;
+        explosion.y = y;
+        explosion.width = Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+        explosion.height = Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+        explosion.animationSpeed = 0.25;
+        explosion.loop = false;
+        explosion.onComplete = () => { explosion.destroy(); };
+        explosion.play();
+        this.addChild(explosion);
     }
 
     private _addPlayers(players: Shared.Interfaces.IGameStatePlayers) {
@@ -118,7 +156,7 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
             // мелькаем игроком, если он получил урон
             if (players[color].isImmortal)
-                this._players[color].player.blink(5, 0);
+                this._players[color].player.blink(5, 0.15);
             else if (this._players[color].player.alpha !== 1)
                 this._players[color].player.alpha = 1;
 

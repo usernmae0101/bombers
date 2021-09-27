@@ -8,7 +8,7 @@ export default class UDPClientSocketHandler {
     public static connections: { [token: string]: any; } = {}
    
     /**
-     * Добавляет сокет в список подключенных к серверу.  Если сокет уже 
+     * Добавляет сокет в список подключенных к серверу. Если сокет уже 
      * есть в списке, отключает предыдущий и перезписывает новым подключением.
      *
      * @param token - авторизационный токен пользователя
@@ -27,13 +27,23 @@ export default class UDPClientSocketHandler {
 
         this.connections[token] = socket;
         
-        debug("Socket connected", `token: ${token}`);
+        debug(
+            "Socket UDP connected", 
+            `token: ${token}`
+        );
     }
 
     public static handle(socket: ServerChannel, gameRoom: Room) {
         const token: string = socket.userData.token;
 
         this.addSocketToConnectionSotre(token, socket);
+        
+        socket.onDisconnect(() => {
+            debug(
+               "Disconnected UDP socket",
+               `token: ${token}`
+            );
+        });
 
         socket.on(
             String(Shared.Enums.SocketChannels.GAME_ON_SEND_INPUT_KEYS),

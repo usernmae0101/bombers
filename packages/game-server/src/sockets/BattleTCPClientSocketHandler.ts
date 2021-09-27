@@ -4,6 +4,7 @@ import SocketManager from "./SocketManager";
 import * as Shared from "@bombers/shared/src/idnex";
 import Room from "../Room";
 import { debug } from "@bombers/shared/src/tools/debugger";
+import UDPClientSocketHandler from "./UDPClientSocketHandler";
 
 /**
  * Обрабатыает сообщения клиента по веб-сокету (подключенного к игровой команте).
@@ -12,7 +13,7 @@ export default class BattleTCPClientSocketHandler {
     public static connections: { [token: string]: any; } = {}
     
     /**
-     * Добавляет сокет в список подключенных к серверу.  Если сокет уже 
+     * Добавляет сокет в список подключенных к серверу. Если сокет уже 
      * есть в списке, отключает предыдущий и перезписывает новым подключением.
      *
      * @param token - авторизационный токен пользователя
@@ -31,9 +32,29 @@ export default class BattleTCPClientSocketHandler {
 
         this.connections[token] = socket;
         
-        debug("Socket connected", `token: ${token}`);
+        debug("Socket TCP connected", `token: ${token}`);
     }
-    
+  
+    /**
+     * Срабатыват при подтверждении от центрального сервера, 
+     * о том, что пользователь покинул комнату.
+     *
+     * @param token - авторизационный токен пользователя
+     */
+    public static confirmUserDisconnection(token: string) {
+        debug(
+            "Leaves room", 
+            `token: ${token}`
+        );
+
+        if (this.connections[token]) {
+            this.connections[token].emit(
+                String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
+            );
+            this.connections[token].disconnect();
+        }
+    }
+
     public static handle(socket: Socket, manager: SocketManager, gameRoom: Room) {
         const token: string = socket.handshake.auth.token;
    
@@ -45,6 +66,15 @@ export default class BattleTCPClientSocketHandler {
             (emotion: number) => gameRoom.onEmotionChange(token, emotion)
         );
         
+        socket.on("disconnect", () => {
+            debug(
+                "Disconnected TCP socket",
+                `token: ${token}`
+            );
+
+            UDPClientSocketHandler.connections[token]?.close();
+        });
+
         // покидаем комнату
         socket.on(
             String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
@@ -54,11 +84,6 @@ export default class BattleTCPClientSocketHandler {
                     String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
                     token
                 );
-
-                debug("Leaves room", `token: ${token}`);
-                
-                gameRoom.onLeave(token);
-                socket.disconnect();
             }
         );
 

@@ -24,11 +24,11 @@ export default class GameServerSocketHandler {
                        
                         // если пользователь найден в базе
                         if (user) {
+                            manager.setUserToRoomConnection(token, server);
+                            
                             responseData.success = true;
                             responseData.token = token;
                             responseData.userData = manager.parseUserData(user);
-                            
-                            manager.setUserToRoomConnection(token, server);
                         }
 
                         // отправляем данные обратно на игровой сервер
@@ -50,6 +50,12 @@ export default class GameServerSocketHandler {
                 );
                 
                 manager.removeUserFromRoomConnection(token)
+
+                // подтверждаем на игровом сервере
+                socket.emit(
+                    String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
+                    token
+                );
             }
         );
 

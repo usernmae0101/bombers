@@ -1,5 +1,5 @@
 import { ClientChannel } from "@geckos.io/client";
-import { Application } from "pixi.js";
+import { Application, Loader } from "pixi.js";
 import { Dispatch } from "redux";
 
 import * as GameActions from "../ui/redux/actions/game-actions";
@@ -63,7 +63,17 @@ export default class Game {
         ]);
 
         // подгружаем игровые ресурсы
-        this._app.loader.add([Shared.Constants.GAME_RESOURCES_IMAGE_TILESET]);
+        Loader.shared
+            .add([
+                Shared.Constants.GAME_RESOURCES_SPRITESHEET_EXPLOSION,
+                Shared.Constants.GAME_RESOURCES_IMAGE_TILESET
+            ])
+            .load(() => { 
+                debug(
+                    "Assets have been loaded",
+                    Loader.shared.resources
+                ); 
+            });
     }
 
     set UDPChann(value: ClientChannel) {
@@ -204,7 +214,7 @@ export default class Game {
             }
 
             const enemy = this._state.players[+color];
-            const { x: currentX, y: currentY, } = enemy;
+            const { x: currentX, y: currentY } = enemy;
 
             if (!(color in this._snapshotBuffer))
                 this._snapshotBuffer[color] = [];

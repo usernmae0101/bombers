@@ -24,7 +24,7 @@ type BattlePropsType = {
 
 const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
     const dispatch = useDispatch();
-
+    
     const [battleResult, setBattleResult] = React.useState([] as any[]);
     const isLoading = useSelector(GameSelectors.select_game_loading);
     const userToken = useSelector(UserSelectors.select_user_auth_token);
@@ -48,7 +48,7 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
             game, 
             gameSocketTCP, 
             dispatch,
-            setBattleResult
+            setBattleResult,
         );
 
         return () => {
@@ -63,16 +63,18 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
         };
     }, []);
 
-    if (isLoading) 
+    if (isLoading) { 
         return <Loader />;
+    }
 
-    if (battleResult.length)
+    if (battleResult.length) {
         return <Redirect 
             to={{
                 pathname: "/",
                 state: { battleResult }
             }} 
         />
+    }
 
     return (
         <div className={styles.battle}>

@@ -36,7 +36,7 @@ export const startHandlingGameBattleSocket = (
     game: Game,
     socket: Socket,
     dispatch: Dispatch,
-    setBattleResult: (result: any[]) => void
+    setBattleResult: (result: any[]) => void,
 ): () => [NodeJS.Timeout, ClientChannel] => {
     let gameSocketUDP: ClientChannel;
     let isConnected: boolean = false;
@@ -129,6 +129,11 @@ export const startHandlingGameBattleSocket = (
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_END),
         (result: any[]) => setBattleResult(result)
+    );
+
+    socket.on(
+        String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
+        () => window.location.href = "/" 
     );
 
     return function () {

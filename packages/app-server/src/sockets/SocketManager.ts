@@ -132,6 +132,12 @@ export default class SocketManager {
 
     public removeUserFromRoomConnection(token: string) {
         delete this._roomConnection[token];
+
+        debug(
+            "Removed from room connection list",
+            `token ${token}`,
+            this._roomConnection
+        );
     }
 
     /**
@@ -170,7 +176,10 @@ export default class SocketManager {
 
                             // отправляем данные для подключения к комнате
                             else {
-                                debug("User already in a room", roomConnectionData);
+                                debug(
+                                    "User already in a room", 
+                                    roomConnectionData
+                                );
 
                                 socket.emit(
                                     String(Shared.Enums.SocketChannels.GAME_ON_ROOM_RECONNECT), 
