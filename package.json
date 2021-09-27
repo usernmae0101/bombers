@@ -43,7 +43,6 @@
     "dependencies": {
         "@types/react": "^17.0.5",
         "@types/react-dom": "^17.0.3",
-        "array-buffer-serializer": "^0.1.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "redux-mock-store": "^1.5.4"

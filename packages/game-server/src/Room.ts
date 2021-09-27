@@ -113,7 +113,8 @@ export default class Room {
             Shared.Constants.DEV_NETWORK_PING_SIMULATION, 
             () => {
                 // FIXME: сделать буфер циклическим
-                this._game.keysBuffer[this._users[token].color].push(keysData);
+                const color = this._users[token]?.color;
+                color && this._game.keysBuffer[color]?.push(keysData);
             }
         );
     }
