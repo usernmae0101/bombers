@@ -40,8 +40,18 @@ export const filterOverlapData = (
             case EntityNumbers.ITEM_HEALTH:
             case EntityNumbers.ITEM_RADIUS:
             case EntityNumbers.ITEM_SPEED:
-                pickUpBonusItem(entityId, proxyState.players[color], color, bombsState);
-                removeEntityFromMap(entityId, proxyState.map, overlapData.row, overlapData.col);
+                pickUpBonusItem(
+                    entityId, 
+                    proxyState.players[color], 
+                    color, 
+                    bombsState
+                );
+                removeEntityFromMap(
+                    entityId, 
+                    proxyState.map, 
+                    overlapData.row, 
+                    overlapData.col
+                );
         }
     }
 };
@@ -76,7 +86,9 @@ export const tryToDamagePlayer = (
 
         // возвращаем уязвимость через таймаут
         setTimeout(
-            () => { state.players[color].isImmortal = false; },
+            () => { 
+                state.players[color].isImmortal = false; 
+            },
             GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL
         );
     }
@@ -115,7 +127,7 @@ export const pickUpBonusItem = (
     // подобрали скорость
     else if (entityId === EntityNumbers.ITEM_SPEED) {
         if (player.speed < GAME_GAMEPLAY_PLAYER_PROPERTY_SPEED_LIMIT) {
-            ++player.speed;
+            player.speed += 2;
         }
     }
     // подобрали здоровье
@@ -157,31 +169,19 @@ export const movePlayer = (
 
     let speed;
     switch (player.speed) {
-        case 1: speed = 0.150;
+        case 2: speed = 3;
             break;
-        case 2: speed = 0.155;
+        case 4: speed = 4;
             break;
-        case 3: speed = 0.160;
+        case 6: speed = 5;
             break;
-        case 4: speed = 0.165;
+        case 8: speed = 6;
             break;
-        case 5: speed = 0.170;
-            break;
-        case 6: speed = 0.175;
-            break;
-        case 7: speed = 0.180;
-            break;
-        case 8: speed = 0.185;
-            break;
-        case 9: speed = 0.190;
-            break;
-        case 10: speed = 0.195;
+        case 10: speed = 7;
     }
-
+    
     // передвигаем игрока
-    let offset = +(speed * Shared.Constants.GAME_FIXED_DELTA_TIME).toFixed(4);
-    offset *= [UP, LEFT].includes(direction) ? -1 : 1;
-    player[axisAlongWhichPlayerMoves] += offset;
+    player[axisAlongWhichPlayerMoves] += [UP, LEFT].includes(direction) ? -speed : speed;
 
     if (isOutOfBorder(player)) {
         alignPlayer(player, axisAlongWhichPlayerMoves);
@@ -190,9 +190,9 @@ export const movePlayer = (
 
     const [overlapData, atEdgeOfBorder] = checkPlayerOverlap(player, map);
 
-    // если игрок пересёкся с объктом, о который бьется (collided), 
+    // если игрок пересёкся с объктом о который бьется (collided), 
     // выравнивам игрока по оси движения
-    if (overlapData && isPlayerCollide(map[overlapData.row][overlapData.col])) 
+    if (overlapData && isPlayerCollide(map, overlapData, speed)) 
         alignPlayer(player, axisAlongWhichPlayerMoves);
 
     // если игрок не столкнулся, направление движения поменялось 
@@ -209,7 +209,10 @@ export const movePlayer = (
  * @param player
  * @param axis
  */
-export const alignPlayer = (player: Shared.Interfaces.IGameStatePlayer, axis: "x" | "y") => {
+export const alignPlayer = (
+    player: Shared.Interfaces.IGameStatePlayer, 
+    axis: "x" | "y"
+) => {
     const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
     
     player[axis] = Math.round(player[axis] / GAME_RESOLUTION_TILE_SIZE) * GAME_RESOLUTION_TILE_SIZE;
@@ -223,7 +226,11 @@ export const alignPlayer = (player: Shared.Interfaces.IGameStatePlayer, axis: "x
  * @param row
  * @param col
  */
-export const destroyBoxFromMap = (map: number[][][], row: number, col: number) => {
+export const destroyBoxFromMap = (
+    map: number[][][], 
+    row: number, 
+    col: number
+) => {
     const { EntityNumbers } = Shared.Enums;
     const { getRandomBetween } = Shared.Maths;
     const { GAME_GAMEPLAY_DROP_ITEM_PERCENT } = Shared.Constants;
@@ -245,7 +252,12 @@ export const destroyBoxFromMap = (map: number[][][], row: number, col: number) =
  * @param row
  * @param col
  */
-export const addEntityToMap = (entityId: number, map: number[][][], row: number, col: number) => {
+export const addEntityToMap = (
+    entityId: number, 
+    map: number[][][], 
+    row: number, 
+    col: number
+) => {
     const entities = [...map[row][col]];
     entities.push(entityId);
     map[row][col] = entities;
@@ -259,7 +271,12 @@ export const addEntityToMap = (entityId: number, map: number[][][], row: number,
  * @param row
  * @param col
  */
-export const removeEntityFromMap = (entityId: number, map: number[][][], row: number, col: number) => {
+export const removeEntityFromMap = (
+    entityId: number, 
+    map: number[][][], 
+    row: number, 
+    col: number
+) => {
     const entities = [...map[row][col]];
     const entitityIndex = entities.findIndex(id => id === entityId);
     entities.splice(entitityIndex, 1);
@@ -272,7 +289,9 @@ export const removeEntityFromMap = (entityId: number, map: number[][][], row: nu
  * @param keys - нажатые клавиши
  * @returns [двигать ли игрока: да или нет, в каком направлении]
  */
-export const tryToMovePlayer = (keys: number[]): [boolean, number] => {
+export const tryToMovePlayer = (
+    keys: number[]
+): [boolean, number] => {
     const { MoveDirections, InputKeys } = Shared.Enums;
 
     switch (true) {

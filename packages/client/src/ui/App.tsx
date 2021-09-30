@@ -1,4 +1,5 @@
 import React from "react";
+import { Loader } from "pixi.js";
 import bridge from '@vkontakte/vk-bridge';
 import { BrowserRouter } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -10,7 +11,8 @@ import * as UserSelectors from "./redux/selectors/user-selecrots";
 import * as UserActions from "./redux/actions/user-actions";
 import * as Shared from "@bombers/shared/src/idnex";
 import { startHandlingAppSocket } from "../handlers/socket-app-handler";
-import Loader from "./components/Loader";
+import LoaderComponent from "./components/Loader";
+import { debug } from "@bombers/shared/src/tools/debugger";
 
 const Main = () => {
     const dispatch = useDispatch();
@@ -100,15 +102,28 @@ const Main = () => {
                     setRoomToRedirect
                 );
 
-                dispatch(
-                    UserActions.action_user_set_socket_instance(_socket)
-                );
+                // подгружаем игровые ресурсы
+                Loader.shared
+                    .add([
+                        Shared.Constants.GAME_RESOURCES_SPRITESHEET_EXPLOSION,
+                        Shared.Constants.GAME_RESOURCES_IMAGE_TILESET
+                    ])
+                    .load(() => { 
+                        debug(
+                            "Assets have been loaded",
+                            Loader.shared.resources
+                        ); 
+
+                        dispatch(
+                            UserActions.action_user_set_socket_instance(_socket)
+                        );
+                    });
             }
         })();
     }, [isAuth]);
 
     if (!isAuth || !socket) 
-        return (<Loader />);
+        return (<LoaderComponent />);
 
     return (
         <BrowserRouter>

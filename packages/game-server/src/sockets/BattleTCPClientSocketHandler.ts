@@ -32,7 +32,10 @@ export default class BattleTCPClientSocketHandler {
 
         this.connections[token] = socket;
         
-        debug("Socket TCP connected", `token: ${token}`);
+        debug(
+            "Socket TCP connected", 
+            `token: ${token}`
+        );
     }
   
     /**

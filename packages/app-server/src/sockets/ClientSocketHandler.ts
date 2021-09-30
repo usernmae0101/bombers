@@ -35,7 +35,10 @@ export default class ClientSocketHandler {
 
         this.connections[token] = socket;
         
-        debug("Socket connected", `token: ${token}`);
+        debug(
+            "Socket connected", 
+             `token: ${token}`
+        );
     }
 
     public static handle(

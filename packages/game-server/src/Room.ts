@@ -74,7 +74,9 @@ export default class Room {
             --this._readyCounter;
 
         delete this._users[token];
-        this._slots[color] = Shared.Helpers.makeCopyObject(Shared.Slots.emptySlot);
+        this._slots[color] = Shared.Helpers.makeCopyObject(
+            Shared.Slots.emptySlot
+        );
         this._game.removePlayerFromState(color);
         this._availableColors.push(color);
         --this._activeSlots;
@@ -114,7 +116,7 @@ export default class Room {
             () => {
                 // FIXME: сделать буфер циклическим
                 const color = this._users[token]?.color;
-                color && this._game.keysBuffer[color]?.push(keysData);
+                color !== undefined && this._game.keysBuffer[color]?.push(keysData);
             }
         );
     }
@@ -243,12 +245,15 @@ export default class Room {
     private _configurate() {
         this._setAvailableColors();
         this._game.isStarted = false;
+        this._isLocked = false;
         this._activeSlots = 0;
         this._readyCounter = 0;
         this._battleResult = {};
         this._tokens = {};
         this._users = {};
-        this._slots = Shared.Slots.slots;
+        this._slots = Shared.Helpers.makeCopyObject(
+            Shared.Slots.slots
+        );
         this._resetStateChanges();
 
         const state = createState(

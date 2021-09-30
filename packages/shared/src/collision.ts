@@ -9,7 +9,9 @@ const { EntityNumbers } = Shared.Enums;
  * @param player
  * @returns да или нет
  */
-export function isOutOfBorder(player: Shared.Interfaces.IGameStatePlayer): boolean {
+export function isOutOfBorder(
+    player: Shared.Interfaces.IGameStatePlayer
+): boolean {
     const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
 
     if (
@@ -24,12 +26,22 @@ export function isOutOfBorder(player: Shared.Interfaces.IGameStatePlayer): boole
 
 /**
  * Проверяет, находится ли в ячейке идентификатор игровой сущности, 
- * с которой игрок сталкивается.
+ * с которой игрок сталкивается. Если игрок хоть чуть-чуть находится 
+ * на бомбе, игнорирует столкновение, позволяя "скользить".
  * 
- * @param cellEntities - список идентификаторов сущностей в ячейке
+ * @param map
+ * @param overlapData - информация о пересечении с ячейкой
+ * @param speed
  * @returns да или нет
  */
-export const isPlayerCollide = (cellEntities: number[]): boolean => {
+export const isPlayerCollide = (
+    map: number[][][],
+    overlapData: Shared.Interfaces.IOverlapData,
+    speed: number
+): boolean => {
+    const { row, col, distance } = overlapData;
+    const cellEntities = map[row][col];
+
     for (let entityId of cellEntities) {
         if (
             [
@@ -37,6 +49,13 @@ export const isPlayerCollide = (cellEntities: number[]): boolean => {
                 EntityNumbers.BOMB_PURPLE,
                 EntityNumbers.BOMB_YELLOW,
                 EntityNumbers.BOMB_RED,
+            ].includes(entityId)
+        ) {
+            return (distance - speed) < 1;
+        } 
+
+        if (
+            [
                 EntityNumbers.BOX,
                 EntityNumbers.ROCK
             ].includes(entityId)
@@ -77,6 +96,7 @@ export const isPlayerCollide = (cellEntities: number[]): boolean => {
                 return [undefined, true];
 
             cellRow = playerRow - 1;
+            /* falls through */
         case DOWN:
             cellRow = cellRow ?? playerRow + 1;
 
@@ -110,6 +130,7 @@ export const isPlayerCollide = (cellEntities: number[]): boolean => {
                 return [undefined, true];
 
             cellCol = playerCol - 1;
+            /* falls through */
         case RIGHT:
             cellCol = cellCol ?? playerCol + 1;
 

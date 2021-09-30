@@ -28,7 +28,10 @@ export const calculatePlayerCellPosition = (
  * @param cellPoint - позиция ячейки на карте по X или Y
  * @returns количество пикселей (абсолютное значение)
  */
-export const calculateOverlapDistance = (playerPoint: number, cellPoint: number): number => {
+export const calculateOverlapDistance = (
+    playerPoint: number, 
+    cellPoint: number
+): number => {
     const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
 
     return Math.abs(GAME_RESOLUTION_TILE_SIZE - Math.abs(playerPoint - cellPoint));
@@ -138,6 +141,10 @@ export const getAllBombsIds = (): Shared.Enums.EntityNumbers[] => {
  * @param col
  * @returns идентификаторы игровых сущностей
  */
-export const getAllEntitiesInCell = (map: number[][][], row: number, col: number): number[] => {
+export const getAllEntitiesInCell = (
+    map: number[][][], 
+    row: number, 
+    col: number
+): number[] => {
     return [ ...map[row][col] ];
 };

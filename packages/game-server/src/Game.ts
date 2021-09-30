@@ -28,10 +28,19 @@ export default class Game {
         if (isPlayerMove) {
             const _player = { ...this._state.players[+color] };
 
-            const overlapData = Shared.Common.movePlayer(_player, direction, this._state.map);
+            const overlapData = Shared.Common.movePlayer(
+                _player, 
+                direction, 
+                this._state.map
+            );
             if (overlapData) {
                 // перебираем пересечённые игровые сущности
-                Shared.Common.filterOverlapData(overlapData, this._proxyState, +color, this._bombsState);
+                Shared.Common.filterOverlapData(
+                    overlapData, 
+                    this._proxyState, 
+                    +color, 
+                    this._bombsState
+                );
                         
                 // если игрок был удалён из игрового сосояния
                 if (!(color in this._state.players))
@@ -44,9 +53,19 @@ export default class Game {
             this._proxyState.players[+color].tick = tick;
         }
 
-        const isPlaceBomb = Shared.Common.tryToPlaceBomb(keys, this._state, this._bombsState, +color);
-        if (isPlaceBomb) 
-            Shared.Explode.placeBombToMap(this._proxyState, this._bombsState, +color);
+        const isPlaceBomb = Shared.Common.tryToPlaceBomb(
+            keys, 
+            this._state, 
+            this._bombsState, 
+            +color
+        );
+        if (isPlaceBomb) {
+            Shared.Explode.placeBombToMap(
+                this._proxyState, 
+                this._bombsState, 
+                +color
+            );
+        }
     }
 
     /**

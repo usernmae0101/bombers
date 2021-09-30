@@ -2,8 +2,10 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./result.module.scss";
+import * as Shared from "@bombers/shared/src/idnex";
 import * as UserSelectors from "@bombers/client/src/ui/redux/selectors/user-selecrots";
 import * as UserActions from "@bombers/client/src/ui/redux/actions/user-actions";
+import * as GameActions from "@bombers/client/src/ui/redux/actions/game-actions";
 
 const ResultPlayer: React.FC<{
     nickname: string;
@@ -32,6 +34,16 @@ const ResultPlayer: React.FC<{
 };
 
 const Result: React.FC<{ battleResult: any[]; }> = ({ battleResult }) => {
+    const dispatch = useDispatch();
+    
+    React.useEffect(() => {
+        dispatch(
+            GameActions.action_game_set_slots(
+                Shared.Slots.slots                
+            )
+        );     
+    }, []);
+
     return (
         <div className={styles.result}>
             <ul>

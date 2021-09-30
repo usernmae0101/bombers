@@ -11,12 +11,12 @@ export const GAME_GAMEPLAY_DROP_ITEM_PERCENT = 65;
 /**
  * Таймаут в миллисекундах на взрыв бомбы после установки.
  */
-export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 2_500;
+export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 3_000;
 
 /**
  * Время в миллисекундах, после которого пламя исчезает.
  */
-export const GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW = 800;
+export const GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW = 400;
 
 /**
  * Лимит на храрактеристику игрока: бомбы.
@@ -155,9 +155,9 @@ export const DEV_NETWORK_PING_SIMULATION = 100;
 /**
  * Потеря пакетов на сервере в процентах.
  */
-export const DEV_NETWORK_PACKAGE_LOSS_SERVER = 4;
+export const DEV_NETWORK_PACKAGE_LOSS_SERVER = 0;
 
 /**
  * Потеря пакетов на клиенте в процентах.
  */
-export const DEV_NETWORK_PACKAGE_LOSS_CLIENT = 3;
+export const DEV_NETWORK_PACKAGE_LOSS_CLIENT = 0;

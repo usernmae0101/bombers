@@ -21,7 +21,7 @@ export const createState = (map: number[][][]): Shared.Interfaces.IGameState => 
 export const createPlayer = (x: number, y: number): Shared.Interfaces.IGameStatePlayer => ({
     health: 3,
     bombs: 1,
-    speed: 1,
+    speed: 2,
     radius: 1,
     direction: Shared.Enums.MoveDirections.DOWN,
     isImmortal: false,

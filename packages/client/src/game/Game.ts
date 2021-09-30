@@ -1,5 +1,5 @@
 import { ClientChannel } from "@geckos.io/client";
-import { Application, Loader } from "pixi.js";
+import { Application } from "pixi.js";
 import { Dispatch } from "redux";
 
 import * as GameActions from "../ui/redux/actions/game-actions";
@@ -61,19 +61,6 @@ export default class Game {
             new Containers.BoxesContainer,
             new Containers.RocksContainer
         ]);
-
-        // подгружаем игровые ресурсы
-        Loader.shared
-            .add([
-                Shared.Constants.GAME_RESOURCES_SPRITESHEET_EXPLOSION,
-                Shared.Constants.GAME_RESOURCES_IMAGE_TILESET
-            ])
-            .load(() => { 
-                debug(
-                    "Assets have been loaded",
-                    Loader.shared.resources
-                ); 
-            });
     }
 
     set UDPChann(value: ClientChannel) {
@@ -260,8 +247,10 @@ export default class Game {
 
                 this._state.players[this._color].x = authX;
                 this._state.players[this._color].y = authY;
-            }
-
+                
+                continue;
+            } 
+            
             this._updateLocalPlayer(this._predictionBuffer[tick].keys, false);
         }
     }
@@ -273,7 +262,11 @@ export default class Game {
         if (isPlayerMove) {
             const _player = { ...player };
 
-            Shared.Common.movePlayer(_player, direction, this._state.map);
+            Shared.Common.movePlayer(
+                _player, 
+                direction, 
+                this._state.map
+            );
 
             player.x = _player.x;
             player.y = _player.y;
