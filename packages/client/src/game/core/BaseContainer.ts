@@ -12,9 +12,16 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
     protected entities: IEntityCollector<T> = {};
     protected entityIds: number[];
 
-    public abstract update(state: Shared.Interfaces.IGameState, localPlayerColor?: number, dt?: number): void;
+    public abstract update(
+        state: Shared.Interfaces.IGameState, 
+        localPlayerColor?: number, 
+        dt?: number
+    ): void;
 
-    constructor(layer: number, entityIds: number[] = []) {
+    constructor(
+        layer: number, 
+        entityIds: number[] = []
+    ) {
         super();
 
         this.width = Shared.Helpers.calculateCanvasWidth();
@@ -34,6 +41,9 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
         }
     }
 
+    /**
+     * Добавляет игровую сущность на канвас для отображения.
+     */
     private _addEntity(entityId: number, row: number, col: number) {
         const entity: T = EntityFactory.create(entityId);
 
@@ -46,6 +56,9 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
         this.entities[`${entityId}${row}${col}`] = entity;
     }
 
+    /**
+     * Удаляет игровую сущность с канваса и перестаёт отображать.
+     */
     private _removeEntity(entityId: number, position: string) {
         this.entities[`${entityId}${position}`].destroy();
         delete this.entities[`${entityId}${position}`];
@@ -53,7 +66,9 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
 
     protected redraw(
         map: number[][][],
-        callbacks: { (entityId: number, position: string): void }[] = []
+        onUpdate: { (entityId: number, position: string): void }[] = [],
+        onAdd: any = (a?: string) => {},
+        onDelete: any = (a?: string) => {}
     ) {
         for (let row = 0; row < map.length; row++) {
             for (let col = 0; col < map[row].length; col++) {
@@ -64,17 +79,19 @@ export default abstract class BaseContainer<T extends BaseEntity> extends Contai
                     // если идентификатор, принадлежащий контейнеру, есть на карте
                     if (map[row][col].includes(entityId)) {
                         if (isEntityExistInColllection) {
-                            this._updateEntity(callbacks, entityId, position);
+                            this._updateEntity(onUpdate, entityId, position);
                         }
 
                         else {
                             this._addEntity(entityId, row, col)
+                            onAdd(position);
                         }
                     }
 
                     // если нет на карте, но есть в коллекции
                     else if (isEntityExistInColllection) {
                         this._removeEntity(entityId, position);
+                        onDelete(position);
                     }
                 }
             }

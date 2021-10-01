@@ -1,8 +1,6 @@
 import BaseEntity from "../core/BaseEntity";
 import * as Shared from "@bombers/shared/src/idnex";
 
-const { GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
-
 export default class BombEntity extends BaseEntity {
     private _isMakeBombBigger: boolean = false;
 
@@ -10,11 +8,12 @@ export default class BombEntity extends BaseEntity {
         super(frameX, frameY);
     }
 
-    public pulse() {
-        if (++this.tick % 20 !== 0)
+    public pulse(
+        scale: number, 
+        containerTick: number
+    ) {
+        if (containerTick % 20 !== 0)
             return;
-
-        const scale = GAME_RESOLUTION_TILE_OFFSET;
 
         this.width += this._isMakeBombBigger ? scale : -scale;
         this.x += this._isMakeBombBigger ? -(scale / 2) : (scale / 2);
