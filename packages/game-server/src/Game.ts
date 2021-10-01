@@ -1,5 +1,6 @@
 import * as Shared from "@bombers/shared/src/idnex";
 import PlayerFactory from "./PlayerFactory";
+import { debug } from "@bombers/shared/src/tools/debugger";
 
 interface IKeysBuffer {
     [color: number]: Shared.Interfaces.IKeysData[];
@@ -88,6 +89,12 @@ export default class Game {
     }
 
     public updatePlayerEmotion(color: number, emotion: number) {
+        debug(
+            "Emotion has been changed",
+            `color: ${color}`,
+            `emotion: ${emotion}`
+        );
+
         this._proxyState.players[color].emotion = emotion;
     }
 

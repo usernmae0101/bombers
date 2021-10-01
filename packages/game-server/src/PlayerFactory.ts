@@ -8,7 +8,7 @@ export default class PlayerFactory {
      * @param color - цвет игрока
      * @returns игрок
      */
-    public static create(color: Shared.Enums.PlayerColors): Shared.Interfaces.IGameStatePlayer {
+    public static create( color: Shared.Enums.PlayerColors): Shared.Interfaces.IGameStatePlayer {
         const tileSize = Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
         // ширина канваса в пикселях
         const mapWidth = Shared.Helpers.calculateCanvasWidth();

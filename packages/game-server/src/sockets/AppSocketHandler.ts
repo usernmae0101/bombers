@@ -35,8 +35,11 @@ export default class AppSocketHandler {
                     authSocket.join("room");
 
                     // отправляем данные подключенному сокету
-                    const userColor = gameRoom.users[responseData.token].color;
-                    manager.sendRoomDataToConnectedUser(authSocket, gameRoom, userColor);
+                    manager.sendRoomDataToConnectedUser(
+                        authSocket, 
+                        gameRoom, 
+                        gameRoom.users[responseData.token].color
+                    );
    
                     BattleTCPClientSocketHandler.handle(authSocket, manager, gameRoom);
                 }

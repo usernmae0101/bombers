@@ -62,7 +62,7 @@ describe("common module should works correctly", () => {
                 player.speed = 2;
                 map[0][0] = [Enums.EntityNumbers.ITEM_SPEED];
                 common.filterOverlapData(overlapData, state, 1, {});
-                expect(player.speed).toBe(3);
+                expect(player.speed).toBe(4);
             });
 
             it("should picks up radius item", () => {

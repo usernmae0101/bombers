@@ -75,7 +75,7 @@ export default class PlayerEntity extends BaseEntity {
             this._emotion.texture.updateUvs();
         }
         
-        if (direction === MoveDirections.RIGHT) {
+        else if (direction === MoveDirections.RIGHT) {
             this._emotion.texture.frame.width = GAME_RESOLUTION_TILE_SIZE / 2;
             this._emotion.texture.updateUvs();
             this._emotion.x += GAME_RESOLUTION_TILE_SIZE / 2;

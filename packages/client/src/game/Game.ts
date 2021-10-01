@@ -63,10 +63,16 @@ export default class Game {
         ]);
     }
 
+    /**
+     * Устанавливет UDP-соединение.
+     */
     set UDPChann(value: ClientChannel) {
         this._UDPChann = value;
     }
 
+    /**
+     * Устанавливает игровое состояние.
+     */
     set state(value: Shared.Interfaces.IGameState) {
         this._state = value;
     }
@@ -78,6 +84,9 @@ export default class Game {
         this._color = value;
     }
 
+    /**
+     * Обрабатывает нажатые клавиши. Добавляет идентификаторы в спиок.
+     */
     private _handleInputs() {
         switch (true) {
             case Keyboard.keys["KeyW"]:
@@ -105,6 +114,10 @@ export default class Game {
         }
     }
 
+    /**
+     * Если список нажатых клавиш не пустой, отправляет его
+     * и номер игрового такта на сервер по UDP.
+     */
     private _sendInputKeysToServer() {
         if (this._keys.length) {
             this._UDPChann.emit(
@@ -117,7 +130,10 @@ export default class Game {
         }
     }
 
-    public onReliableStateChanges(changes: any[], dispatch: Dispatch) {
+    public onReliableStateChanges(
+        changes: any[], 
+        dispatch: Dispatch
+    ) {
         for (let _changes of changes) {
             // удалён игрок из игрового состояния
             if ("delete" in _changes)
@@ -255,7 +271,10 @@ export default class Game {
         }
     }
 
-    private _updateLocalPlayer(keys: number[], isInsertPrediction: boolean) {
+    private _updateLocalPlayer(
+        keys: number[], 
+        isInsertPrediction: boolean
+    ) {
         const player = this._state.players[this._color];
 
         const [isPlayerMove, direction] = Shared.Common.tryToMovePlayer(keys);

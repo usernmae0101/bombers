@@ -4,6 +4,7 @@ import SocketManager from "./sockets/SocketManager";
 import { createState } from "./game-state";
 import { createMapById } from "@bombers/shared/src/maps";
 import { simulatePackageLoss } from "@bombers/shared/src/tools/network";
+import { debug } from "@bombers/shared/src/tools/debugger";
 
 export default class Room {
     /** Общее количество игровых слотов. */
@@ -73,6 +74,9 @@ export default class Room {
         if (this._slots[this._users[token].color].isReady)
             --this._readyCounter;
 
+        if (!this._game.isStarted)
+            this._isLocked = false;
+
         delete this._users[token];
         this._slots[color] = Shared.Helpers.makeCopyObject(
             Shared.Slots.emptySlot
@@ -92,11 +96,18 @@ export default class Room {
      * @param socket - TCP-сокет пользователя
      */
     public onReconnect(token: string, socket: any) {
-        this._socketManager.sendRoomDataToConnectedUser(socket, this, this._users[token].color);
+        this._socketManager.sendRoomDataToConnectedUser(
+            socket, 
+            this, 
+            this._users[token].color
+        );
     }
     
     public onEmotionChange(token: string, emotion: number) {
-        this._game.updatePlayerEmotion(this._users[token].color, emotion);
+        this._game.updatePlayerEmotion(
+            this._users[token].color, 
+            emotion
+        );
     }
 
     /**
@@ -157,7 +168,7 @@ export default class Room {
                         String(Shared.Enums.SocketChannels.GAME_ON_END),
                         result
                     );
-                    socket.disconnect();
+                    socket.disconnect(true);
                 });  
                 
                 this._configurate();
@@ -173,33 +184,47 @@ export default class Room {
         this._game.bombsState = Shared.Helpers.createBombsState(this._users);
 
         // широковещание игрового состояния
-        this._broadcastInterval = setInterval(() => {
-            this._socketManager.broadcastStateChanges(this._stateChanges);
-            this._resetStateChanges();
-        }, 1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE);
+        this._broadcastInterval = setInterval(
+            () => {
+                this._socketManager.broadcastStateChanges(this._stateChanges);
+                this._resetStateChanges();
+            }, 
+            1000 / Shared.Constants.GAME_SERVER_BROADCAST_RATE
+        );
 
         let accumulator = 0;
         let then = +(new Date());
 
         // обновление игрового состояния
-        this._updateInterval = setInterval(() => {
-            const now = +(new Date());
-            let frameTime = now - then;
-            frameTime = frameTime > Shared.Constants.GAME_MAXIMUM_DELTA_TIME 
-                ? Shared.Constants.GAME_MAXIMUM_DELTA_TIME 
-                : frameTime;
-            then = now;
+        this._updateInterval = setInterval(
+            () => {
+                const now = Date.now();
+                let frameTime = now - then;
+                frameTime = frameTime > Shared.Constants.GAME_MAXIMUM_DELTA_TIME 
+                    ? Shared.Constants.GAME_MAXIMUM_DELTA_TIME 
+                    : frameTime;
+                then = now;
 
-            accumulator += frameTime;
+                accumulator += frameTime;
 
-            while (accumulator >= Shared.Constants.GAME_FIXED_DELTA_TIME) {
-                this._game.update();
-                accumulator -= Shared.Constants.GAME_FIXED_DELTA_TIME;
-            }
-        }, 1000 / Shared.Constants.GAME_SERVER_TICK_RATE);
+                while (accumulator >= Shared.Constants.GAME_FIXED_DELTA_TIME) {
+                    this._game.update();
+                    accumulator -= Shared.Constants.GAME_FIXED_DELTA_TIME;
+                }
+            }, 
+            1000 / Shared.Constants.GAME_SERVER_TICK_RATE
+        );
+        
+        debug(
+            "State changes before start",
+            this._stateChanges
+        );
+
+        this._resetStateChanges();
 
         this._socketManager.serverSocketTCP.of("battle").to("room").emit(
-            String(Shared.Enums.SocketChannels.GAME_ON_START)
+            String(Shared.Enums.SocketChannels.GAME_ON_START),
+            this.gameState
         );
     }
 

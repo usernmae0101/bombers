@@ -81,7 +81,9 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
         explosion.height = Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
         explosion.animationSpeed = 0.25;
         explosion.loop = false;
-        explosion.onComplete = () => { explosion.destroy(); };
+        explosion.onComplete = () => { 
+            explosion.destroy(); 
+        };
         explosion.play();
         this.addChild(explosion);
     }
@@ -99,7 +101,10 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
             const player = new PlayerEntity(frameX, frameY, +color);
     
             // устанавливаем эмоцию игрока
-            player.updateEmotion(players[color].emotion, players[color].direction);
+            player.updateEmotion(
+                players[color].emotion, 
+                players[color].direction
+            );
 
             this.addChild(player);
             this._players[color] = {

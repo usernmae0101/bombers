@@ -47,8 +47,12 @@ export const startHandlingGameBattleSocket = (
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_CONNECT_ROOM_DATA),
         (data: IConnectRoomData) => {
-            dispatch(GameActions.action_game_set_slots(data.slots));
-            dispatch(GameActions.action_game_set_color(data.color));
+            dispatch(
+                GameActions.action_game_set_slots(data.slots)
+            );
+            dispatch(
+                GameActions.action_game_set_color(data.color)
+            );
 
             // открываем UDP-соединение
             const UDPChann = geckos({
@@ -127,7 +131,10 @@ export const startHandlingGameBattleSocket = (
     // запускаем игру
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_START),
-        () => game.start()
+        (state: Shared.Interfaces.IGameState) => {
+            game.state = state; 
+            game.start();
+        }
     )
     
     // завершаем игру

@@ -93,12 +93,33 @@ describe("collision should works correctly", () => {
     });
 
     describe("collision detection should works correctly", () => {
+        let map, od;
+
+        beforeEach(() => {
+            map = [[]];
+            od = { row: 0, col: 0, distance: 0 };
+        });
+
         it("should not detects if not collided entity", () => {
-            expect(Collision.isPlayerCollide([Enums.EntityNumbers.ITEM_RADIUS])).toBeFalsy();
+            map[0][0] = [Enums.EntityNumbers.ITEM_RADIUS];
+            expect(Collision.isPlayerCollide(map, od, 0)).toBeFalsy();
         });
 
         it("should detects if collided entity", () => {
-            expect(Collision.isPlayerCollide([Enums.EntityNumbers.BOX])).toBeTruthy();
+            map[0][0] = [Enums.EntityNumbers.BOX];
+            expect(Collision.isPlayerCollide(map, od, 0)).toBeTruthy();
+        });
+
+        it("should not sliding on the bomb", () => {
+            map[0][0] = [Enums.EntityNumbers.BOMB_RED];
+            od.distance = 5;
+            expect(Collision.isPlayerCollide(map, od, 5)).toBeTruthy();
+        });
+
+        it("should sliding on the bomb", () => {
+            map[0][0] = [Enums.EntityNumbers.BOMB_RED];
+            od.distance = 5;
+            expect(Collision.isPlayerCollide(map, od, 4)).toBeFalsy();
         });
     });
 });

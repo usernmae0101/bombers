@@ -55,7 +55,6 @@ export default class SocketManager {
      * @param message - сообщение, отправленное пользователем
      */
     public addMessageToState(message: Shared.Interfaces.IChatMessage) {
-        // циклический буфер
         const circularBuffer = (this.state.chat.messages.length + 1) % (Shared.Constants.CHAT_MESSAGES_BUFFER_SIZE + 1);
 
         this.state.chat.messages[

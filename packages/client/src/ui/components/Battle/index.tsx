@@ -40,7 +40,9 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
             }
         });
 
-        dispatch(GameActions.action_game_set_tcp_socket(gameSocketTCP));
+        dispatch(
+            GameActions.action_game_set_tcp_socket(gameSocketTCP)
+        );
 
         const getPingIntervalAndUDPChann = startHandlingGameBattleSocket(
             userToken, 
