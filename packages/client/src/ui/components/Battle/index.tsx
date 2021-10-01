@@ -9,7 +9,6 @@ import RoomBar from "./RoomBar";
 import RoomSlots from "./RoomSlots";
 import GameContainer from "./GameContainer";
 import GameHUD from "./GameHUD";
-import * as Shared from "@bombers/shared/src/idnex";
 import * as GameSelectors from "../../redux/selectors/game-selectors";
 import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import Game from "../../../game/Game";

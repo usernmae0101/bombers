@@ -263,7 +263,7 @@ export const detonateBomb = (
         const xPos = players[+color].x;
         const yPos = players[+color].y;
 
-        const [pRow, pCol] = Shared.Helpers.calculatePlayerCellPosition(players[+color])
+        const [pRow, pCol] = Shared.Helpers.calculatePlayerCellPosition(players[+color]);
 
         const xRem = xPos % Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
         const yRem = yPos % Shared.Constants.GAME_RESOLUTION_TILE_SIZE;

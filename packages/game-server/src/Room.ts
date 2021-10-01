@@ -220,8 +220,6 @@ export default class Room {
             this._stateChanges
         );
 
-        this._resetStateChanges();
-
         this._socketManager.serverSocketTCP.of("battle").to("room").emit(
             String(Shared.Enums.SocketChannels.GAME_ON_START),
             this.gameState
