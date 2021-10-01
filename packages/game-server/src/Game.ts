@@ -75,7 +75,7 @@ export default class Game {
      * @param color - цвет игрока
      */
     public addPlayerToState(color: number) {
-        this._proxyState.players[color] = PlayerFactory.create(color);
+        this._state.players[color] = PlayerFactory.create(color);
     }
 
     public removePlayerFromState(color: number) {
@@ -95,7 +95,7 @@ export default class Game {
             `emotion: ${emotion}`
         );
 
-        this._proxyState.players[color].emotion = emotion;
+        this._state.players[color].emotion = emotion;
     }
 
     /**

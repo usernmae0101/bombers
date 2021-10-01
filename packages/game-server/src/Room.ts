@@ -104,7 +104,7 @@ export default class Room {
     }
     
     public onEmotionChange(token: string, emotion: number) {
-        this._game.updatePlayerEmotion(
+        !this.isGameStarted && this._game.updatePlayerEmotion(
             this._users[token].color, 
             emotion
         );
@@ -319,7 +319,7 @@ export default class Room {
                     this._stateChanges.notReliable.s[this._lastChangedStateKey][_key] = value;
                 }
 
-                // какие-то другие хар-ки игрока (или сам игрок) - передаём надёжно
+                // какие-то другие хар-ки игрока - передаём надёжно
                 else {
                     this._stateChanges.reliable.push(
                         {
@@ -329,6 +329,7 @@ export default class Room {
                         }
                     );
                 }
+
                 return Reflect.set(target, key, value, receiver);
             },
             deleteProperty: (target, key) => {

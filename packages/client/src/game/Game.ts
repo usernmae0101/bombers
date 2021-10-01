@@ -143,13 +143,8 @@ export default class Game {
             else if ("row" in _changes)
                 this._state.map[_changes.row][_changes.col] = _changes.entities;
             
-            // поменялись хар-ки игрока или добавлен игрок
+            // поменялись хар-ки игрока
             else {
-                if (_changes.color === "players") {
-                    this._state.players[_changes.key] = _changes.value;
-                    continue;
-                }
-
                 const player = this._state.players[_changes.color];
 
                 if (+_changes.color === this._color) {
@@ -190,14 +185,25 @@ export default class Game {
             while (buffer.length > 1 && buffer[1].timestamp <= renderTime)
                 buffer.shift();
 
-            if (buffer.length > 1 && buffer[0].timestamp <= renderTime && renderTime <= buffer[1].timestamp) {
+            if (buffer.length > 1 && 
+                buffer[0].timestamp <= renderTime && 
+                renderTime <= buffer[1].timestamp) 
+            {
                 const [s1, s2] = buffer;
 
                 const ratio = (renderTime - s1.timestamp) / (s2.timestamp - s1.timestamp);
 
                 enemy.direction = buffer[1].snapshot.direction;
-                enemy.x = Shared.Maths.lerp(s1.snapshot.x, s2.snapshot.x, ratio);
-                enemy.y = Shared.Maths.lerp(s1.snapshot.y, s2.snapshot.y, ratio);
+                enemy.x = Shared.Maths.lerp(
+                    s1.snapshot.x, 
+                    s2.snapshot.x, 
+                    ratio
+                );
+                enemy.y = Shared.Maths.lerp(
+                    s1.snapshot.y, 
+                    s2.snapshot.y, 
+                    ratio
+                );
             }
 
             else if (buffer.length) {
