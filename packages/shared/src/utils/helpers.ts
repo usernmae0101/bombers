@@ -6,7 +6,6 @@ const { PlayerColors, EntityNumbers } = Shared.Enums;
 /**
  * Определяет в какой ячейке на карте находится игрок.
  * 
- * @param player
  * @returns [ряд ячейки, колонка ячейки]
  */
 export const calculatePlayerCellPosition = (
@@ -34,7 +33,9 @@ export const calculateOverlapDistance = (
 ): number => {
     const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
 
-    return Math.abs(GAME_RESOLUTION_TILE_SIZE - Math.abs(playerPoint - cellPoint));
+    return Math.abs(
+        GAME_RESOLUTION_TILE_SIZE - Math.abs(playerPoint - cellPoint)
+    );
 };
 
 /**
@@ -81,7 +82,9 @@ export const createBombsState = (
  * @returns копия объекта
  */
 export const makeCopyObject = <T>(object: T): T => {
-    return JSON.parse(JSON.stringify(object));
+    return JSON.parse(
+        JSON.stringify(object)
+    );
 };
 
 /**
@@ -136,9 +139,6 @@ export const getAllBombsIds = (): Shared.Enums.EntityNumbers[] => {
 /**
  * Получает список игровых сущностей на карте в определенной ячейке.
  * 
- * @param map
- * @param row
- * @param col
  * @returns идентификаторы игровых сущностей
  */
 export const getAllEntitiesInCell = (

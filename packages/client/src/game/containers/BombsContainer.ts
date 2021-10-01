@@ -32,19 +32,30 @@ export default class BombsContainer extends BaseContainer<BombEntity> {
         delete this._timestampBombPlacing[position];
     };
 
-    private _pulseBomb = (entityId: number, position: string) => {
+    private _pulseBomb = (
+        entityId: number, 
+        position: string
+    ) => {
         const bomb = this.entities[`${entityId}${position}`];
-        const ratio = (Date.now() - this._timestampBombPlacing[position]) / GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT;
-        const scale = Shared.Maths.lerp(1, GAME_RESOLUTION_TILE_OFFSET, Math.min(ratio, 1));  
+        
+        const amplitude = GAME_RESOLUTION_TILE_OFFSET;
+        const t1 = (Date.now() - this._timestampBombPlacing[position]);
+        const t2 = GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT;
+        const ratio = t1 / t2;
+        const period = Math.ceil(ratio * GAME_RESOLUTION_TILE_OFFSET);
+
+        const scale = (amplitude / 16) * Math.sin(
+            (t1 * period) / (64 * Math.PI)
+        );
 
         debug(
             "Scale of bomb has been changed",
-            `ratio: ${ratio}`,
             `scale: ${scale}`,
+            `period: ${period}`,
             `position: ${position}`
         );
 
-        bomb.pulse(scale, this._tick);
+        bomb.pulse(scale);
     };
 
     public update(state: Shared.Interfaces.IGameState) {

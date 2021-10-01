@@ -6,7 +6,6 @@ const { EntityNumbers } = Shared.Enums;
 /**
  * Проверяет, вышел ли игрок за границу канваса.
  * 
- * @param player
  * @returns да или нет
  */
 export function isOutOfBorder(
@@ -29,9 +28,7 @@ export function isOutOfBorder(
  * с которой игрок сталкивается. Если игрок хоть чуть-чуть находится 
  * на бомбе, игнорирует столкновение, позволяя "скользить".
  * 
- * @param map
  * @param overlapData - информация о пересечении с ячейкой
- * @param speed
  * @returns да или нет
  */
 export const isPlayerCollide = (
@@ -69,8 +66,6 @@ export const isPlayerCollide = (
  * Проверяет пересечение игрока с ячейкой на карте. Если ячейка не пустая, 
  * высчитывает дистанцию пересечения и расположение ячейки на карте.
  * 
- * @param player
- * @param map
  * @returns [информация о ячейке, у границы канваса ли игрок: да, нет]
  */
  export const checkPlayerOverlap = (

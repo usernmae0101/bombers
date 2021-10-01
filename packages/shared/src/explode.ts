@@ -36,25 +36,38 @@ interface IDirectionBlazeState {
  * Добавляет бомбу на игровую карту. Уменьшает количество доступных
  * бомб у игрока, поставившего бомбу. Через таймаут вызывает функцию
  * удаления бомбы.
- * 
- * @param state
- * @param bombsState
- * @param color
  */
 export const placeBombToMap = (
     state: Shared.Interfaces.IGameState, 
     bombsState: Shared.Interfaces.IBombsState,
     color: Shared.Enums.PlayerColors
 ) => {
-    const [playerRow, playerCol] = calculatePlayerCellPosition(state.players[color]);
+    const [playerRow, playerCol] = calculatePlayerCellPosition(
+        state.players[color]
+    );
 
-    addEntityToMap(getBombIdByPlayerColor(color), state.map, playerRow, playerCol);
+    addEntityToMap(
+        getBombIdByPlayerColor(color), 
+        state.map, 
+        playerRow, 
+        playerCol
+    );
     --bombsState[color];
 
-    const args = [[playerRow, playerCol], state, bombsState, color, state.players[color].radius];
+    const args = [
+        [playerRow, playerCol], 
+        state, 
+        bombsState, 
+        color, 
+        state.players[color].radius
+    ];
     
     // удаляем бомбу через таймаут
-    setTimeout(removeBombFromMap, Shared.Constants.GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT, ...args);
+    setTimeout(
+        removeBombFromMap, 
+        Shared.Constants.GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT, 
+        ...args
+    );
 };
 
 /**
@@ -63,10 +76,6 @@ export const placeBombToMap = (
  * кратер на карту. Вызывает функцию взрыва бомбы.
  * 
  * @param epicetner - [ряд ячеки, колонка ячейки]
- * @param proxyState
- * @param bombsState
- * @param color
- * @param radius
  */
 export const removeBombFromMap = (
     epicenter: [number, number],
@@ -77,14 +86,28 @@ export const removeBombFromMap = (
 ) => {
     const [epicenterRow, epicenterCol] = epicenter;
 
-    removeEntityFromMap(getBombIdByPlayerColor(color), proxyState.map, epicenterRow, epicenterCol);
+    removeEntityFromMap(
+        getBombIdByPlayerColor(color), 
+        proxyState.map, 
+        epicenterRow, 
+        epicenterCol
+    );
     ++bombsState[color];
 
     // добавляем кратер, если его нет в ячейке на карте
     if (!proxyState.map[epicenterRow][epicenterCol].includes(EntityNumbers.CRATER))
-        addEntityToMap(EntityNumbers.CRATER, proxyState.map, epicenterRow, epicenterCol);
+        addEntityToMap(
+            EntityNumbers.CRATER, 
+            proxyState.map, 
+            epicenterRow, 
+            epicenterCol
+        );
 
-    detonateBomb([epicenterRow, epicenterCol], proxyState, radius);
+    detonateBomb(
+        [epicenterRow, epicenterCol], 
+        proxyState, 
+        radius
+    );
 };
 
 /**
@@ -92,8 +115,6 @@ export const removeBombFromMap = (
  * добавляет идентификаторы пламени в ячейки на игровой карте.
  * 
  * @param epicenter - [ряд ячеки, колонка ячейки]
- * @param proxyState
- * @param radius
  */
 export const detonateBomb = (
     epicenter: [number, number],
@@ -104,13 +125,24 @@ export const detonateBomb = (
     const players = proxyState.players;
 
     const { EntityNumbers } = Shared.Enums;
-    const { GAME_RESOLUTION_TILE_LENGTH_Y, GAME_RESOLUTION_TILE_LENGTH_X, GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW } = Shared.Constants;
+    const { 
+        GAME_RESOLUTION_TILE_LENGTH_Y, 
+        GAME_RESOLUTION_TILE_LENGTH_X, 
+        GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW 
+    } = Shared.Constants;
 
     const [epicenterRow, epicenterCol] = epicenter;
-    const orientationDict = { row: epicenterRow, col: epicenterCol };
+    const orientationDict = { 
+        row: epicenterRow, 
+        col: epicenterCol 
+    };
 
-    // создаём массив, куда будем складывать пламя. добавляем туда эпицентер
-    const blaze: IBlazeList[] = [{ row: epicenterRow, col: epicenterCol, id: EntityNumbers.FIRE_CENTER }];
+    // сюда будем складывать пламя. добавляем эпицентер
+    const blaze: IBlazeList[] = [{ 
+        row: epicenterRow, 
+        col: epicenterCol, 
+        id: EntityNumbers.FIRE_CENTER 
+    }];
 
     const directions = {
         LEFT: {
@@ -326,14 +358,17 @@ export const detonateBomb = (
  * Обновляет состояние пламени на карте. Добавляет
  * или удаляет, в зависимости от переданного коллбека.
  * 
- * @param blaze
- * @param map
  * @param callback - функция удаляения или добавления сущности на карту
  */
 export const updateBlazeDependsCallback = (
     blaze: IBlazeList[],
     map: number[][][],
-    callback: (entityId: number, map: number[][][], row: number, col: number) => void
+    callback: (
+        entityId: number, 
+        map: number[][][], 
+        row: number, 
+        col: number
+    ) => void
 ) => {
     for (let fire of blaze) {
         callback(fire.id, map, fire.row, fire.col);

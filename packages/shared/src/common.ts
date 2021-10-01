@@ -4,11 +4,6 @@ import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision"
 /**
  * Перебирает идентификаторы игровых сущностей из ячейки, с которой 
  * игрок пересёкся. Удаляет поднятый бонусный предмет с карты.
- * 
- * @param overlapData 
- * @param proxyState
- * @param color 
- * @param bombsState
  */
 export const filterOverlapData = (
     overlapData: Shared.Interfaces.IOverlapData,
@@ -59,9 +54,6 @@ export const filterOverlapData = (
 /**
  * Наносит урон игроку, который коснулся пламени. Если у игрока кончилось 
  * здоровье, удаляет его из игового сотояния.
- * 
- * @param state
- * @param color
  */
 export const tryToDamagePlayer = (
     state: Shared.Interfaces.IGameState,
@@ -97,11 +89,6 @@ export const tryToDamagePlayer = (
 /**
  * Применяет бонусный предмет на игрока, если у игрока 
  * не достигнуты лимиты на предмет.
- * 
- * @param entityId
- * @param player
- * @param color
- * @param bombsState
  */
 export const pickUpBonusItem = (
     entityId: Shared.Enums.EntityNumbers,
@@ -149,9 +136,6 @@ export const pickUpBonusItem = (
  * обновляет направление и выравнивает игрока по оси обратной его движению: 
  * если движется по Y - выравнивает по X, а если движется по X - выравнивает по Y.
  * 
- * @param player
- * @param direction
- * @param map
  * @returns данные о ячейке, пресеbчённой игроком
  */
 export const movePlayer = (
@@ -205,9 +189,6 @@ export const movePlayer = (
 
 /**
  * Выравнивает игрока в клетке, большую часть которой он занимает.
- * 
- * @param player
- * @param axis
  */
 export const alignPlayer = (
     player: Shared.Interfaces.IGameStatePlayer, 
@@ -221,10 +202,6 @@ export const alignPlayer = (
 /**
  * Удаляет коробку с игровой карты. С вероятностью, заданной константным 
  * значением, выбрасывает из коробки случайный предмет и добавляет его на карту.
- * 
- * @param map
- * @param row
- * @param col
  */
 export const destroyBoxFromMap = (
     map: number[][][], 
@@ -246,11 +223,6 @@ export const destroyBoxFromMap = (
 
 /**
  * Меняет состояние карты. Добавляет игровую сущность в ячейку.
- * 
- * @param entityId
- * @param map
- * @param row
- * @param col
  */
 export const addEntityToMap = (
     entityId: number, 
@@ -265,11 +237,6 @@ export const addEntityToMap = (
 
 /**
  * Меняет состояние карты. Удаляет игровую сущность из ячейки.
- * 
- * @param entityId
- * @param map
- * @param row
- * @param col
  */
 export const removeEntityFromMap = (
     entityId: number, 
@@ -313,7 +280,6 @@ export const tryToMovePlayer = (
  * 
  * @param keys - нажатые клавиши
  * @param state - игровое состояние
- * @param bombsState
  * @param color - цвет игрока
  * @returns можно ли ставить бомбу: да или нет
  */
