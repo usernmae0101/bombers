@@ -11,6 +11,10 @@ export const select_game_loading = (state: AppStateType): boolean => {
     return state.game.isLoading;
 };
 
+export const select_wall_timestamp = (state: AppStateType): number => {
+    return state.game.wallTimestamp;
+};
+
 export const select_game_color = (state: AppStateType): Shared.Enums.PlayerColors => {
     return state.game.color;
 };

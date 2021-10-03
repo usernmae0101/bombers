@@ -1,6 +1,15 @@
 import * as Shared from "@bombers/shared/src/idnex";
-import { addEntityToMap, tryToDamagePlayer, destroyBoxFromMap, removeEntityFromMap } from "./common";
-import { calculatePlayerCellPosition, getBombIdByPlayerColor } from "./utils/helpers";
+import { 
+    addEntityToMap, 
+    tryToDamagePlayer, 
+    destroyBoxFromMap, 
+    removeEntityFromMap,
+    getPlayerOccupiedCells
+} from "./common";
+import { 
+    calculatePlayerCellPosition, 
+    getBombIdByPlayerColor 
+} from "./utils/helpers";
 
 const { EntityNumbers } = Shared.Enums;
 
@@ -40,7 +49,8 @@ interface IDirectionBlazeState {
 export const placeBombToMap = (
     state: Shared.Interfaces.IGameState, 
     bombsState: Shared.Interfaces.IBombsState,
-    color: Shared.Enums.PlayerColors
+    color: Shared.Enums.PlayerColors,
+    decreaseBoxes: () => void
 ) => {
     const [playerRow, playerCol] = calculatePlayerCellPosition(
         state.players[color]
@@ -59,7 +69,8 @@ export const placeBombToMap = (
         state, 
         bombsState, 
         color, 
-        state.players[color].radius
+        state.players[color].radius,
+        decreaseBoxes
     ];
     
     // удаляем бомбу через таймаут
@@ -82,10 +93,12 @@ export const removeBombFromMap = (
     proxyState: Shared.Interfaces.IGameState,
     bombsState: Shared.Interfaces.IBombsState,
     color: Shared.Enums.PlayerColors,
-    radius: number
+    radius: number,
+    decreaseBoxes: () => void
 ) => {
     const [epicenterRow, epicenterCol] = epicenter;
 
+    // удаляем бомбу с карты
     removeEntityFromMap(
         getBombIdByPlayerColor(color), 
         proxyState.map, 
@@ -106,7 +119,8 @@ export const removeBombFromMap = (
     detonateBomb(
         [epicenterRow, epicenterCol], 
         proxyState, 
-        radius
+        radius,
+        decreaseBoxes
     );
 };
 
@@ -119,7 +133,8 @@ export const removeBombFromMap = (
 export const detonateBomb = (
     epicenter: [number, number],
     proxyState: Shared.Interfaces.IGameState,
-    radius: number
+    radius: number,
+    decreaseBoxes: () => void
 ) => {
     const map = proxyState.map;
     const players = proxyState.players;
@@ -230,7 +245,12 @@ export const detonateBomb = (
 
                     // если пламя на границе наткнулось на коробку - уничтожаем коробку
                     if (entitiesInCell.includes(EntityNumbers.BOX)) {
-                        destroyBoxFromMap(map, _direction.row, _direction.col);
+                        destroyBoxFromMap(
+                            map,
+                            _direction.row, 
+                            _direction.col,
+                            decreaseBoxes
+                        );
                     }
 
                     _direction.isStopped = true;
@@ -265,7 +285,12 @@ export const detonateBomb = (
                         row: _direction.row
                     });
 
-                    destroyBoxFromMap(map, _direction.row, _direction.col);
+                    destroyBoxFromMap(
+                        map, 
+                        _direction.row, 
+                        _direction.col,
+                        decreaseBoxes
+                    );
 
                     _direction.isStopped = true;
                     continue;
@@ -292,41 +317,7 @@ export const detonateBomb = (
 
     // проверяем, задело ли кого-нибудь из игроков
     for (let color in players) {
-        const xPos = players[+color].x;
-        const yPos = players[+color].y;
-
-        const [pRow, pCol] = Shared.Helpers.calculatePlayerCellPosition(players[+color]);
-
-        const xRem = xPos % Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-        const yRem = yPos % Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-
-        // занимаемые ячейки
-        const takes: { row: number; col: number; }[] = [{ col: pCol, row: pRow }];
-
-        // если занимает две ячейки
-        if (!(xRem === 0 && yRem === 0)) {
-            // выровнен по Y
-            if (xRem !== 0) {
-                const rest = xPos - (pCol * Shared.Constants.GAME_RESOLUTION_TILE_SIZE);     
-                if (Math.abs(rest) > Shared.Constants.GAME_RESOLUTION_TILE_OFFSET) {
-                    takes.push({
-                        row: pRow,
-                        col: rest > 0 ? pCol + 1 : pCol - 1
-                    });
-                }
-            }
-
-            // выровнен по X
-            else {
-                const rest = yPos - (pRow * Shared.Constants.GAME_RESOLUTION_TILE_SIZE);     
-                if (Math.abs(rest) > Shared.Constants.GAME_RESOLUTION_TILE_OFFSET) {
-                    takes.push({
-                        col: pCol,
-                        row: rest > 0 ? pRow + 1 : pRow - 1
-                    });
-                }
-            }
-        }
+        const takes = getPlayerOccupiedCells(players[+color]);
 
         for (let { row, col } of takes) {
             for (let entity of map[row][col]) {
@@ -338,8 +329,10 @@ export const detonateBomb = (
                     EntityNumbers.FIRE_RIGHT,
                     EntityNumbers.FIRE_MIDDLE_X,
                     EntityNumbers.FIRE_MIDDLE_Y
-                ].includes(entity))
+                ].includes(entity)) {
+                    // tpdp: distance
                     tryToDamagePlayer(proxyState, +color);
+                }
             }     
         }
     }

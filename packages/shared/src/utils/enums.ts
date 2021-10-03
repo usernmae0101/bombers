@@ -40,6 +40,10 @@ export enum SocketChannels {
      */
     GAME_ON_EMOTION_UPDATE,
     /**
+     * Оповещение о запуске стены.
+     */
+    GAME_ON_START_WALL,
+    /**
      * Получение сетевой задержки между клиентом и игровым сервером.
      */
     GAME_ON_PING_PONG,
@@ -178,9 +182,9 @@ export enum EntityNumbers {
 
 export enum ContainerLayers {
     BOXES,
-    ROCKS,
     CRATERS,
     ITEMS,
+    ROCKS,
     FIRES,
     BOMBS,
     PLAYERS

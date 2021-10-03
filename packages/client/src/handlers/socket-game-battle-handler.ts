@@ -54,6 +54,11 @@ export const startHandlingGameBattleSocket = (
                 GameActions.action_game_set_color(data.color)
             );
 
+            // обновляем таймер, если стена запущена
+            data.gameState.wall && dispatch(
+                GameActions.action_game_set_wall_timestamp(data.gameState.wall)
+            );
+
             // открываем UDP-соединение
             const UDPChann = geckos({
                 url: `http://${address}`,
@@ -106,16 +111,30 @@ export const startHandlingGameBattleSocket = (
         }
     )
 
+    // обновляем таймер на стену
+    socket.on(
+        String(Shared.Enums.SocketChannels.GAME_ON_START_WALL),
+        (timestamp: number) => {
+            dispatch(
+                GameActions.action_game_set_wall_timestamp(timestamp)
+            );
+        }
+    );
+
     // высчитываем сетевую задержку
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_PING_PONG),
         () => {
             const latency = Date.now() - pingTimestamp;
-            dispatch(GameActions.action_game_set_ping(latency));
+            dispatch(
+                GameActions.action_game_set_ping(latency)
+            );
 
             if (!isConnected) {
                 isConnected = true;
-                dispatch(GameActions.action_game_set_loading(false));
+                dispatch(
+                    GameActions.action_game_set_loading(false)
+                );
             }
         }
     );
@@ -124,7 +143,9 @@ export const startHandlingGameBattleSocket = (
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_UPDATE_GAME_ROOM_SLOTS),
         (slots: Shared.Interfaces.IGameSlots) => {
-            dispatch(GameActions.action_game_set_slots(slots));
+            dispatch(
+                GameActions.action_game_set_slots(slots)
+            );
         }
     )
 

@@ -59,6 +59,8 @@ export interface IGameState {
     map: number[][][];
     /** Игроки. */
     players: IGameStatePlayers;
+    /** ВременнАя метка запуска стены */
+    wall: number;
 }
 
 export interface IGameStatePlayers {
@@ -90,6 +92,13 @@ export interface INotReliableStateChanges {
     };
     /** ВременнАя метка */
     t?: number;
+}
+
+export interface ICell {
+    /** Колонка ячейки */
+    col: number;
+    /** Ряд ячейки */
+    row: number;
 }
 
 export interface IStateChanges {

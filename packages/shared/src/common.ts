@@ -168,7 +168,10 @@ export const movePlayer = (
     player[axisAlongWhichPlayerMoves] += [UP, LEFT].includes(direction) ? -speed : speed;
 
     if (isOutOfBorder(player)) {
-        alignPlayer(player, axisAlongWhichPlayerMoves);
+        alignPlayer(
+            player, 
+            axisAlongWhichPlayerMoves
+        );
         return;
     }
 
@@ -177,12 +180,18 @@ export const movePlayer = (
     // если игрок пересёкся с объктом о который бьется (collided), 
     // выравнивам игрока по оси движения
     if (overlapData && isPlayerCollide(map, overlapData, speed)) 
-        alignPlayer(player, axisAlongWhichPlayerMoves);
+        alignPlayer(
+            player, 
+            axisAlongWhichPlayerMoves
+        );
 
     // если игрок не столкнулся, направление движения поменялось 
     // и не у края канваса, выравниваем игрока по оси обратной его движению
     else if (isDirectionChanged && !atEdgeOfBorder) 
-        alignPlayer(player, axisAlongWhichPlayerMoves === "x" ? "y" : "x");
+        alignPlayer(
+            player, 
+            axisAlongWhichPlayerMoves === "x" ? "y" : "x"
+        );
 
     return overlapData;
 };
@@ -200,13 +209,15 @@ export const alignPlayer = (
 };
 
 /**
- * Удаляет коробку с игровой карты. С вероятностью, заданной константным 
- * значением, выбрасывает из коробки случайный предмет и добавляет его на карту.
+ * Удаляет коробку с игровой карты. С вероятностью, заданной 
+ * константным значением, выбрасывает из коробки случайный 
+ * предмет и добавляет его на карту.
  */
 export const destroyBoxFromMap = (
     map: number[][][], 
     row: number, 
-    col: number
+    col: number,
+    decreaseBoxes: () => void
 ) => {
     const { EntityNumbers } = Shared.Enums;
     const { getRandomBetween } = Shared.Maths;
@@ -216,9 +227,18 @@ export const destroyBoxFromMap = (
     // удаляем коробку
     removeEntityFromMap(EntityNumbers.BOX, map, row, col);
 
+    // уменьшаем счетчик коробок на карте
+    decreaseBoxes();
+
     // добавляем случайный предмет
-    if (GAME_GAMEPLAY_DROP_ITEM_PERCENT <= getRandomBetween(1, 100)) 
-        addEntityToMap(chooseRandomBonusItem(), map, row, col);
+    if (GAME_GAMEPLAY_DROP_ITEM_PERCENT <= getRandomBetween(1, 100)) { 
+        addEntityToMap(
+            chooseRandomBonusItem(), 
+            map, 
+            row, 
+            col
+        );
+    }
 };
 
 /**
@@ -276,6 +296,58 @@ export const tryToMovePlayer = (
 };
 
 /**
+ * Возвращает список ячеек, которые занимает игрок.
+ */
+export const getPlayerOccupiedCells = (
+    player: Shared.Interfaces.IGameStatePlayer
+): Shared.Interfaces.ICell[] => {
+    const xPos = player.x;
+    const yPos = player.y;
+
+    const [pRow, pCol] = Shared.Helpers.calculatePlayerCellPosition(
+        player
+    );
+
+    const xRem = xPos % Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+    const yRem = yPos % Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+
+    // занимаемые ячейки
+    const takes: Shared.Interfaces.ICell[] = [
+        { 
+            col: pCol, 
+            row: pRow 
+        }
+    ];
+
+    // если занимает две ячейки
+    if (!(xRem === 0 && yRem === 0)) {
+        // выровнен по Y
+        if (xRem !== 0) {
+            const rest = xPos - (pCol * Shared.Constants.GAME_RESOLUTION_TILE_SIZE);     
+            if (Math.abs(rest) > Shared.Constants.GAME_RESOLUTION_TILE_OFFSET) {
+                takes.push({
+                    row: pRow,
+                    col: rest > 0 ? pCol + 1 : pCol - 1
+                });
+            }
+        }
+
+        // выровнен по X
+        else {
+            const rest = yPos - (pRow * Shared.Constants.GAME_RESOLUTION_TILE_SIZE);     
+            if (Math.abs(rest) > Shared.Constants.GAME_RESOLUTION_TILE_OFFSET) {
+                takes.push({
+                    col: pCol,
+                    row: rest > 0 ? pRow + 1 : pRow - 1
+                });
+            }
+        }
+    }
+    
+    return takes;
+};
+
+/**
  * Пытается поставить бомбу, если были нажаты клавиши.
  * 
  * @param keys - нажатые клавиши
@@ -289,7 +361,11 @@ export const tryToPlaceBomb = (
     bombsState: Shared.Interfaces.IBombsState,
     color: number
 ): boolean => {
-    const { calculatePlayerCellPosition, getAllEntitiesInCell, getAllBombsIds } = Shared.Helpers;
+    const { 
+        calculatePlayerCellPosition, 
+        getAllEntitiesInCell, 
+        getAllBombsIds 
+    } = Shared.Helpers;
     const { INPUT_KEY_SPACE } = Shared.Enums.InputKeys;
 
     if (!keys.includes(INPUT_KEY_SPACE))
@@ -298,10 +374,19 @@ export const tryToPlaceBomb = (
     if (bombsState[color] === 0)
         return false;
 
-    const [playerRow, playerCol] = calculatePlayerCellPosition(state.players[color]);
+    const [
+        playerRow, 
+        playerCol
+    ] = calculatePlayerCellPosition(state.players[color]);
 
+    const allEntities = getAllEntitiesInCell(
+        state.map, 
+        playerRow, 
+        playerCol
+    );
+    
     // проверяем, есть ли в ячейке бомба любого цвета
-    for (let eintity of getAllEntitiesInCell(state.map, playerRow, playerCol))
+    for (let eintity of allEntities)
         if (getAllBombsIds().includes(eintity))
             return false;
 

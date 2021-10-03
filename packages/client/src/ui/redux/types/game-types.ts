@@ -6,6 +6,7 @@ export const ACTION_TYPE_GAME_SET_PING = "GAME/SET_PING";
 export const ACTION_TYPE_GAME_SET_BOMBS = "GAME/SET_BOMBS";
 export const ACTION_TYPE_GAME_SET_SPEED = "GAME/SET_SPEED";
 export const ACTION_TYPE_GAME_SET_RADIUS = "GAME/SET_RADIUS";
+export const ACTION_TYPE_GAME_SET_WALL_TIMESTAMP = "GAME/SET_WALL_TIMESTAMP";
 export const ACTION_TYPE_GAME_SET_SLOTS = "GAME/SET_SLOTS";
 export const ACTION_TYPE_GAME_SET_LOADING = "GAME/SET_LOADING";
 export const ACTION_TYPE_GAME_SET_COLOR = "GAME/SET_COLOR";
@@ -20,6 +21,7 @@ export type GameStateType = {
         radius: number;
         speed: number;
     };
+    wallTimestamp: number;
     TCPSocket: Socket; 
     slots: Shared.Interfaces.IGameSlots;
 }
@@ -64,6 +66,12 @@ export type GameSetColorActionType = {
     payload: Shared.Enums.PlayerColors;
 };
 
+export type GameSetWallTimestampActionType = {
+    type: typeof ACTION_TYPE_GAME_SET_WALL_TIMESTAMP;
+    payload: number;
+};
+
 export type GameActionsType = GameSetRadiusActionType | GameSetSpeedActionType 
     | GameSetBombsActionType | GameSetSlotsActionType | GameSetPingActionType 
-    | GameSetLoadingActionType | GameSetColorActionType | GameSetTCPSocketActionType;
+    | GameSetLoadingActionType | GameSetColorActionType | GameSetTCPSocketActionType
+    | GameSetWallTimestampActionType;

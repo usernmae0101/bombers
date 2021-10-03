@@ -52,6 +52,13 @@ export const action_game_set_radius = (
     payload: radius
 });
 
+export const action_game_set_wall_timestamp = (
+    timestamp: number
+): GameTypes.GameSetWallTimestampActionType => ({
+    type: GameTypes.ACTION_TYPE_GAME_SET_WALL_TIMESTAMP,
+    payload: timestamp
+});
+
 export const action_game_set_slots = (
     slots: Shared.Interfaces.IGameSlots
 ): GameTypes.GameSetSlotsActionType => ({

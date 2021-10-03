@@ -17,6 +17,7 @@ export default class Room {
     private _mapId: Shared.Enums.GameMaps;
     /** Игровые слоты. */
     private _slots: Shared.Interfaces.IGameSlots;
+    /** Список доступных цветов для игрока. */
     private _availableColors: Shared.Enums.PlayerColors[];
     /** Количество готовых к игре пользователей. */
     private _readyCounter: number;
@@ -30,7 +31,10 @@ export default class Room {
     private _tokens: { [color: number]: string };
     private _battleResult: { [place: number]: string; }; 
 
-    constructor(socketManager: SocketManager, mapId: Shared.Enums.GameMaps) {
+    constructor(
+        socketManager: SocketManager, 
+        mapId: Shared.Enums.GameMaps
+    ) {
         this._socketManager = socketManager;
         this._mapId = mapId;
         this._game = new Game;
@@ -44,7 +48,10 @@ export default class Room {
      * @param token - авторизационный токен пользователя
      * @param userData - данные пользователя
      */
-    public onJoin(token: string, userData: Shared.Interfaces.IUser) {
+    public onJoin(
+        token: string, 
+        userData: Shared.Interfaces.IUser
+    ) {
         const color = this._chooseRandomColor();
 
         this._users[token] = { color };
@@ -117,7 +124,10 @@ export default class Room {
      * @param token - токен пользователя
      * @param keysData - нажатые клавиши и номер такта
      */
-    public onKeys(token: string, keysData: Shared.Interfaces.IKeysData) {
+    public onKeys(
+        token: string, 
+        keysData: Shared.Interfaces.IKeysData
+    ) {
         if (!this.isGameStarted)
             return;
        
@@ -182,6 +192,8 @@ export default class Room {
         this._isLocked = true;
         this._game.isStarted = true;
         this._game.bombsState = Shared.Helpers.createBombsState(this._users);
+
+        this._countBoxesOnMap();
 
         // широковещание игрового состояния
         this._broadcastInterval = setInterval(
@@ -261,6 +273,19 @@ export default class Room {
         return color;
     }
 
+    /**
+     * Считает количество коробок на карте. Обновляет счетчик.
+     */
+    private _countBoxesOnMap() {
+        for (let row = 0; row < this._game.state.map.length; row++) {
+            for (let col = 0; col < this._game.state.map[row].length; col++) {
+                if (this._game.state.map[row][col].includes(
+                        Shared.Enums.EntityNumbers.BOX
+                )) this._game.increaseBoxes(); 
+            }
+        } 
+    }
+
     private _resetStateChanges() {
         this._stateChanges = { reliable: [], notReliable: { s: {} } };
     }
@@ -268,6 +293,7 @@ export default class Room {
     private _configurate() {
         this._setAvailableColors();
         this._game.isStarted = false;
+        this._game.boxes = 0;
         this._isLocked = false;
         this._activeSlots = 0;
         this._readyCounter = 0;
@@ -308,13 +334,26 @@ export default class Room {
                 }
 
                 // поменяли координаты игрока - передаём ненадёжно
-                else if (["x", "y", "tick", "direction"].includes(key as string)) {
+                else if ([
+                    "x", 
+                    "y", 
+                    "tick", 
+                    "direction"
+                ].includes(key as string)) {
                     if (!(this._lastChangedStateKey in this._stateChanges.notReliable.s))
                         this._stateChanges.notReliable.s[this._lastChangedStateKey] = {};
 
                     const _key = key as keyof Shared.Interfaces.INotReliableStateData;
 
                     this._stateChanges.notReliable.s[this._lastChangedStateKey][_key] = value;
+                }
+
+                // запустили стену - оповещаем игрков
+                else if (key === "wall") {
+                    this._socketManager.serverSocketTCP.of("battle").to("room").emit(
+                        String(Shared.Enums.SocketChannels.GAME_ON_START_WALL),
+                        value
+                    );
                 }
 
                 // какие-то другие хар-ки игрока - передаём надёжно
@@ -400,6 +439,9 @@ export default class Room {
         return this._users;
     }
 
+    /**
+     * Возвращает статус игры: запущена или нет.
+     */
     get isGameStarted(): boolean {
         return this._game.isStarted;
     }

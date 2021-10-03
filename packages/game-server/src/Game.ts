@@ -12,6 +12,7 @@ export default class Game {
     /** Cтатус игры: начата или нет. */
     private _isStarted: boolean = false;
     private _proxyState: Shared.Interfaces.IGameState;
+    private _boxes: number;
     private _queuePlayersToRemove: number[] = [];
     private _bombsState: Shared.Interfaces.IBombsState;
     public keysBuffer: IKeysBuffer = {};
@@ -64,20 +65,22 @@ export default class Game {
             Shared.Explode.placeBombToMap(
                 this._proxyState, 
                 this._bombsState, 
-                +color
+                +color,
+                this._decreaseBoxes
             );
         }
     }
 
     /**
      * Добавляет игрока в игровое состояние.
-     * 
-     * @param color - цвет игрока
      */
     public addPlayerToState(color: number) {
         this._state.players[color] = PlayerFactory.create(color);
     }
 
+    /**
+     * Удаляет игрока из состояния, когда он вышел из комнаты.
+     */
     public removePlayerFromState(color: number) {
         // добавляем в очередь, чтобы не получить ошибку
         if (this._isStarted) {
@@ -88,6 +91,9 @@ export default class Game {
         delete this._proxyState.players[color];
     }
 
+    /**
+     * Обновляет эмоцию игрока в игровом состоянии.
+     */
     public updatePlayerEmotion(color: number, emotion: number) {
         debug(
             "Emotion has been changed",
@@ -110,10 +116,141 @@ export default class Game {
             }
         }
 
-        // удаляем игроков, которые отключились
-        for (let color of this._queuePlayersToRemove)
+        // удаляем игроков, которые удалены не в основном цикле
+        for (let color; (color = this._queuePlayersToRemove.shift()) !== undefined;) {
             delete this._proxyState.players[color];
+
+            debug(
+                "Player in queue has been removed",
+                `color: ${color}`
+            );
+        }
     }
+
+    /**
+     * Увеличивает количество коробок на карте при подсчёте.
+     */
+    public increaseBoxes() {
+        ++this._boxes;
+
+        debug(
+            "Increases the counter of boxes",
+            `boxes: ${this._boxes}`
+        );
+    }
+
+    /**
+     * Уменьшает счетчик коробок на карте. Если коробки 
+     * кончились, запускает стену.
+     */
+    private _decreaseBoxes = () => {
+        if(--this._boxes === 0) {
+            this._proxyState.wall = Date.now();
+
+            debug(
+                "Starts wall cuz of the boxes are out",
+                `timestamp: ${this._state.wall}`
+            );
+            
+            this._startWall();
+        }
+    };
+
+    /**
+     * Ежесекундно добавляет cтену в ячейку, пока не заполнит все ячейки
+     * на карте. Удаляет игрока, если он находится в области ячейки.
+     *
+     * Перебираем двумерный массив M*N по спирали: по часовой стрелке
+     * от периферии к центру. A, B, C, D - смещения при итерации по 
+     * каждой из сторон.
+     *
+     *            A
+     *            |
+     *       M    *
+     *       -----------
+     *     N |>|>|>|>|v|
+     *       |>|>|>|v|v|
+     * D---* |^|>|>|v|v| *---B
+     *       |^|<|<|<|v|
+     *       |<|<|<|<|<|
+     *       -----------     
+     *           *    
+     *           |   
+     *           C
+     */
+    private async _startWall() {
+        const M = Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_X;
+        const N = Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_Y;
+
+        let A = 0, B = 0, C = 0, D = 0, cell = 0;
+        
+        let row = 0;
+        let col = 0;
+
+        while (cell++ < N * M) {
+            // если в ячейке на карте нет камня
+            if (!this._state.map[row][col].includes(Shared.Enums.EntityNumbers.ROCK)) {
+                Shared.Common.addEntityToMap(
+                    Shared.Enums.EntityNumbers.ROCK,
+                    this._proxyState.map,
+                    row,
+                    col
+                );  
+
+                for (let color in this._state.players) {
+                    const takes = Shared.Common.getPlayerOccupiedCells(
+                        this._state.players[+color]
+                    );
+
+                    for (let { row: tRow, col: tCol } of takes) {
+                        if (
+                            row === tRow && 
+                            col === tCol
+                        ) {
+                            debug(
+                                "Player has been destroyed by wall",
+                                `color: ${color}`
+                            );
+                           
+                            this._queuePlayersToRemove.push(+color);
+                        }
+                    }
+                }
+            }
+
+            // движемся вправо
+            if (row === A && col < M - B - 1)
+                ++col;
+
+            // движемся вниз
+            else if (col === M - B - 1 && row < N - C - 1)
+                ++row;
+
+            // дввижемся влево
+            else if (row === N - C - 1 && col > D)
+                --col;
+
+            // движемся вверх
+            else 
+                --row;
+
+            if ((row === A + 1) && (col === D) && (D !== M - B - 1)) {
+                ++A;
+                ++B;
+                ++C;
+                ++D;
+            }
+
+            await new Promise(res => setTimeout(res, 1000));
+        }
+    }
+
+    /**
+     * Устанавливает количество коробок на карте.
+     */
+    set boxes(value: number) {
+        this._boxes = value;
+    } 
 
     /** 
      * Устанавливает игровое состояние.

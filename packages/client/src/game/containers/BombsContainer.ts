@@ -38,21 +38,15 @@ export default class BombsContainer extends BaseContainer<BombEntity> {
     ) => {
         const bomb = this.entities[`${entityId}${position}`];
         
-        const amplitude = GAME_RESOLUTION_TILE_OFFSET;
         const t1 = (Date.now() - this._timestampBombPlacing[position]);
         const t2 = GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT;
         const ratio = t1 / t2;
+        
         const period = Math.ceil(ratio * GAME_RESOLUTION_TILE_OFFSET);
+        const amplitude = GAME_RESOLUTION_TILE_OFFSET;
 
         const scale = (amplitude / 16) * Math.sin(
             (t1 * period) / (64 * Math.PI)
-        );
-
-        debug(
-            "Scale of bomb has been changed",
-            `scale: ${scale}`,
-            `period: ${period}`,
-            `position: ${position}`
         );
 
         bomb.pulse(scale);

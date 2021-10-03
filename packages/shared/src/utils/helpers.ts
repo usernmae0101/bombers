@@ -76,6 +76,13 @@ export const createBombsState = (
 };
 
 /**
+ * Вовзращет общее количество ячеек на карте.
+ */
+export const getTotalMapCells = (): number => {
+    return Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_X * Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_Y;
+};
+
+/**
  * Делает копию объекта, включая все вложенные объекты.
  * 
  * @param object - объект, который нужно скопировать

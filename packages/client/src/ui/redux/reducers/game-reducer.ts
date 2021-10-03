@@ -9,6 +9,7 @@ const initialState: GameTypes.GameStateType = {
         speed: 1,
         radius: 1
     },
+    wallTimestamp: null,
     TCPSocket: null,
     color: null,
     slots: Shared.Slots.slots
@@ -19,6 +20,8 @@ export default function gameReducer(
     action: GameTypes.GameActionsType
 ): GameTypes.GameStateType {
     switch (action.type) {
+        case GameTypes.ACTION_TYPE_GAME_SET_WALL_TIMESTAMP:
+            return { ...state, wallTimestamp: action.payload };
         case GameTypes.ACTION_TYPE_GAME_SET_TCP_SOCKET:
             return { ...state, TCPSocket: action.payload };
         case GameTypes.ACTION_TYPE_GAME_SET_COLOR:

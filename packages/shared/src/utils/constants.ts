@@ -16,7 +16,7 @@ export const GAME_GAMEPLAY_BOMB_DETONATE_TIMEOUT = 3_000;
 /**
  * Время в миллисекундах, после которого пламя исчезает.
  */
-export const GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW = 400;
+export const GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW = 300;
 
 /**
  * Лимит на храрактеристику игрока: бомбы.
