@@ -325,33 +325,42 @@ export const detonateBomb = (
 
         for (let { row, col } of takes) {
             for (let entity of map[row][col]) {
-                if ([
-                    EntityNumbers.FIRE_CENTER,
-                    EntityNumbers.FIRE_BOTTOM,
-                    EntityNumbers.FIRE_LEFT,
-                    EntityNumbers.FIRE_TOP,
-                    EntityNumbers.FIRE_RIGHT,
-                    EntityNumbers.FIRE_MIDDLE_X,
-                    EntityNumbers.FIRE_MIDDLE_Y
-                ].includes(entity)) {
-                    const x1 = col * GAME_RESOLUTION_TILE_SIZE;
-                    const x2 = player.x > x1 ? player.x - GAME_RESOLUTION_TILE_SIZE : player.x;
-                    const y1 = row * GAME_RESOLUTION_TILE_SIZE;
-                    const y2 = player.y > y1 ? player.y - GAME_RESOLUTION_TILE_SIZE : player.y;
-
-                    // считаем расстояние пересечения
-                    const distance = Shared.Maths.getDistance(x1, x2, y1, y2);
+                if (
+                    [
+                        EntityNumbers.FIRE_CENTER,
+                        EntityNumbers.FIRE_BOTTOM,
+                        EntityNumbers.FIRE_LEFT,
+                        EntityNumbers.FIRE_TOP,
+                        EntityNumbers.FIRE_RIGHT,
+                        EntityNumbers.FIRE_MIDDLE_X,
+                        EntityNumbers.FIRE_MIDDLE_Y
+                    ].includes(entity)
+                ) {
+                    // считаем расстояние между точками
+                    const distance = Shared.Maths.getDistanceSqrt(
+                        col * GAME_RESOLUTION_TILE_SIZE, // x1
+                        player.x,                        // x2
+                        row * GAME_RESOLUTION_TILE_SIZE, // y1
+                        player.y                         // y2
+                    );
                
                     if (GAME_RESOLUTION_TILE_SIZE - distance > GAME_RESOLUTION_TILE_OFFSET * 2) {
                         tryToDamagePlayer(proxyState, +color);
 
                         debug(
                             "Player was damaged by fire",
-                            `distance: ${GAME_RESOLUTION_TILE_SIZE - distance}`
+                            `distance: ${GAME_RESOLUTION_TILE_SIZE - distance}`,
+                            `[row, col]: ${[row, col]}`
                         );
 
                         break;
                     }
+
+                    debug(
+                        "Player is not damaged",
+                        `distance: ${GAME_RESOLUTION_TILE_SIZE - distance}`,
+                        `[row, col]: ${[row, col]}`
+                    );
                 }
             }     
         }

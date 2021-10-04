@@ -22,31 +22,41 @@ describe("maths should calculates correctly", () => {
 
         it("calculates right", () => {
             x2 = 2;
-            const distance = Maths.getDistance(x1, x2, y1, y2);
-            expect(distance).toBe(70);
+            const distanceHypo = Maths.getDistanceHypot(x1, x2, y1, y2);
+            const distanceSqrt = Maths.getDistanceSqrt(x1, x2, y1, y2);
+            expect(distanceHypo).toBe(70);
+            expect(distanceSqrt).toBe(70);
         });
 
         it("calculates left", () => {
-            x2 = 74;
-            const distance = Maths.getDistance(x1, x2 - 72, y1, y2);
-            expect(distance).toBe(70);
+            x2 = 142;
+            const distanceHypo = Maths.getDistanceHypot(x1, x2, y1, y2);
+            const distanceSqrt = Maths.getDistanceSqrt(x1, x2, y1, y2);
+            expect(distanceHypo).toBe(70);
+            expect(distanceSqrt).toBe(70);
         });
 
         it("calculates up", () => {
-            y2 = 74;
-            const distance = Maths.getDistance(x1, x2, y1, y2 - 72);
-            expect(distance).toBe(70);
+            y2 = 142;
+            const distanceHypo = Maths.getDistanceHypot(x1, x2, y1, y2);
+            const distanceSqrt = Maths.getDistanceSqrt(x1, x2, y1, y2);
+            expect(distanceHypo).toBe(70);
+            expect(distanceSqrt).toBe(70);
         });
 
         it("calculates down", () => {
             y2 = 2;
-            const distance = Maths.getDistance(x1, x2, y1, y2);
-            expect(distance).toBe(70);
+            const distanceHypo = Maths.getDistanceHypot(x1, x2, y1, y2);
+            const distanceSqrt = Maths.getDistanceSqrt(x1, x2, y1, y2);
+            expect(distanceHypo).toBe(70);
+            expect(distanceSqrt).toBe(70);
         });
     
         it("calculates middle", () => {
-            const distance = Maths.getDistance(x1, x2, y1, y2);
-            expect(distance).toBe(0);
+            const distanceHypo = Maths.getDistanceHypot(x1, x2, y1, y2);
+            const distanceSqrt = Maths.getDistanceSqrt(x1, x2, y1, y2);
+            expect(distanceHypo).toBe(0);
+            expect(distanceSqrt).toBe(0);
         });
     });
 });
