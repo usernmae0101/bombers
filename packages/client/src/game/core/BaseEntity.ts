@@ -4,13 +4,24 @@ import { Sprite } from "@pixi/sprite";
 
 import * as Shared from "@bombers/shared/src/idnex";
 
-const { GAME_RESOLUTION_TILE_SIZE, GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
+const { 
+    GAME_RESOLUTION_TILE_SIZE, 
+    GAME_RESOLUTION_TILE_OFFSET 
+} = Shared.Constants;
 
 export default class BaseEntity extends Sprite {
-    protected tick: number = 0;
-    private _blinkedTimes: number = 0;
+    protected tick: number;
 
-    constructor(frameX: number, frameY: number, isResize: boolean = true) {
+    private _blinkedTimes: number;
+    private _size: number;
+    private _positionX: number;
+    private _positionY: number;
+
+    constructor(
+        frameX: number, 
+        frameY: number, 
+        isResize: boolean = true
+    ) {
         super(
             new Texture(
                 BaseTexture.from(Shared.Constants.GAME_RESOURCES_IMAGE_TILESET),
@@ -22,11 +33,16 @@ export default class BaseEntity extends Sprite {
                 )
             )
         );
+
+        this.tick = 0;
+        this._blinkedTimes = 0;
+        this._size = GAME_RESOLUTION_TILE_SIZE;
         
         if (isResize) {
-            this.width = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
-            this.height = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
+            this._size = GAME_RESOLUTION_TILE_SIZE - (GAME_RESOLUTION_TILE_OFFSET * 2);
         }
+
+        this.width = this.height = this._size;
     }
 
     get destroyed(): boolean {
@@ -35,6 +51,18 @@ export default class BaseEntity extends Sprite {
 
     get blinkedTimes(): number {
         return this._blinkedTimes;
+    }
+
+    get size(): number {
+        return this._size;
+    }
+
+    get positionX(): number {
+        return this._positionX;
+    }
+
+    get positionY(): number {
+        return this._positionY;
     }
 
     /**
@@ -63,9 +91,8 @@ export default class BaseEntity extends Sprite {
     }
 
     /**
-     * Устанавливает прозрачность игровой сущности
-     * на период, заданный в игровых тактах, и меняет 
-     * обратно на непрозрачность.
+     * Устанавливает прозрачность игровой сущности на период, заданный в 
+     * игровых тактах, и меняет  обратно на непрозрачность.
      * 
      * @param frequency - частота смены (в игровых тактах)
      * @param opacity - прозрачность (от 0.0 до 1.0)
@@ -85,7 +112,7 @@ export default class BaseEntity extends Sprite {
      * @param col - колонка ячейки на игровой карте
      */
     public setPosition(row: number, col: number) {
-        this.x = col * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_OFFSET;
-        this.y = row * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_OFFSET;
+        this._positionX = this.x = col * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_OFFSET;
+        this._positionY = this.y = row * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_OFFSET;
     }
 }
