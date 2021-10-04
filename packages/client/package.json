@@ -27,7 +27,7 @@
         "mini-css-extract-plugin": "^1.4.0",
         "sass": "^1.34.1",
         "sass-loader": "^12.1.0",
-        "style-loader": "^2.0.0",
+        "style-loader": "^3.3.0",
         "ts-loader": "^9.2.2",
         "typescript": "^4.2.3",
         "webpack": "^5.52.0",
