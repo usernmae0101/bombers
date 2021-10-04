@@ -5,7 +5,11 @@ import { Constants, Enums, Interfaces } from "@bombers/shared/src/idnex";
 describe("common module should works correctly", () => {
     describe("should filters overlap correctly", () => {
         const map = [[[]]];
-        const state = { map, players: {} };
+        const state = { 
+            map, 
+            players: {}, 
+            wall: null 
+        };
         const overlapData = { row: 0, col: 0, distance: 0 };
         let player: Interfaces.IGameStatePlayer;
 

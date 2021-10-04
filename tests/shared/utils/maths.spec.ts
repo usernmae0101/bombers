@@ -9,4 +9,44 @@ describe("maths should calculates correctly", () => {
         expect(Maths.getRandomBetween(100, 200)).toBeGreaterThanOrEqual(100);
         expect(Maths.getRandomBetween(100, 200)).toBeLessThanOrEqual(200);
     });
+
+    describe("getDistance", () => {
+        let x1, x2, y1, y2;
+
+        beforeEach(() => {
+            x1 = 72;
+            x2 = 72;
+            y1 = 72;
+            y2 = 72;
+        });
+
+        it("calculates right", () => {
+            x2 = 2;
+            const distance = Maths.getDistance(x1, x2, y1, y2);
+            expect(distance).toBe(70);
+        });
+
+        it("calculates left", () => {
+            x2 = 74;
+            const distance = Maths.getDistance(x1, x2 - 72, y1, y2);
+            expect(distance).toBe(70);
+        });
+
+        it("calculates up", () => {
+            y2 = 74;
+            const distance = Maths.getDistance(x1, x2, y1, y2 - 72);
+            expect(distance).toBe(70);
+        });
+
+        it("calculates down", () => {
+            y2 = 2;
+            const distance = Maths.getDistance(x1, x2, y1, y2);
+            expect(distance).toBe(70);
+        });
+    
+        it("calculates middle", () => {
+            const distance = Maths.getDistance(x1, x2, y1, y2);
+            expect(distance).toBe(0);
+        });
+    });
 });

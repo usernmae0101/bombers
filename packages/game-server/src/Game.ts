@@ -160,9 +160,8 @@ export default class Game {
      * Ежесекундно добавляет cтену в ячейку, пока не заполнит все ячейки
      * на карте. Удаляет игрока, если он находится в области ячейки.
      *
-     * Перебираем двумерный массив M*N по спирали: по часовой стрелке
-     * от периферии к центру. A, B, C, D - смещения при итерации по 
-     * каждой из сторон.
+     * Перебираем двумерный массив M*N по часовой стрелке от периферии 
+     * к центру. 
      *
      *            A
      *            |
@@ -182,7 +181,7 @@ export default class Game {
         const M = Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_X;
         const N = Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_Y;
 
-        let A = 0, B = 0, C = 0, D = 0, cell = 0;
+        let margin = 0, cell = 0;
         
         let row = 0;
         let col = 0;
@@ -218,28 +217,24 @@ export default class Game {
                 }
             }
 
-            // движемся вправо
-            if (row === A && col < M - B - 1)
+            // движемся вправо (вдоль A)
+            if (row === margin && col < M - margin - 1)
                 ++col;
 
-            // движемся вниз
-            else if (col === M - B - 1 && row < N - C - 1)
+            // движемся вниз (вдоль B)
+            else if (col === M - margin - 1 && row < N - margin - 1)
                 ++row;
 
-            // дввижемся влево
-            else if (row === N - C - 1 && col > D)
+            // дввижемся влево (вдоль C)
+            else if (row === N - margin - 1 && col > margin)
                 --col;
 
-            // движемся вверх
+            // движемся вверх (вдоль D)
             else 
                 --row;
 
-            if ((row === A + 1) && (col === D) && (D !== M - B - 1)) {
-                ++A;
-                ++B;
-                ++C;
-                ++D;
-            }
+            if ((row === margin + 1) && (col === margin) && (margin !== M - margin - 1))
+                ++margin;
 
             await new Promise(res => setTimeout(res, 1000));
         }

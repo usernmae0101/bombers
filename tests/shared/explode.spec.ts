@@ -23,21 +23,21 @@ describe("explode.ts", () => {
         it("should damages if takes full cell", () => {
             state.players[0].x = 2 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
             state.players[0].y = 2 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-            detonateBomb([2, 2], state, 2);
+            detonateBomb([2, 2], state, 2, () => {});
             expect(state.players[0].health).toBe(2);
         });
 
         it("should damages if takes age of cell", () => {
             state.players[0].x = 5 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE - 10;
             state.players[0].y = 2 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-            detonateBomb([2, 2], state, 2);
+            detonateBomb([2, 2], state, 2, () => {});
             expect(state.players[0].health).toBe(2);
         });
 
         it("should not damages beacause of offset", () => {
             state.players[0].x = 5 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE - 1;
             state.players[0].y = 2 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-            detonateBomb([2, 2], state, 2);
+            detonateBomb([2, 2], state, 2, () => {});
             expect(state.players[0].health).toBe(3);
         });
 
@@ -45,14 +45,14 @@ describe("explode.ts", () => {
             delete state.players[1];
             state.players[0].x = 2 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
             state.players[0].y = 2 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-            detonateBomb([2, 2], state, 2);
+            detonateBomb([2, 2], state, 2, () => {});
             expect(state.players[0].health).toBe(3);
         });
 
         it("should not damages because of range", () => {
             state.players[0].x = 3 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
             state.players[0].y = 3 * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
-            detonateBomb([2, 2], state, 2);
+            detonateBomb([2, 2], state, 2, () => {});
             expect(state.players[0].health).toBe(3);
         });
     });

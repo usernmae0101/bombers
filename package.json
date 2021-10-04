@@ -22,7 +22,7 @@
         ]
     },
     "scripts": {
-        "test": "jest --testEnvironment=node",
+        "test": "jest --detectOpenHandles --testEnvironment=node",
         "dev:client": "yarn workspace @bombers/client dev",
         "dev:app-server": "yarn workspace @bombers/app-server dev",
         "dev:game-server": "yarn workspace @bombers/game-server dev",
