@@ -1,4 +1,5 @@
 import * as Shared from "@bombers/shared/src/idnex";
+import { debug } from "@bombers/shared/src/tools/debugger";
 import { 
     addEntityToMap, 
     tryToDamagePlayer, 
@@ -143,7 +144,9 @@ export const detonateBomb = (
     const { 
         GAME_RESOLUTION_TILE_LENGTH_Y, 
         GAME_RESOLUTION_TILE_LENGTH_X, 
-        GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW 
+        GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW,
+        GAME_RESOLUTION_TILE_SIZE,
+        GAME_RESOLUTION_TILE_OFFSET
     } = Shared.Constants;
 
     const [epicenterRow, epicenterCol] = epicenter;
@@ -317,7 +320,8 @@ export const detonateBomb = (
 
     // проверяем, задело ли кого-нибудь из игроков
     for (let color in players) {
-        const takes = getPlayerOccupiedCells(players[+color]);
+        const player = players[+color];
+        const takes = getPlayerOccupiedCells(player);
 
         for (let { row, col } of takes) {
             for (let entity of map[row][col]) {
@@ -330,8 +334,24 @@ export const detonateBomb = (
                     EntityNumbers.FIRE_MIDDLE_X,
                     EntityNumbers.FIRE_MIDDLE_Y
                 ].includes(entity)) {
-                    // tpdp: distance
-                    tryToDamagePlayer(proxyState, +color);
+                    // считаем расстояние пересечения
+                    const distance = Shared.Maths.getDistance(
+                        col * GAME_RESOLUTION_TILE_SIZE, // x1
+                        player.x,                        // x2
+                        row * GAME_RESOLUTION_TILE_SIZE, // y1
+                        player.y                         // y2
+                    );
+               
+                    if (GAME_RESOLUTION_TILE_SIZE - distance > GAME_RESOLUTION_TILE_OFFSET * 2) {
+                        tryToDamagePlayer(proxyState, +color);
+
+                        debug(
+                            "Player was damaged by fire",
+                            `distance: ${GAME_RESOLUTION_TILE_SIZE - distance}`
+                        );
+
+                        break;
+                    }
                 }
             }     
         }
