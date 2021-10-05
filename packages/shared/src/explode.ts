@@ -146,7 +146,8 @@ export const detonateBomb = (
         GAME_RESOLUTION_TILE_LENGTH_X, 
         GAME_GAMEPLAY_BLAZE_TIME_TO_SHOW,
         GAME_RESOLUTION_TILE_SIZE,
-        GAME_RESOLUTION_TILE_OFFSET
+        GAME_RESOLUTION_TILE_OFFSET,
+        GAME_GAMEPLAY_PLAYER_FIRE_EVATION
     } = Shared.Constants;
 
     const [epicenterRow, epicenterCol] = epicenter;
@@ -343,8 +344,9 @@ export const detonateBomb = (
                         row * GAME_RESOLUTION_TILE_SIZE, // y1
                         player.y                         // y2
                     );
-               
-                    if (GAME_RESOLUTION_TILE_SIZE - distance > GAME_RESOLUTION_TILE_OFFSET * 2) {
+              
+                    const offset = GAME_RESOLUTION_TILE_OFFSET * 2;
+                    if (GAME_RESOLUTION_TILE_SIZE - distance > offset + GAME_GAMEPLAY_PLAYER_FIRE_EVATION) {
                         tryToDamagePlayer(proxyState, +color);
 
                         debug(

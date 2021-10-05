@@ -12,10 +12,15 @@ export const filterOverlapData = (
     bombsState: Shared.Interfaces.IBombsState
 ) => {
     const { EntityNumbers } = Shared.Enums;
-    const { GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
+    const { 
+        GAME_RESOLUTION_TILE_OFFSET,
+        GAME_GAMEPLAY_PLAYER_FIRE_EVATION
+    } = Shared.Constants;
+
+    const offset = GAME_RESOLUTION_TILE_OFFSET * 2;
 
     // учитываем оступы в пикселях при отрисовке спрайтов
-    if (overlapData.distance <= GAME_RESOLUTION_TILE_OFFSET * 2)
+    if (overlapData.distance <= offset)
         return;
 
     const cellEntities = proxyState.map[overlapData.row][overlapData.col];
@@ -29,7 +34,8 @@ export const filterOverlapData = (
             case EntityNumbers.FIRE_RIGHT:
             case EntityNumbers.FIRE_MIDDLE_X:
             case EntityNumbers.FIRE_MIDDLE_Y:
-                tryToDamagePlayer(proxyState, color);
+                if (overlapData.distance > offset + GAME_GAMEPLAY_PLAYER_FIRE_EVATION)
+                    tryToDamagePlayer(proxyState, color);
                 break;
             case EntityNumbers.ITEM_BOMB:
             case EntityNumbers.ITEM_HEALTH:

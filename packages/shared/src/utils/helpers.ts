@@ -59,6 +59,20 @@ export const calculateCanvasHeight = (): number => {
 };
 
 /**
+ * Вычисляет ширину приложения для рендеринга.
+ */
+export const calculateAppAreaWidth = (): number => {
+    return calculateCanvasWidth() + Shared.Constants.GAME_RESOLUTION_CANVAS_MARGIN * 2;  
+};
+
+/**
+ * Вычисляет высоту приложения для рендеринга.
+ */
+export const calculateAppAreaHeight = (): number => {
+    return calculateCanvasHeight() + Shared.Constants.GAME_RESOLUTION_CANVAS_MARGIN * 2;
+};
+
+/**
  * Создает состояние бомб для игроков, инициализируя начальным значением.
  *
  * @param users - список подключеннык к комнате

@@ -47,8 +47,8 @@ export default class Game {
 
     constructor() {
         this._app = new Application({
-            width: Shared.Helpers.calculateCanvasWidth(),
-            height: Shared.Helpers.calculateCanvasHeight(),
+            width: Shared.Helpers.calculateAppAreaWidth(),
+            height: Shared.Helpers.calculateAppAreaHeight(),
             backgroundAlpha: 0
         });
 

@@ -91,7 +91,10 @@ export default class GameServerSocketHandler {
                             user.save();
                         }
                     } catch (error) {
-                        debug("Error occured while trying update battle data", error);
+                        debug(
+                            "Error occured while trying update battle data", 
+                            error
+                        );
                     }
                 }
                 

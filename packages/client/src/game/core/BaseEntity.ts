@@ -6,7 +6,8 @@ import * as Shared from "@bombers/shared/src/idnex";
 
 const { 
     GAME_RESOLUTION_TILE_SIZE, 
-    GAME_RESOLUTION_TILE_OFFSET 
+    GAME_RESOLUTION_TILE_OFFSET,
+    GAME_RESOLUTION_CANVAS_MARGIN
 } = Shared.Constants;
 
 export default class BaseEntity extends Sprite {
@@ -97,7 +98,10 @@ export default class BaseEntity extends Sprite {
      * @param frequency - частота смены (в игровых тактах)
      * @param opacity - прозрачность (от 0.0 до 1.0)
      */
-    public blink(frequency: number, opacity: number) {
+    public blink(
+        frequency: number, 
+        opacity: number
+    ) {
         if (++this.tick % frequency !== 0) 
             return;
 
@@ -111,8 +115,14 @@ export default class BaseEntity extends Sprite {
      * @param row - ряд ячейки на игровой карте
      * @param col - колонка ячейки на игровой карте
      */
-    public setPosition(row: number, col: number) {
-        this._positionX = this.x = col * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_OFFSET;
-        this._positionY = this.y = row * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_TILE_OFFSET;
+    public setPosition(
+        row: number, 
+        col: number
+    ) {
+        const x = col * GAME_RESOLUTION_TILE_SIZE;
+        const y = row * GAME_RESOLUTION_TILE_SIZE;
+
+        this._positionX = this.x = x + GAME_RESOLUTION_TILE_OFFSET + GAME_RESOLUTION_CANVAS_MARGIN;
+        this._positionY = this.y = y + GAME_RESOLUTION_TILE_OFFSET + GAME_RESOLUTION_CANVAS_MARGIN;
     }
 }

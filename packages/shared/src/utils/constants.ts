@@ -43,6 +43,11 @@ export const GAME_GAMEPLAY_PLAYER_PROPERTY_RADIUS_LIMIT = 10;
  */
 export const GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL = 1_300;
 
+/**
+ * На сколько пикселей позволять игроку заходить в пламя без последствий.
+ */
+export const GAME_GAMEPLAY_PLAYER_FIRE_EVATION = 1;
+
 
 /***************************************
  * RESOLUTION--------------------------*
@@ -62,13 +67,17 @@ export const GAME_RESOLUTION_TILE_LENGTH_X = 17;
 /**
  * Отступ при отрисовке спрайта в пикселях.
  */
-export const GAME_RESOLUTION_TILE_OFFSET = 4;
+export const GAME_RESOLUTION_TILE_OFFSET = 2;
 
 /**
  * Количество игровых тайлов на карте в высоту.
  */
 export const GAME_RESOLUTION_TILE_LENGTH_Y = 11;
 
+/**
+ * Отспуп игрового поля от каждого края в пикселях.
+ */
+export const GAME_RESOLUTION_CANVAS_MARGIN = 10;
 
 /***************************************
  * CHAT--------------------------------*

@@ -6,8 +6,16 @@ import BaseEntity from "../core/BaseEntity";
 import EntityFactory from "../core/EntityFactory";
 import { getEntityFrame } from "../core/frames";
 
-const { EntityNumbers, PlayerColors, MoveDirections } = Shared.Enums;
-const { GAME_RESOLUTION_TILE_SIZE, GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
+const { 
+    EntityNumbers, 
+    PlayerColors, 
+    MoveDirections 
+} = Shared.Enums;
+const { 
+    GAME_RESOLUTION_TILE_SIZE, 
+    GAME_RESOLUTION_TILE_OFFSET,
+    GAME_RESOLUTION_CANVAS_MARGIN
+} = Shared.Constants;
 
 export default class PlayerEntity extends BaseEntity {
     private _color: number;
@@ -16,20 +24,23 @@ export default class PlayerEntity extends BaseEntity {
     private _arrow: ArrowEntity;
     private _emotion: EmotionEntity;
 
-    constructor(frameX: number, frameY: number, color: number) {
+    constructor (frameX: number, frameY: number, color: number) {
         super(frameX, frameY);
-
+        
         this._color = color;
     }
 
     get color(): number { 
         return this._color;
     }
-    
+   
+    /**
+     * Обновляет полосу здоровья игрока.
+     */
     public updateHealthbar(health: number) {
         if (this._health !== health) {
             let hexColor: number;
-            let lineLength = GAME_RESOLUTION_TILE_SIZE / 2;
+            let lineLength = GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_CANVAS_MARGIN * 2;
 
             if (health === 3) {
                 hexColor = 0x2CFF00;
@@ -49,16 +60,22 @@ export default class PlayerEntity extends BaseEntity {
 
             this._healthbar = new Graphics();
             this._healthbar.beginFill(hexColor);
-            this._healthbar.drawRect(GAME_RESOLUTION_TILE_SIZE / 4, 0, lineLength, 5);
+            this._healthbar.drawRect(
+                GAME_RESOLUTION_CANVAS_MARGIN, 
+                -(GAME_RESOLUTION_CANVAS_MARGIN / 2 + GAME_RESOLUTION_TILE_OFFSET * 2), 
+                lineLength, 
+                GAME_RESOLUTION_CANVAS_MARGIN / 2
+            );
             this._healthbar.endFill();
-            this._healthbar.y -= GAME_RESOLUTION_TILE_OFFSET * 3;
             this.addChild(this._healthbar);
-
             this._health = health;
         }
     }
 
-    public updateEmotion(emotion: number, direction: number) {
+    public updateEmotion(
+        emotion: number, 
+        direction: number
+    ) {
         if (this._emotion !== undefined) {
             this._emotion.destroy();
             this._emotion = undefined;
@@ -115,11 +132,12 @@ export default class PlayerEntity extends BaseEntity {
      * @param x - позиция по X (левый верхний край спрайта)
      * @param y - позиция по Y (левый верхний край спрайта)
      */
-    public setPosition(x: number, y: number) {
-        const { GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
-
-        this.x = x + GAME_RESOLUTION_TILE_OFFSET;
-        this.y = y + GAME_RESOLUTION_TILE_OFFSET;
+    public setPosition(
+        x: number, 
+        y: number
+    ) {
+        this.x = x + GAME_RESOLUTION_TILE_OFFSET + GAME_RESOLUTION_CANVAS_MARGIN;
+        this.y = y + GAME_RESOLUTION_TILE_OFFSET + GAME_RESOLUTION_CANVAS_MARGIN;
     }
 
     /**
