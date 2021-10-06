@@ -191,6 +191,7 @@ export default class Room {
     private _startGame() {
         this._isLocked = true;
         this._game.isStarted = true;
+        this._resetStateChanges();
         this._game.bombsState = Shared.Helpers.createBombsState(this._users);
 
         this._countBoxesOnMap();

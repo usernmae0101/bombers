@@ -53,7 +53,7 @@ const GameHUD = () => {
             `timestamp: ${wallTimestamp}`
         );
 
-        tickWallTimer();
+        wallTimestamp && tickWallTimer();
     }, [wallTimestamp]);
 
     return (

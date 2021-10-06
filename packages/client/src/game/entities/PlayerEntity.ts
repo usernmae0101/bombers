@@ -114,6 +114,7 @@ export default class PlayerEntity extends BaseEntity {
                 case PlayerColors.YELLOW:
                 case PlayerColors.RED:
                     this._arrow.angle = 180;
+                    this._arrow.y -= GAME_RESOLUTION_CANVAS_MARGIN;
                     this._arrow.x += GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_OFFSET;
             }
 

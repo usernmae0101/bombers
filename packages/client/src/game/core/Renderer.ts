@@ -16,8 +16,9 @@ export default class Renderer {
     public init(stage: Container) {
         stage.sortableChildren = true;
 
-        for (let container of this._containers)
+        for (let container of this._containers) {
             stage.addChild(container);
+        }
     }
 
     /**
@@ -28,7 +29,8 @@ export default class Renderer {
      * @param localPlayerColor
      */
     public render(dt: number, state: Shared.Interfaces.IGameState, localPlayerColor: number) {
-        for (let container of this._containers)
+        for (let container of this._containers) {
             container.update(state, localPlayerColor, dt);
+        }
     }
 }

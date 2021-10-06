@@ -106,6 +106,7 @@ const Main = () => {
                 Loader.shared
                     .add([
                         Shared.Constants.GAME_RESOURCES_SPRITESHEET_EXPLOSION,
+                        Shared.Constants.GAME_RESOURCES_IMAGE_GRASS,
                         Shared.Constants.GAME_RESOURCES_IMAGE_TILESET
                     ])
                     .load(() => { 

@@ -37,11 +37,17 @@ const Result: React.FC<{ battleResult: any[]; }> = ({ battleResult }) => {
     const dispatch = useDispatch();
     
     React.useEffect(() => {
+        // обновляем игровые слоты
         dispatch(
             GameActions.action_game_set_slots(
                 Shared.Slots.slots                
             )
-        );     
+        ); 
+
+        // обновляем статус загрузки игры
+        dispatch(
+            GameActions.action_game_set_loading(true)
+        );
     }, []);
 
     return (

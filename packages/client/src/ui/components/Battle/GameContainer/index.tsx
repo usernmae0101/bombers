@@ -5,32 +5,38 @@ import { Socket } from "socket.io-client"
 
 import * as Shared from "@bombers/shared/src/idnex";
 import * as GameSelecors from "../../../redux/selectors/game-selectors";
+import Game from "../../../../game/Game";
 import styles from "./game-container.module.scss";
 import { EmotionEntity, PlayerEntity } from "../../../../game/entities";
 import { getEntityFrame } from "../../../../game/core/frames";
 import EntityFactory from "../../../../game/core/EntityFactory";
+import { debug } from "@bombers/shared/src/tools/debugger";
 
+/**
+ * Создаем оболочку для канваса. Элемент должен отрисоваться
+ * только один раз, поэтому мемозируем через React.memeo(...).
+ */
 const GameCanvas = React.memo(() => {
-    const canvasBackgroundImgStyles: React.CSSProperties = {
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        zIndex: 0
-    };
+    debug(
+        "Canvas wrapper has been created",
+        `timestamp: ${Date.now()}`
+    ); 
 
     return (
-        <div className={styles.canvas} id="game-cnv">
-            <img
-                src={Shared.Constants.GAME_RESOURCES_IMAGE_GRASS}
-                style={canvasBackgroundImgStyles}
-            />
+        <div 
+            className={styles.canvas} 
+            id={Shared.Constants.GAME_CANVAS_VIEW_ID}
+        >
         </div>
     );
 });
 
 let currentEmotion: EmotionEntity;
 
-const applyEmotion = (playerEntity: PlayerEntity, emotionEntityId: number) => {
+const applyEmotion = (
+    playerEntity: PlayerEntity, 
+    emotionEntityId: number
+) => {
     if (currentEmotion !== undefined) {
         currentEmotion.destroy();
     }
@@ -40,9 +46,15 @@ const applyEmotion = (playerEntity: PlayerEntity, emotionEntityId: number) => {
     playerEntity.addChild(currentEmotion);
 };
 
-const initMenuCanvas = (color: number, TCPSocket: Socket) => {
+const initMenuCanvas = (
+    color: number, 
+    TCPSocket: Socket
+) => {
     const { EntityNumbers, MoveDirections } = Shared.Enums;
-    const { GAME_RESOLUTION_TILE_SIZE, GAME_RESOLUTION_TILE_OFFSET } = Shared.Constants;
+    const { 
+        GAME_RESOLUTION_TILE_SIZE, 
+        GAME_RESOLUTION_TILE_OFFSET 
+    } = Shared.Constants;
 
     const app = new Application({
         width: GAME_RESOLUTION_TILE_SIZE * 3,
@@ -50,7 +62,11 @@ const initMenuCanvas = (color: number, TCPSocket: Socket) => {
         backgroundAlpha: 0
     });
 
-    const { x: frameX, y: frameY } = getEntityFrame(EntityNumbers.PLAYER, +color, MoveDirections.DOWN);
+    const { x: frameX, y: frameY } = getEntityFrame(
+        EntityNumbers.PLAYER, 
+        +color, 
+        MoveDirections.DOWN
+    );
     const playerEntity = new PlayerEntity(frameX, frameY, +color);
 
     playerEntity.x = GAME_RESOLUTION_TILE_SIZE * 2 + GAME_RESOLUTION_TILE_OFFSET;
@@ -105,7 +121,9 @@ const initMenuCanvas = (color: number, TCPSocket: Socket) => {
     document.getElementById("menu-cnv").appendChild(app.view);
 };
 
-const GameContainer = () => {
+const GameContainer: React.FC<{ 
+    game: Game; 
+}> = ({ game }) => {
     const localColor = useSelector(GameSelecors.select_game_color);
     const gameSlots = useSelector(GameSelecors.select_game_slots);
     const TCPSocket = useSelector(GameSelecors.select_game_tcp_socket);
@@ -115,6 +133,15 @@ const GameContainer = () => {
             String(Shared.Enums.SocketChannels.GAME_ON_READY_TO_PLAY)
         );
     };
+
+    React.useEffect(() => {
+        game.init();
+        
+        debug(
+            "Method init() of the game has been called",
+            `timestamp: ${Date.now()}`
+        );
+    }, []);
 
     React.useEffect(() => {
         // если игрок не подтведил готовность, рисуем менюшку

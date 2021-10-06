@@ -46,7 +46,7 @@ export const GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL = 1_300;
 /**
  * На сколько пикселей позволять игроку заходить в пламя без последствий.
  */
-export const GAME_GAMEPLAY_PLAYER_FIRE_EVATION = 1;
+export const GAME_GAMEPLAY_PLAYER_FIRE_EVATION = 2;
 
 
 /***************************************

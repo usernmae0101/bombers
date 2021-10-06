@@ -85,7 +85,7 @@ export const tryToDamagePlayer = (
         // возвращаем уязвимость через таймаут
         setTimeout(
             () => { 
-                state.players[color].isImmortal = false; 
+               state.players[color] !== undefined && (state.players[color].isImmortal = false); 
             },
             GAME_GAMEPLAY_PLAYER_IMMORTAL_INTERVAL
         );
@@ -181,23 +181,27 @@ export const movePlayer = (
         return;
     }
 
-    const [overlapData, atEdgeOfBorder] = checkPlayerOverlap(player, map);
+    let [overlapData, atEdgeOfBorder] = checkPlayerOverlap(player, map);
 
     // если игрок пересёкся с объктом о который бьется (collided), 
     // выравнивам игрока по оси движения
-    if (overlapData && isPlayerCollide(map, overlapData, speed)) 
+    if (overlapData && isPlayerCollide(map, overlapData, speed)) {
         alignPlayer(
             player, 
             axisAlongWhichPlayerMoves
         );
 
+        overlapData = undefined;
+    }
+
     // если игрок не столкнулся, направление движения поменялось 
     // и не у края канваса, выравниваем игрока по оси обратной его движению
-    else if (isDirectionChanged && !atEdgeOfBorder) 
+    else if (isDirectionChanged && !atEdgeOfBorder) {
         alignPlayer(
             player, 
             axisAlongWhichPlayerMoves === "x" ? "y" : "x"
         );
+    }
 
     return overlapData;
 };

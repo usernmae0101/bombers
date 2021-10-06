@@ -25,14 +25,17 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
     const dispatch = useDispatch();
     
     const [battleResult, setBattleResult] = React.useState([] as any[]);
+    const [game, setGame] = React.useState(null);
     const isLoading = useSelector(GameSelectors.select_game_loading);
     const userToken = useSelector(UserSelectors.select_user_auth_token);
-
+    
     React.useEffect(() => {
         Keyboard.subscribe();
 
         const game = new Game;
-   
+        game.addGrassBackgroundCanvas();
+        setGame(game);
+
         const gameSocketTCP = io(`http://${address}:${port}/battle`, {
             auth: {
                 token: userToken
@@ -81,7 +84,7 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
         <div className={styles.battle}>
             <RoomBar />
             <RoomSlots />
-            <GameContainer />
+            <GameContainer game={game} />
             <GameHUD />
         </div>
     );

@@ -1,5 +1,5 @@
 import { ClientChannel } from "@geckos.io/client";
-import { Application } from "pixi.js";
+import { Application, Sprite } from "pixi.js";
 import { Dispatch } from "redux";
 
 import * as GameActions from "../ui/redux/actions/game-actions";
@@ -48,8 +48,7 @@ export default class Game {
     constructor() {
         this._app = new Application({
             width: Shared.Helpers.calculateAppAreaWidth(),
-            height: Shared.Helpers.calculateAppAreaHeight(),
-            backgroundAlpha: 0
+            height: Shared.Helpers.calculateAppAreaHeight()
         });
 
         this._renderer = new Renderer([
@@ -214,7 +213,9 @@ export default class Game {
         }
     }
 
-    public onNotReliableStateChanges(changes: Shared.Interfaces.INotReliableStateChanges) {
+    public onNotReliableStateChanges(
+        changes: Shared.Interfaces.INotReliableStateChanges
+    ) {
         for (let color in changes.s) {
             // для локального игрока выполняем согласование с сервером
             if (+color === this._color) {
@@ -241,7 +242,26 @@ export default class Game {
         }
     }
 
-    private _serverReconciliation(changes: Shared.Interfaces.INotReliableStateData) {
+    /**
+     * Добавляет задним фоном траву на игровой канвас.
+     */
+    public addGrassBackgroundCanvas() {
+        const grass = Sprite.from(
+            Shared.Constants.GAME_RESOURCES_IMAGE_GRASS
+        );
+
+        grass.x = Shared.Constants.GAME_RESOLUTION_CANVAS_MARGIN;
+        grass.y = Shared.Constants.GAME_RESOLUTION_CANVAS_MARGIN;
+
+        grass.width = Shared.Helpers.calculateCanvasWidth();
+        grass.height = Shared.Helpers.calculateCanvasHeight();
+
+        this._app.stage.addChild(grass);
+    }
+
+    private _serverReconciliation(
+        changes: Shared.Interfaces.INotReliableStateData
+    ) {
         if (!changes.tick) 
             return;
 
@@ -308,12 +328,17 @@ export default class Game {
         }
     }
 
-    public start() {
+    /**
+     * Инициализирует игровой канвас.
+     */
+    public init() {
         document.getElementById(Shared.Constants.GAME_CANVAS_VIEW_ID)
             .appendChild(this._app.view);
-
+        
         this._renderer.init(this._app.stage);
+    }
 
+    public start() {
         let accumulator = 0;
 
         this._app.ticker.add(() => {
