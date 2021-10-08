@@ -22,7 +22,10 @@ export default class ClientSocketHandler {
      * @param token - авторизационный токен пользователя
      * @param socket - подключенный сокет пользователя
      */
-    public static addSocketToConnectionSotre(token: string, socket: any) {
+    public static addSocketToConnectionSotre(
+        token: string, 
+        socket: any
+    ) {
         if (this.connections[token]) {
             debug(
                 "Socket already in connection list",

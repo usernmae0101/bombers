@@ -14,7 +14,10 @@ export default class UDPClientSocketHandler {
      * @param token - авторизационный токен пользователя
      * @param socket - подключенный сокет пользователя
      */
-    public static addSocketToConnectionSotre(token: string, socket: any) {
+    public static addSocketToConnectionSotre(
+        token: string, 
+        socket: any
+    ) {
         if (this.connections[token]) {
             debug(
                 "Socket UDP already in connection list",
@@ -33,7 +36,10 @@ export default class UDPClientSocketHandler {
         );
     }
 
-    public static handle(socket: ServerChannel, gameRoom: Room) {
+    public static handle(
+        socket: ServerChannel, 
+        gameRoom: Room
+    ) {
         const token: string = socket.userData.token;
 
         this.addSocketToConnectionSotre(token, socket);

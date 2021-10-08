@@ -10,8 +10,6 @@ export default class Renderer {
     /**
      * Инициализация перед началом отрисовки. Добавляет 
      * контейнеры на главную сцену.
-     * 
-     * @param stage
      */
     public init(stage: Container) {
         stage.sortableChildren = true;
@@ -23,12 +21,12 @@ export default class Renderer {
 
     /**
      * Отрисовывает каждый контейнер на сцене.
-     * 
-     * @param dt
-     * @param state
-     * @param localPlayerColor
      */
-    public render(dt: number, state: Shared.Interfaces.IGameState, localPlayerColor: number) {
+    public render(
+        dt: number, 
+        state: Shared.Interfaces.IGameState, 
+        localPlayerColor: number
+    ) {
         for (let container of this._containers) {
             container.update(state, localPlayerColor, dt);
         }

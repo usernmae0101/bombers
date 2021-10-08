@@ -19,7 +19,10 @@ export default class BattleTCPClientSocketHandler {
      * @param token - авторизационный токен пользователя
      * @param socket - подключенный сокет пользователя
      */
-    public static addSocketToConnectionSotre(token: string, socket: any) {
+    public static addSocketToConnectionSotre(
+        token: string, 
+        socket: any
+    ) {
         if (this.connections[token]) {
             debug(
                 "Socket TCP already in connection list",
@@ -58,7 +61,11 @@ export default class BattleTCPClientSocketHandler {
         }
     }
 
-    public static handle(socket: Socket, manager: SocketManager, gameRoom: Room) {
+    public static handle(
+        socket: Socket, 
+        manager: SocketManager, 
+        gameRoom: Room
+    ) {
         const token: string = socket.handshake.auth.token;
    
         this.addSocketToConnectionSotre(token, socket);

@@ -14,7 +14,8 @@ describe("common module should works correctly", () => {
         let player: Interfaces.IGameStatePlayer;
 
         beforeEach(() => {
-            overlapData.distance = Constants.GAME_RESOLUTION_TILE_OFFSET * 2 + Constants.GAME_GAMEPLAY_PLAYER_FIRE_EVATION + 1;
+            const offset = Constants.GAME_RESOLUTION_TILE_OFFSET * 2;
+            overlapData.distance = offset + Constants.GAME_GAMEPLAY_PLAYER_FIRE_EVATION + 1;
             state.players[1] = createPlayer(0, 0);
             state.players[2] = createPlayer(100, 100);
             player = state.players[1];
@@ -67,6 +68,14 @@ describe("common module should works correctly", () => {
                 map[0][0] = [Enums.EntityNumbers.ITEM_SPEED];
                 common.filterOverlapData(overlapData, state, 1, {});
                 expect(player.speed).toBe(4);
+            });
+
+            it("should not picks item cuz of distance", () => {
+                player.speed = 2;
+                overlapData.distance = Constants.GAME_RESOLUTION_TILE_OFFSET * 2;
+                map[0][0] = [Enums.EntityNumbers.ITEM_SPEED];
+                common.filterOverlapData(overlapData, state, 1, {});
+                expect(player.speed).toBe(2);
             });
 
             it("should picks up radius item", () => {

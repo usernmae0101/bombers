@@ -22,7 +22,9 @@ export const startHandlingAppSocket = (
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_SET_ONLINE),
 		(online: number) => {
-			dispatch(DashboardActions.action_dashboard_set_online(online));
+			dispatch(
+				DashboardActions.action_dashboard_set_online(online)
+			);
 		}
 	);
 
@@ -30,11 +32,19 @@ export const startHandlingAppSocket = (
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_SET_STATE), 
 		(state: InitialStateType) => {
-			dispatch(DashboardActions.action_dashboard_set_total_servers(state.totalServers));
+			dispatch(
+				DashboardActions.action_dashboard_set_total_servers(state.totalServers)
+			);
 
-			dispatch(ChatActions.action_chat_set_messages(state.chat.messages));
-			dispatch(ChatActions.action_chat_set_members(state.chat.members));
-			dispatch(ChatActions.action_chat_set_ready(true));
+			dispatch(
+				ChatActions.action_chat_set_messages(state.chat.messages)
+			);
+			dispatch(
+				ChatActions.action_chat_set_members(state.chat.members)
+			);
+			dispatch(
+				ChatActions.action_chat_set_ready(true)
+			);
 		}
 	);
 
@@ -42,7 +52,9 @@ export const startHandlingAppSocket = (
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER), 
 		(member: Shared.Interfaces.IUser) => {
-			dispatch(ChatActions.action_chat_add_member(member));
+			dispatch(
+				ChatActions.action_chat_add_member(member)
+			);
 		}
 	);
 
@@ -50,7 +62,9 @@ export const startHandlingAppSocket = (
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_SET_GAME_SERVERS_COUNT), 
 		(count: number) => {
-			dispatch(DashboardActions.action_dashboard_set_total_servers(count));
+			dispatch(
+				DashboardActions.action_dashboard_set_total_servers(count)
+			);
 		}
 	);
 
@@ -66,7 +80,9 @@ export const startHandlingAppSocket = (
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_REMOVE_CHAT_MEMBER), 
 		(nickname: string) => {
-			dispatch(ChatActions.action_chat_delete_member(nickname));
+			dispatch(
+				ChatActions.action_chat_delete_member(nickname)
+			);
 		}
 	);
 
@@ -85,8 +101,12 @@ export const startHandlingAppSocket = (
 				});
 			}
 
-			dispatch(LobbyActions.action_lobby_set_servers(lobbyServers));
-			dispatch(LobbyActions.action_lobby_set_loading(false));
+			dispatch(
+				LobbyActions.action_lobby_set_servers(lobbyServers)
+			);
+			dispatch(
+				LobbyActions.action_lobby_set_loading(false)
+			);
 		}
 	);
 
@@ -94,7 +114,9 @@ export const startHandlingAppSocket = (
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MESSAGE), 
 		(message: Shared.Interfaces.IChatMessage) => {
-			dispatch(ChatActions.action_chat_add_message(message));
+			dispatch(
+				ChatActions.action_chat_add_message(message)
+			);
 		}
 	);
 };

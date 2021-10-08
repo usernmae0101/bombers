@@ -18,7 +18,11 @@ const ResultPlayer: React.FC<{
     let className = styles.enemy;
 
     if (nickname === userNickname) {
-        dispatch(UserActions.action_user_set_data_rating(rating));
+        // обновляем рейтинг в состоянии
+        dispatch(
+            UserActions.action_user_set_data_rating(rating)
+        );
+
         className = styles.me;
     }
 
@@ -33,15 +37,15 @@ const ResultPlayer: React.FC<{
     );
 };
 
-const Result: React.FC<{ battleResult: any[]; }> = ({ battleResult }) => {
+const Result: React.FC<{ 
+    battleResult: any[]; 
+}> = ({ battleResult }) => {
     const dispatch = useDispatch();
     
     React.useEffect(() => {
         // обновляем игровые слоты
         dispatch(
-            GameActions.action_game_set_slots(
-                Shared.Slots.slots                
-            )
+            GameActions.action_game_set_slots(Shared.Slots.slots)
         ); 
 
         // обновляем статус загрузки игры

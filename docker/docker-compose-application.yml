@@ -8,6 +8,7 @@ services:
     container_name: bombers_client
     volumes: 
       - ./public:/client/packages/client/dist
+  
   server:
     build: 
       context: ./../
@@ -24,6 +25,7 @@ services:
       - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
     volumes: 
       - ./../public:/app-server/packages/app-server/public
+  
   db:
     image: mongo
     container_name: bombers_mongodb

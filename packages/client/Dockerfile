@@ -7,6 +7,6 @@ COPY ./yarn.lock ./
 COPY ./packages/client ./packages/client
 COPY ./packages/shared ./packages/shared
 
-RUN yarn && yarn install && cd packages/client && npm i colyseus.js
+RUN yarn && yarn install
 
 CMD ["npm", "run", "prod:client"]

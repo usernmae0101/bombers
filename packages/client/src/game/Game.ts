@@ -173,7 +173,7 @@ export default class Game {
         for (let color in this._snapshotBuffer) {
             const enemy = this._state.players[+color];
             const buffer = this._snapshotBuffer[color].sort((a, b) => {
-                return a.timestamp - b.timestamp
+                return a.timestamp - b.timestamp;
             });
 
             if (!enemy) {
@@ -184,10 +184,11 @@ export default class Game {
             while (buffer.length > 1 && buffer[1].timestamp <= renderTime)
                 buffer.shift();
 
-            if (buffer.length > 1 && 
+            if (
+                buffer.length > 1 && 
                 buffer[0].timestamp <= renderTime && 
-                renderTime <= buffer[1].timestamp) 
-            {
+                renderTime <= buffer[1].timestamp
+            ) {
                 const [s1, s2] = buffer;
 
                 const ratio = (renderTime - s1.timestamp) / (s2.timestamp - s1.timestamp);

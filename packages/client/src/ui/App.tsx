@@ -25,15 +25,25 @@ const Main = () => {
     const errorCode = useSelector(UserSelectors.select_user_error_code);
     const isAuth = useSelector(UserSelectors.select_user_auth);
     const socket = useSelector(UserSelectors.select_user_socket_instance);
-    
+   
+    const dispatchSocial = (type: string, id: number) => {
+        dispatch(
+            UserActions.action_user_set_social_type(type)
+        );
+        dispatch(
+            UserActions.action_uesr_set_social_uid(id)
+        );
+        dispatch(
+            UserActions.action_user_set_auth_is_social(true)
+        );
+    };
+
     // Подписка на монтирование компонента. ComponentDidMonut.
     React.useEffect(() => {
         // Режим разработки. Задаём невалидные данные, чтобы создать новый аккаунт.
         if (isDevMode) {
             const id = window.crypto.getRandomValues(new Uint16Array(1))[0];
-            dispatch(UserActions.action_user_set_social_type("vk"));
-            dispatch(UserActions.action_uesr_set_social_uid(id));
-            dispatch(UserActions.action_user_set_auth_is_social(true));
+            dispatchSocial("vk", id);
         }
         
         // Авторизация через IFrame.
@@ -43,9 +53,7 @@ const Main = () => {
             if (host === "vk.com") {
                 bridge.send(`VKWebAppInit`).then(async () => {
                     const { id } = await bridge.send("VKWebAppGetUserInfo");
-                    dispatch(UserActions.action_user_set_social_type("vk"));
-                    dispatch(UserActions.action_uesr_set_social_uid(id));
-                    dispatch(UserActions.action_user_set_auth_is_social(true));
+                    dispatchSocial("vk", id);
                 });
             }
         }

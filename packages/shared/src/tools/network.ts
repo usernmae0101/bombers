@@ -40,7 +40,10 @@ export const simulatePackageLoss = (
     }
     
     if (getRandomBetween(1, 100) <= percent) {
-        debug("Drops UDP package", `percent: ${percent}`);
+        debug(
+            "Drops UDP package", 
+            `percent: ${percent}`
+        );
         return;
     }
 
