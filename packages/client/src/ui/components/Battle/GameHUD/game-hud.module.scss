@@ -1,7 +1,23 @@
 .hud {
-    grid-area: hud;
-    display: grid;
-    grid-template-columns: 2fr 2fr 2fr 1fr;
+    height: 80%;
+    width: 35%;
 
+    display: flex;
+    justify-content: space-around;
+
+    color: #eee;
+}
+
+.item {
+    display: flex;
     align-items: center;
+    justify-content: center;
+
+    height: 100%;
+    width: 30%;
+
+    div {
+        background: linear-gradient(125deg, #fff, #000);
+        padding: 5%;
+    }
 }

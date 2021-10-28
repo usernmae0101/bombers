@@ -12,7 +12,10 @@ export default class CraterEntity extends BaseEntity {
     }
 
     setPosition(row: number, col: number) {
-        this.x = col * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_CANVAS_MARGIN;
-        this.y = row * GAME_RESOLUTION_TILE_SIZE + GAME_RESOLUTION_CANVAS_MARGIN;
+        const x = col * GAME_RESOLUTION_TILE_SIZE; 
+        const y = row * GAME_RESOLUTION_TILE_SIZE;
+
+        this.x = x + GAME_RESOLUTION_CANVAS_MARGIN;
+        this.y = y + GAME_RESOLUTION_CANVAS_MARGIN;
     }
 }

@@ -8,7 +8,6 @@ import Loader from "../Loader";
 import RoomBar from "./RoomBar";
 import RoomSlots from "./RoomSlots";
 import GameContainer from "./GameContainer";
-import GameHUD from "./GameHUD";
 import * as GameSelectors from "../../redux/selectors/game-selectors";
 import * as UserSelectors from "../../redux/selectors/user-selecrots";
 import Game from "../../../game/Game";
@@ -82,10 +81,9 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
 
     return (
         <div className={styles.battle}>
-            <RoomBar />
             <RoomSlots />
             <GameContainer game={game} />
-            <GameHUD />
+            <RoomBar />
         </div>
     );
 };

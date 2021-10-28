@@ -1,15 +1,12 @@
 .battle {
-    display: grid;
+    background: linear-gradient(40deg, rgba(0,0,0,1) 5%, rgba(238,238,238,1) 50%, rgba(0,0,0,1) 90%);
 
+    display: grid;
+    grid-template: 12fr 1fr / 1fr 6fr;
+    
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
 
     background-color: #333;
-
-    grid-gap: 10px;
-
-    grid-template-columns: 1fr 7fr;
-    grid-template-rows: 0.3fr 8fr 0.5fr;
-
-    grid-template-areas: "bar bar" "slots game" "slots hud";
 }

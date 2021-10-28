@@ -17,6 +17,13 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: "ts-loader",
                 exclude: /node_modules/
+            },
+            {
+                test: /\.(jpe?g|png)$/i,
+                loader: "file-loader",
+                options: {
+                    name: "images/[name].[contenthash].[ext]"
+                }
             }
         ]
     },
@@ -25,7 +32,12 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin({
-            cleanAfterEveryBuildPatterns: ["*.js", "*.map", "*.css", "*.LICENSE.txt"]
+            cleanAfterEveryBuildPatterns: [
+                "*.js", 
+                "*.map", 
+                "*.css", 
+                "*.LICENSE.txt"
+            ]
         }),
         new CopyWebpackPlugin({
             patterns: [

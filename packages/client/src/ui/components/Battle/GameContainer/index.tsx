@@ -24,7 +24,7 @@ const GameCanvas = React.memo(() => {
 
     return (
         <div 
-            className={styles.canvas} 
+            className={styles.game_wrapper} 
             id={Shared.Constants.GAME_CANVAS_VIEW_ID}
         >
         </div>
@@ -121,18 +121,36 @@ const initMenuCanvas = (
     document.getElementById("menu-cnv").appendChild(app.view);
 };
 
+const MenuContainer: React.FC<{
+    TCPSocket: any;
+}> = ({ TCPSocket }) => {
+    const readyToPlay = () => {
+        TCPSocket.emit(
+            String(Shared.Enums.SocketChannels.GAME_ON_READY_TO_PLAY)
+        );
+    };
+
+    return (
+        <div className={styles.menu}>
+            <div className={styles.label}>Выбери эмоцию!</div>
+            <div 
+                className={styles.menu_wrapper}
+                id="menu-cnv"
+            >
+            </div>
+            <div className={styles.ready}>
+                <button onClick={readyToPlay}>Выбрать</button>
+            </div>
+        </div>
+    );
+};
+
 const GameContainer: React.FC<{ 
     game: Game; 
 }> = ({ game }) => {
     const localColor = useSelector(GameSelecors.select_game_color);
     const gameSlots = useSelector(GameSelecors.select_game_slots);
     const TCPSocket = useSelector(GameSelecors.select_game_tcp_socket);
-
-    const readyToPlay = () => {
-        TCPSocket.emit(
-            String(Shared.Enums.SocketChannels.GAME_ON_READY_TO_PLAY)
-        );
-    };
 
     React.useEffect(() => {
         game.init();
@@ -151,17 +169,12 @@ const GameContainer: React.FC<{
 
     return (
         <div className={styles.game}>
-            <div className={styles.menu}>
-                {
-                    !gameSlots[localColor].isReady &&
-                    <div className={styles.test}>
-                        <span>Выбери эмоцию!</span>
-                        <div id="menu-cnv"></div>
-                        <button onClick={readyToPlay}>играть</button>
-                    </div>
-                }
-            </div>
             <GameCanvas />
+            { 
+                !gameSlots[localColor].isReady &&
+                
+                <MenuContainer TCPSocket={TCPSocket}/>
+            }
         </div>
     );
 };

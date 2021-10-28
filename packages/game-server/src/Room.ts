@@ -191,9 +191,9 @@ export default class Room {
     private _startGame() {
         this._isLocked = true;
         this._game.isStarted = true;
-        this._resetStateChanges();
         this._game.bombsState = Shared.Helpers.createBombsState(this._users);
 
+        this._resetStateChanges();
         this._countBoxesOnMap();
 
         // широковещание игрового состояния
@@ -292,7 +292,6 @@ export default class Room {
     }
 
     private _configurate() {
-        this._setAvailableColors();
         this._game.isStarted = false;
         this._game.boxes = 0;
         this._isLocked = false;
@@ -304,6 +303,8 @@ export default class Room {
         this._slots = Shared.Helpers.makeCopyObject(
             Shared.Slots.slots
         );
+        
+        this._setAvailableColors();
         this._resetStateChanges();
 
         const state = createState(

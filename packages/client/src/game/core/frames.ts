@@ -3,23 +3,30 @@ import { Constants, Enums } from "@bombers/shared/src/idnex";
 const { GAME_RESOLUTION_TILE_SIZE } = Constants;
 const { EntityNumbers, MoveDirections, PlayerColors } = Enums;
 
-export const getEntityFrame = (entity: number, color?: number, direction?: number): { x: number, y: number } => {
+export const getEntityFrame = (
+    entity: number, 
+    color?: number, 
+    direction?: number
+): { x: number, y: number } => {
     if ([
         EntityNumbers.FIRE_TOP,
         EntityNumbers.FIRE_BOTTOM,
         EntityNumbers.FIRE_LEFT,
         EntityNumbers.FIRE_RIGHT,
-    ].includes(entity)) return frames.static[EntityNumbers.FIRE_EDGE];
+    ].includes(entity)) 
+        return frames.static[EntityNumbers.FIRE_EDGE];
 
     if ([
         EntityNumbers.FIRE_MIDDLE_X,
         EntityNumbers.FIRE_MIDDLE_Y
-    ].includes(entity)) return frames.static[EntityNumbers.FIRE_CENTER];
+    ].includes(entity)) 
+        return frames.static[EntityNumbers.FIRE_CENTER];
 
     switch (entity) {
         case EntityNumbers.PLAYER:
             return frames.dynamic.player[color][direction];
-        default: return frames.static[entity];
+        default: 
+            return frames.static[entity];
     }
 };
 

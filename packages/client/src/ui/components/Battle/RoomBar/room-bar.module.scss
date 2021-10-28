@@ -1,11 +1,50 @@
 .bar {
-    grid-area: bar;
+    grid-area: 2 / 2 / 3 / 3;
 
-    display: grid;
+    width: 100%;
+    height: 100%;
 
-    color: white;
-    background-color: black;
-
-    justify-items: end;
+    display: flex;
     align-items: center;
+    justify-content: space-around;
+
+    font-size: 2vh;
+
+    img {
+        background: linear-gradient(45deg, #fff, #000);
+
+        height: 4vh;
+        width: 3vw;
+
+        padding: 5%;
+    }
+}
+
+.helpers {
+    height: 80%;
+    width: 35%;
+
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.exit {
+    img {
+        background: none !important;
+        cursor: pointer;
+    }
+}
+
+.ping {
+    display: flex;
+    align-items: center;
+
+    div {
+        background: linear-gradient(125deg, #fff, #000);
+        color: #eee;
+
+        padding: 5%;
+    }
 }

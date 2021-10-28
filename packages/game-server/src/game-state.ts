@@ -2,11 +2,10 @@ import * as Shared from "@bombers/shared/src/idnex";
 
 /**
  * Создаёт игровое состояние.
- * 
- * @param map - игровая карта
- * @returns игровое состояние
  */
-export const createState = (map: number[][][]): Shared.Interfaces.IGameState => ({
+export const createState = (
+    map: number[][][]
+): Shared.Interfaces.IGameState => ({
     map,
     players: {},
     wall: null
@@ -14,12 +13,11 @@ export const createState = (map: number[][][]): Shared.Interfaces.IGameState => 
 
 /**
  * Создаёт нового игрока для игрового состояния.
- * 
- * @param x - начальная позиция по X
- * @param y - начальная позиция по Y
- * @returns игрок
  */
-export const createPlayer = (x: number, y: number): Shared.Interfaces.IGameStatePlayer => ({
+export const createPlayer = (
+    x: number, 
+    y: number
+): Shared.Interfaces.IGameStatePlayer => ({
     health: 3,
     bombs: 1,
     speed: 2,
