@@ -18,7 +18,7 @@ describe("RoomSlots component should renders correctly", () => {
         const store = mockStore({ game: { slots: Shared.Slots.slots } });
         setStore(store);
 
-        expect(wrapper.find("li")).toHaveLength(4);
+        expect(wrapper.find("div[data-color]")).toHaveLength(4);
     });
 
     it("should renders 1 slot with the nickname John Doe", () => {
