@@ -1,10 +1,10 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import IndexPage from "./pages/IndexPage";
-import ProfilePage from "./pages/ProfilePgae";
-import RatingPage from "./pages/RatingPage";
-import RoomPage from "./pages/RoomPage";
+import IndexPage from "./pages/IndexPage/";
+import ProfilePage from "./pages/ProfilePgae/";
+import RatingPage from "./pages/RatingPage/";
+import RoomPage from "./pages/RoomPage/";
 
 export type RoutesPropsType = {
 	match: {
@@ -33,10 +33,23 @@ const Routes: React.FC<{ roomToRedirect: string}> = ({
 
 	return (
 		<Switch>
-			<Route exact path="/" render={(props: any) => checkoutRedirect(roomToRedirect, IndexPage, props)} />
-			<Route path="/rating" render={() => checkoutRedirect(roomToRedirect, RatingPage)} />
-			<Route path="/profile/:nickname" render={() => checkoutRedirect(roomToRedirect, ProfilePage)} />
-			<Route path="/room/:address/:port" component={RoomPage} />
+			<Route 
+				exact 
+				path="/" 
+				render={(props: any) => checkoutRedirect(roomToRedirect, IndexPage, props)} 
+			/>
+			<Route 
+				path="/rating" 
+				render={() => checkoutRedirect(roomToRedirect, RatingPage)} 
+			/>
+			<Route 
+				path="/profile/:nickname" 
+				render={() => checkoutRedirect(roomToRedirect, ProfilePage)} 
+			/>
+			<Route 
+				path="/room/:address/:port" 
+				component={RoomPage} 
+			/>
 		</Switch>
 	);
 };

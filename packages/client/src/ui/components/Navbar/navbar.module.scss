@@ -1,0 +1,26 @@
+.active {
+    opacity: 0.6;
+}
+
+.wrapper {
+    width: 100vw;
+    height: 5vh;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    .link {
+        width: 25%;
+        height: 100%;
+        
+        background: purple;
+        color: black;
+        border: 3px solid gray;
+        cursor: pointer;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

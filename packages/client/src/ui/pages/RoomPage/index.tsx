@@ -1,11 +1,12 @@
 import React from "react";
-import Battle from "../components/Battle";
+import Battle from "../../components/Battle";
 
-import { RoutesPropsType } from "../Routes";
+import { RoutesPropsType } from "../../Routes";
+import styles from "./room-page.module.scss";
 
 const RoomPage: React.FC<RoutesPropsType> = ({ match }) => {
     return (
-        <main>
+        <main className={styles.battle}>
             <Battle 
                 address={match.params.address}
                 port={match.params.port}
