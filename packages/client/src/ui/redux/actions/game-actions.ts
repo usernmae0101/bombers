@@ -59,6 +59,13 @@ export const action_game_set_wall_timestamp = (
     payload: timestamp
 });
 
+export const action_game_set_started = (
+    isStarted: boolean
+): GameTypes.GameSetStartedActionType => ({
+    type: GameTypes.ACTION_TYPE_GAME_SET_STARTED,
+    payload: isStarted
+});
+
 export const action_game_set_slots = (
     slots: Shared.Interfaces.IGameSlots
 ): GameTypes.GameSetSlotsActionType => ({

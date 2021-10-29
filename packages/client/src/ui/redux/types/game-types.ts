@@ -10,11 +10,13 @@ export const ACTION_TYPE_GAME_SET_WALL_TIMESTAMP = "GAME/SET_WALL_TIMESTAMP";
 export const ACTION_TYPE_GAME_SET_SLOTS = "GAME/SET_SLOTS";
 export const ACTION_TYPE_GAME_SET_LOADING = "GAME/SET_LOADING";
 export const ACTION_TYPE_GAME_SET_COLOR = "GAME/SET_COLOR";
+export const ACTION_TYPE_GAME_SET_STARTED = "GAME/SET_STARTED";
 export const ACTION_TYPE_GAME_SET_TCP_SOCKET = "GAME/SET_TCP_SOCKET";
 
 export type GameStateType = {
     color: Shared.Enums.PlayerColors;
     isLoading: boolean;
+    isStarted: boolean;
     HUD: {
         ping: number;
         bombs: number;
@@ -71,7 +73,12 @@ export type GameSetWallTimestampActionType = {
     payload: number;
 };
 
+export type GameSetStartedActionType = {
+    type: typeof ACTION_TYPE_GAME_SET_STARTED;
+    payload: boolean;
+};
+
 export type GameActionsType = GameSetRadiusActionType | GameSetSpeedActionType 
     | GameSetBombsActionType | GameSetSlotsActionType | GameSetPingActionType 
     | GameSetLoadingActionType | GameSetColorActionType | GameSetTCPSocketActionType
-    | GameSetWallTimestampActionType;
+    | GameSetWallTimestampActionType | GameSetStartedActionType;

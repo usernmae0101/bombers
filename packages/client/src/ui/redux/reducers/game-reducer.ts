@@ -3,6 +3,7 @@ import * as GameTypes from "../types/game-types";
 
 const initialState: GameTypes.GameStateType = {
     isLoading: true,
+    isStarted: false,
     HUD: {
         ping: null,
         bombs: 1,
@@ -20,6 +21,8 @@ export default function gameReducer(
     action: GameTypes.GameActionsType
 ): GameTypes.GameStateType {
     switch (action.type) {
+        case GameTypes.ACTION_TYPE_GAME_SET_STARTED:
+            return { ...state, isStarted: action.payload };
         case GameTypes.ACTION_TYPE_GAME_SET_WALL_TIMESTAMP:
             return { ...state, wallTimestamp: action.payload };
         case GameTypes.ACTION_TYPE_GAME_SET_TCP_SOCKET:

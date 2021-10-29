@@ -28,7 +28,26 @@ let pingTimestamp: number = null;
 // пингуем сервер
 const ping = (socket: Socket) => {
     pingTimestamp = Date.now();
-    socket.emit(String(Shared.Enums.SocketChannels.GAME_ON_PING_PONG));
+    socket.emit(
+        String(Shared.Enums.SocketChannels.GAME_ON_PING_PONG)
+    );
+};
+
+const setLocalPlayerStats = (
+    dispatch: Dispatch,
+    bombs: number,
+    speed: number,
+    radius: number
+) => {
+    dispatch(
+        GameActions.action_game_set_bombs(bombs)
+    );
+    dispatch(
+        GameActions.action_game_set_speed(speed)
+    );
+    dispatch(
+        GameActions.action_game_set_radius(radius)
+    );
 };
 
 export const startHandlingGameBattleSocket = (
@@ -52,6 +71,16 @@ export const startHandlingGameBattleSocket = (
             );
             dispatch(
                 GameActions.action_game_set_color(data.color)
+            );
+            dispatch(
+                GameActions.action_game_set_started(data.isGameStarted)
+            );
+
+            setLocalPlayerStats(
+                dispatch,
+                data.gameState.players[data.color].bombs,
+                data.gameState.players[data.color].speed,
+                data.gameState.players[data.color].radius
             );
 
             // обновляем таймер, если стена запущена
@@ -153,6 +182,10 @@ export const startHandlingGameBattleSocket = (
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_START),
         (state: Shared.Interfaces.IGameState) => {
+            dispatch(
+                GameActions.action_game_set_started(true)
+            );
+
             game.state = state; 
             game.start();
         }
@@ -161,7 +194,13 @@ export const startHandlingGameBattleSocket = (
     // завершаем игру
     socket.on(
         String(Shared.Enums.SocketChannels.GAME_ON_END),
-        (result: any[]) => setBattleResult(result)
+        (result: any[]) => {
+            dispatch(
+                GameActions.action_game_set_started(false)
+            );
+
+            setBattleResult(result)
+        }
     );
 
     socket.on(
