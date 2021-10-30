@@ -15,7 +15,6 @@ const ProfilePage: React.FC<RoutesPropsType> = ({ match }) => {
     return (
         <main>
             <Navbar />
-            <Chat />
         </main>
     );
 };

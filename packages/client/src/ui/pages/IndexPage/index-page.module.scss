@@ -1,0 +1,32 @@
+%area-shared {
+    width: 100%;
+    height: 100%;
+}
+
+.page {
+    position: relative;
+    
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+    grid-template: 100px 3fr 6fr / 1fr;
+
+    .navbar {
+        grid-area: 1 / 1 / 2 / 2;
+
+        @extend %area-shared;
+    }
+
+    .dashboard {
+        grid-area: 2 / 1 / 3 / 2;
+        
+        @extend %area-shared;
+    }
+
+    .lobby {
+        grid-area: 3 / 1 / 4 / 2;
+        
+        @extend %area-shared;
+    }
+}

@@ -166,8 +166,8 @@ export default class SocketManager {
                                 socket.emit(
                                     String(Shared.Enums.SocketChannels.APP_ON_SET_STATE), 
                                     {
-                                        online: this.state.online,
-                                        chat: this.state.chat,
+                                        online: [], // TODO: hardcode
+                                        chat: [], // TODO: hardcode
                                         totalServers: this.state.lobby.length,
                                     }
                                 );
@@ -199,7 +199,11 @@ export default class SocketManager {
             if (socket.handshake.query.gameServer !== undefined) {
                 const gameServer = JSON.parse(socket.handshake.query.gameServer as string);
                 
-                GameServerSocketHandler.handle(socket, this, `${gameServer.address}/${gameServer.TCP_port}`);
+                GameServerSocketHandler.handle(
+                    socket, 
+                    this, 
+                    `${gameServer.address}/${gameServer.TCP_port}`
+                );
                 this.addGameServerToState(gameServer);
             }
             

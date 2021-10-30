@@ -8,5 +8,10 @@
     width: 100vw;
     overflow: hidden;
 
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+
     background-color: #333;
 }

@@ -3,24 +3,24 @@
 }
 
 .wrapper {
-    width: 100vw;
-    height: 5vh;
+    width: 100%;
+    height: 100%;
 
     display: flex;
     justify-content: space-around;
     align-items: center;
+    gap: 1%;
 
     .link {
-        width: 25%;
-        height: 100%;
-        
-        background: purple;
-        color: black;
-        border: 3px solid gray;
-        cursor: pointer;
-
         display: flex;
         justify-content: center;
         align-items: center;
+
+        border: 5px solid gray;
+
+        background: purple;
+        color: black;
+
+        width: 20%;
     }
 }

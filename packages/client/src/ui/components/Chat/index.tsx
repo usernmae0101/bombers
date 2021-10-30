@@ -19,11 +19,21 @@ const Chat = () => {
     return (
         <div className={styles.chat}>
             <div className={styles.messages}>
-                <ul>{messages.map(message => <Message key={message.date} message={message} />)}</ul>
+                <ul>
+                    { 
+                        messages.map(message => <Message key={message.date} message={message} />)
+                    }
+                </ul>
             </div>
+
             <div className={styles.members}>
-                <ul>{members.map((member, i) => <Member key={member.nickname + i} member={member} />)}</ul>
+                <ul>
+                    {
+                        members.map((member, i) => <Member key={member.nickname + i} member={member} />)
+                    }
+                </ul>
             </div>
+
             <SendForm />
         </div>
     );

@@ -1,0 +1,41 @@
+%full-size {
+    width: 100%;
+    height: 100%;
+}
+
+.lobby {
+    display: grid;
+    grid-template: 1fr / 1fr 8fr 1fr;
+
+    width: 80%;
+    height: 100%;
+
+    margin: 0 auto;
+}
+
+.list {
+    @extend %full-size;
+
+    background: rgba(0, 0, 0, 0.3);
+
+    table {
+        width: 80%;
+        height: 100%;
+
+        margin: 0 auto;
+    }
+}
+
+.left, .right {
+    @extend %full-size;
+    
+    button {
+        @extend %full-size;
+        
+        cursor: pointer;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

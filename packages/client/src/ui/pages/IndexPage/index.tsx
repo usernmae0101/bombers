@@ -7,7 +7,8 @@ import Lobby from "../../components/Lobby";
 import Navbar from "../../components/Navbar";
 import * as ChatSelectors from "../../redux/selectors/chat-selectors";
 import Loader from "../../components/Loader";
-import Result from "../../components/Battle/Result";
+import BattleResult from "../../components/Battle/Result";
+import styles from "./index-page.module.scss";
 
 const IndexPage: React.FC<{ 
 	location?: any; 
@@ -17,13 +18,25 @@ const IndexPage: React.FC<{
 	if (!isChatLoaded) return <Loader />;
 
 	return (
-		<main>
-			<Navbar />
-			<Dashboard />
-			<Lobby />
-			<Chat />
-			{ location.state && <Result {...location.state}/> }
-		</main>
+		<div className={styles.page}>
+			<div className={styles.navbar}>
+				<Navbar />
+			</div>
+			
+			<div className={styles.dashboard}>
+				<Dashboard />
+			</div>
+
+			<div className={styles.lobby}>
+				<Lobby />
+			</div>
+
+			{ 
+				location.state && 
+
+				<BattleResult {...location.state}/> 
+			}
+		</div>
 	);
 };
 
