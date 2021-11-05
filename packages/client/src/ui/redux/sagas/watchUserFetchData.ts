@@ -23,8 +23,12 @@ function* userFetchDataSocail(action: UserTypes.UserFetchDataSocialActionType) {
                 avatar 
             })
         );
-        yield put(UserActions.action_user_set_auth_token(token))
-        yield put(UserActions.action_user_set_auth(true));
+        yield put(
+            UserActions.action_user_set_auth_token(token)
+        )
+        yield put(
+            UserActions.action_user_set_auth(true)
+        );
     } catch (err) {
         // Сервер вернул код в диапазоне 3xx-5xx. Диспатчим код ошибки в стор.
         yield put(
@@ -34,5 +38,8 @@ function* userFetchDataSocail(action: UserTypes.UserFetchDataSocialActionType) {
 };
 
 export default function* watchUserFetchData() {
-    yield takeEvery(UserTypes.ACTION_TYPE_USER_FETCH_DATA_SOCIAL, userFetchDataSocail);
+    yield takeEvery(
+        UserTypes.ACTION_TYPE_USER_FETCH_DATA_SOCIAL, 
+        userFetchDataSocail
+    );
 };

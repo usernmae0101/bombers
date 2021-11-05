@@ -1,22 +1,34 @@
 import { Request, Response } from "express";
 
+import * as Shared from "@bombers/shared/src/idnex";
 import * as Models from "../models/";
-import * as Services from "../services/";
 
 /**
  * Авторизация через социальную сеть. 
  */
 export const auth_user_social = (req: Request, res: Response) => {
-    Models.UserModel.findOne(Services.request_select_auth_user_socail_data(req))
+    Models.UserModel.findOne(
+        {
+            uid: +req.header("X-Uid")
+        },
+        "nickname rating avatar _id"
+    )
         .then(user => {
             if (!user) { // if user === null 
                 res.status(404).json(
-                    Services.response_auth_user_social_error()
+                    {
+                        code: Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL
+                    }
                 );
             }
             else {
                 res.status(200).json(
-                    Services.response_fetch_user_data(user)
+                    {
+                        nickname: user.nickname,
+                        rating: user.rating,
+                        avatar: user.avatar,
+                        token: user._id
+                    }
                 );
             }
         });
@@ -26,15 +38,28 @@ export const auth_user_social = (req: Request, res: Response) => {
  * Создание пользователя, подключенного через социальную сеть.
  */
 export const create_user_social = (req: Request, res: Response) => {
-    Models.UserModel.create(Services.request_select_create_user_socail_data(req))
+    Models.UserModel.create(
+        {
+            nickname: req.body.nickname,
+            social: req.header("X-Social"),
+            uid: +req.header("X-Uid")
+        }
+    )
         .then(user => {
             res.status(201).json(
-                Services.response_fetch_user_data(user)
+                {
+                    nickname: user.nickname,
+                    rating: user.rating,
+                    avatar: user.avatar,
+                    token: user._id
+                }
             );
         })
         .catch(error => {
             res.status(401).json(
-                Services.response_create_user_social_error(error)
+                {
+                    message: error.message
+                }
             );
         });
 };

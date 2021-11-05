@@ -4,7 +4,7 @@ const initialState: LobbyTypes.LobbyStateType = {
     servers: [],
     pagination: {
         page: 1,
-        items: 5
+        items: 10
     },
     isLoading: true
 };

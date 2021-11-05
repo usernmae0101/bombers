@@ -26,8 +26,8 @@ const Lobby = () => {
         );
     }, [paginationPage]);
 
-    const isDisablePaginationDown = paginationPage === 1;
-    const isDisablePaginationUp = servers.length <= paginationPage * paginationItems;
+    const isDisablePaginationLeft = paginationPage === 1;
+    const isDisablePaginationRight = servers.length <= paginationPage * paginationItems;
 
     if (isLoading) return (<Loader />);
 
@@ -35,7 +35,7 @@ const Lobby = () => {
         <div className={styles.lobby}>
             <div className={styles.left}>
                 <button
-                    disabled={isDisablePaginationDown}
+                    disabled={isDisablePaginationLeft}
                     onClick={() => setPaginationPage(paginationPage - 1)}
                 >
                     {"<"}
@@ -65,7 +65,7 @@ const Lobby = () => {
 
             <div className={styles.right}>
                 <button
-                    disabled={isDisablePaginationUp}
+                    disabled={isDisablePaginationRight}
                     onClick={() => setPaginationPage(paginationPage + 1)}
                 >
                     {">"}

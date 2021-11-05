@@ -13,16 +13,16 @@ export interface IDocumentUser extends mongoose.Document {
     social?: "vk" | "ok" | "fb";
 }
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     uid: {
         type: Number,
-        required: true,
         unique: true
     },
     nickname: {
         type: String,
         required: true,
         uniquie: true,
+        dropDups: true,
         minlength: 5,
         maxlength: 20
     },
@@ -44,4 +44,8 @@ const UserSchema = new mongoose.Schema({
     }
 });
 
-export const UserModel = mongoose.model<IDocumentUser>("User", UserSchema);
+userSchema.static("findByNickname", function(nickname: string) {
+    return this.findOne({ nickname });
+}); 
+
+export const UserModel = mongoose.model<IDocumentUser>("User", userSchema);

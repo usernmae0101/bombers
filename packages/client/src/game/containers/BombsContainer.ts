@@ -24,7 +24,7 @@ export default class BombsContainer extends BaseContainer<BombEntity> {
     }
 
     /**
-     * Коллбэек при добавлении бомбы на канвас.
+     * Коллбэк при добавлении бомбы на канвас.
      */
     private _onAdd = (position: string) => {
         this._timestampBombPlacing[position] = Date.now();

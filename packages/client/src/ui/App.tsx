@@ -16,6 +16,7 @@ import { debug } from "@bombers/shared/src/tools/debugger";
 
 const Main = () => {
     const dispatch = useDispatch();
+
     const [roomToRedirect, setRoomToRedirect] = React.useState(``);
 
     const isAuthViaSocial = useSelector(UserSelectors.select_user_auth_is_social);
@@ -39,97 +40,109 @@ const Main = () => {
     };
 
     // Подписка на монтирование компонента. ComponentDidMonut.
-    React.useEffect(() => {
-        // Режим разработки. Задаём невалидные данные, чтобы создать новый аккаунт.
-        if (isDevMode) {
-            const id = window.crypto.getRandomValues(new Uint16Array(1))[0];
-            dispatchSocial("vk", id);
-        }
-        
-        // Авторизация через IFrame.
-        else if (window.parent != window) {
-            const host = window.parent.location.host;
-
-            if (host === "vk.com") {
-                bridge.send(`VKWebAppInit`).then(async () => {
-                    const { id } = await bridge.send("VKWebAppGetUserInfo");
-                    dispatchSocial("vk", id);
-                });
+    React.useEffect(
+        () => {
+            // Режим разработки. Задаём невалидные данные, чтобы создать новый аккаунт.
+            if (isDevMode) {
+                const id = window.crypto.getRandomValues(new Uint16Array(1))[0];
+                dispatchSocial("vk", id);
             }
-        }
-    }, []);
+            
+            // Авторизация через IFrame.
+            else if (window.parent != window) {
+                const host = window.parent.location.host;
+
+                if (host === "vk.com") {
+                    bridge.send(`VKWebAppInit`).then(async () => {
+                        const { id } = await bridge.send("VKWebAppGetUserInfo");
+                        dispatchSocial("vk", id);
+                    });
+                }
+            }
+        }, 
+        []
+    );
     
     // Подписка на изменение свойства "isAuthViaSocial".
-    React.useEffect(() => {
-        // Авторизация выполнена через социальную сеть, получаем данные через API.
-        if (isAuthViaSocial === true) {
-            dispatch(
-                UserActions.action_user_fetch_data_social({
-                    uid: userUid,
-                    social: userSocialType
-                })
-            );
-        }
-        
-        // TODO:
-        if (isAuthViaSocial === false) { }
-    }, [isAuthViaSocial]);
-  
-    // Подписка на измениение свойства "errorCode".  
-    React.useEffect(() => {
-        switch (errorCode) { 
-            // Пользователь не был найден в базе данных - создаём.
-            case Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL:
+    React.useEffect(
+        () => {
+            // Авторизация выполнена через социальную сеть, получаем данные через API.
+            if (isAuthViaSocial === true) {
                 dispatch(
-                    UserActions.action_user_create_social({
+                    UserActions.action_user_fetch_data_social({
                         uid: userUid,
-                        social: userSocialType,
-                        data: {
-                            nickname: `user${userUid}`
-                        }
+                        social: userSocialType
                     })
                 );
-                break;
-        }
-    }, [errorCode]);
+            }
+            
+            // TODO:
+            if (isAuthViaSocial === false) { }
+        }, 
+        [isAuthViaSocial]
+    );
+  
+    // Подписка на измениение свойства "errorCode".  
+    React.useEffect(
+        () => {
+            switch (errorCode) { 
+                // Пользователь не был найден в базе данных - создаём.
+                case Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL:
+                    dispatch(
+                        UserActions.action_user_create_social({
+                            uid: userUid,
+                            social: userSocialType,
+                            data: {
+                                nickname: `user${userUid}`
+                            }
+                        })
+                    );
+                    break;
+            }
+        }, 
+        [errorCode]
+    );
 
     // Подписка на измение свойства "isAuth".
-    React.useEffect(() => {
-        (async () => {
-            if (isAuth) {
-                // Подключение к веб-сокету по авторизационному токену.
-                const _socket = io("/client", {
-                    query: {
-                        authToken
-                    }
-                });
-                
-                startHandlingAppSocket(
-                    _socket, 
-                    dispatch, 
-                    setRoomToRedirect
-                );
-
-                // подгружаем игровые ресурсы
-                Loader.shared
-                    .add([
-                        Shared.Constants.GAME_RESOURCES_SPRITESHEET_EXPLOSION,
-                        Shared.Constants.GAME_RESOURCES_IMAGE_GRASS,
-                        Shared.Constants.GAME_RESOURCES_IMAGE_TILESET
-                    ])
-                    .load(() => { 
-                        debug(
-                            "Assets have been loaded",
-                            Loader.shared.resources
-                        ); 
-
-                        dispatch(
-                            UserActions.action_user_set_socket_instance(_socket)
-                        );
+    React.useEffect(
+        () => {
+            (async () => {
+                if (isAuth) {
+                    // Подключение к веб-сокету по авторизационному токену.
+                    const _socket = io("/client", {
+                        query: {
+                            authToken
+                        }
                     });
-            }
-        })();
-    }, [isAuth]);
+                    
+                    startHandlingAppSocket(
+                        _socket, 
+                        dispatch, 
+                        setRoomToRedirect
+                    );
+
+                    // подгружаем игровые ресурсы
+                    Loader.shared
+                        .add([
+                            Shared.Constants.GAME_RESOURCES_SPRITESHEET_EXPLOSION,
+                            Shared.Constants.GAME_RESOURCES_IMAGE_GRASS,
+                            Shared.Constants.GAME_RESOURCES_IMAGE_TILESET
+                        ])
+                        .load(() => { 
+                            debug(
+                                "Assets have been loaded",
+                                Loader.shared.resources
+                            ); 
+
+                            dispatch(
+                                UserActions.action_user_set_socket_instance(_socket)
+                            );
+                        });
+                }
+            })();
+        }, 
+        [isAuth]
+    );
 
     if (!isAuth || !socket) 
         return (<LoaderComponent />);

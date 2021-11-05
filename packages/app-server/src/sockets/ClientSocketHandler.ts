@@ -86,7 +86,10 @@ export default class ClientSocketHandler {
             (message: string) => {
                 manager.addMessageToState({
                     author: currentSocketUserData,
-                    message: message.slice(0, Shared.Constants.CHAT_MAX_MESSAGE_LENGTH),
+                    message: message.slice(
+                        0, 
+                        Shared.Constants.CHAT_MAX_MESSAGE_LENGTH
+                    ),
                     date: Date.now()
                 });
             });

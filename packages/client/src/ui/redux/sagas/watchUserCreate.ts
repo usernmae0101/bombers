@@ -24,8 +24,12 @@ function* userCreateSocial(action: UserTypes.UserCreateSocialActionType) {
 				avatar 
 			})
 		);
-		yield put(UserActions.action_user_set_auth_token(token));
-		yield put(UserActions.action_user_set_auth(true));
+		yield put(
+			UserActions.action_user_set_auth_token(token)
+		);
+		yield put(
+			UserActions.action_user_set_auth(true)
+		);
 	} catch (err) {
 		// Сервер вернул код в диапазоне 3xx-5xx. Диспатчим сообщение об ошибке в стор.
 		yield put(
@@ -35,6 +39,9 @@ function* userCreateSocial(action: UserTypes.UserCreateSocialActionType) {
 }
 
 export default function* watchUserCreate() {
-	yield takeEvery(UserTypes.ACTION_TYPE_USER_CREATE_SOCIAL, userCreateSocial);
+	yield takeEvery(
+		UserTypes.ACTION_TYPE_USER_CREATE_SOCIAL, 
+		userCreateSocial
+	);
 }
 

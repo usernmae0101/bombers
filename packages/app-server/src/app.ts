@@ -52,13 +52,15 @@ const io = new Server(server);
 const socketManager = new SocketManager(io, state);
 socketManager.handle();
 
+// disable autoIdex in production
+mongoose.set("autoIndex", isDevMode);
+
 // mongoose connection
-mongoose.connect(`mongodb://${mongoHostname}:27017/bombers`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(`mongodb://${mongoHostname}:27017/bombers`)
     .then(() => {
         server.listen(port);
         console.log(`handlig as localhost:${port}`);
     })
-    .catch(() => { console.error("mongodb error connection") });
+    .catch(() => { 
+        console.error("mongodb error connection") 
+    });

@@ -99,7 +99,7 @@ export type UserSetAuthTokenActionType = {
 };
 
 export type UserSetAuthTypeActionType = {
-    type: typeof ACTION_TYPE_USER_SET_AUTH_TYPE,
+    type: typeof ACTION_TYPE_USER_SET_AUTH_TYPE;
     payload: boolean;
 };
 
