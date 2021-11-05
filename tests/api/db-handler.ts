@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 
 export const dbConnection = async () => {
-    await mongoose.connect('mongodb://localhost:27017/test_bombers', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
+    await mongoose.connect('mongodb://localhost:27017/test_bombers');
 };
 
 export const closeDatabase = async () => {

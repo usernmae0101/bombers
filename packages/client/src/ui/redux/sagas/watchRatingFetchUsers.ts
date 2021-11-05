@@ -1,7 +1,6 @@
 import { call, put, takeEvery } from "@redux-saga/core/effects";
 
-import { api_rating_fetch_users } from "../../../api/rating";
-import { FetchRatingUsersReposnseType } from "../../../api/rating/types";
+import * as API from "@bombers/client/src/api/";
 import * as RatingActions from "@bombers/client/src/ui/redux/actions/rating-actions";
 import * as RatingTypes from "@bombers/client/src/ui/redux/types/rating-types";
 import { debug } from "@bombers/shared/src/tools/debugger";
@@ -12,8 +11,8 @@ function* ratingFetchUsers(action: RatingTypes.FetchUsersActionType) {
             RatingActions.action_rating_set_is_fetching(true)
         );
 
-        const response: FetchRatingUsersReposnseType = yield call(
-            api_rating_fetch_users,
+        const response: API.Rating.FetchRatingUsersReposnseType = yield call(
+            API.Rating.api_rating_fetch_users,
             action.payload
         );
 

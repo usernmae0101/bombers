@@ -1,6 +1,15 @@
 import axios from "axios";
 
-import { AuthUserDataRsponseType } from "./types";
+export type AuthUserDataRsponseType = {
+    /**  никнейм пользователя. */
+    nickname: string;
+    /** аватар пользователя. url. */
+    avatar: string;
+    /** рейтинг пользователя. */
+    rating: number;
+    /** пользовательский токен. используетя для аутентификации к веб-сокету. */
+    token: string;
+};
 
 /**
  * Генерация HTTP-заголовков для пользователей, 

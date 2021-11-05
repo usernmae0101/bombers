@@ -1,14 +1,13 @@
 import { call, put, takeEvery } from "@redux-saga/core/effects";
 
-import { api_user_auth_social } from "../../../api/users";
-import { AuthUserDataRsponseType } from "../../../api/users/types";
+import * as API from "@bombers/client/src/api/";
 import * as UserActions from "../actions/user-actions";
 import * as UserTypes from "../types/user-types";
 
 function* userFetchDataSocail(action: UserTypes.UserFetchDataSocialActionType) {
     try {
-        const response: AuthUserDataRsponseType = yield call(
-            api_user_auth_social,
+        const response: API.Users.AuthUserDataRsponseType = yield call(
+            API.Users.api_user_auth_social,
             action.payload.uid,
             action.payload.social
         );
