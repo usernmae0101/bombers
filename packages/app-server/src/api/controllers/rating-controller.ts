@@ -28,7 +28,8 @@ export const get_sorted_portion = (req: Request, res: Response) => {
                     res.json(
                         {
                             users,
-                            hasMoreUsers: (totalUsers - (users.length + skip)) > 0 
+                            hasMoreUsers: (totalUsers - (users.length + skip)) > 0,
+                            totalUsers
                         }
                     );
                 });

@@ -91,7 +91,7 @@ const RatingList = () => {
             node && observer.current.observe(node)
         },
         [isFetching, hasMoreUsers]
-    ) 
+    );
 
     return (
         <div className={styles.list}>

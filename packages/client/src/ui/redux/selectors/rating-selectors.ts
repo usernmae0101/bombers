@@ -12,3 +12,7 @@ export const select_has_more_users = (state: AppStateType): boolean => {
 export const select_is_fetching = (state: AppStateType): boolean => {
     return state.rating.isFetching;
 };
+
+export const select_total_users = (state: AppStateType): number => {
+    return state.rating.totalUsers;
+};

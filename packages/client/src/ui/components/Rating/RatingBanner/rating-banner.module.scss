@@ -1,0 +1,31 @@
+%flex-align-center {
+    display: flex;
+    align-items: center;
+}
+
+.banner {
+    width: 80%;
+    height: 100%;
+
+    margin: 0 auto;
+
+    @extend %flex-align-center;
+
+    justify-content: space-between;
+    
+    background: red;
+
+    .label {
+        @extend %flex-align-center;
+
+        margin-left: 5%;
+        font-size: 2em;
+    }
+
+    .total {
+        @extend %flex-align-center;
+
+        margin-right: 5%;
+        font-size: 1em;
+    }
+}

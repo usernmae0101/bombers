@@ -14,6 +14,8 @@ export type FetchRatingUsersReposnseType = {
     users: RatingUserResponseType[]; 
     /** Имеются ли в базе данных ещё пользователи. */
     hasMoreUsers: boolean;
+    /** Всего пользователей в базе данных */
+    totalUsers: number;
 };
 
 export const api_rating_fetch_users = async (

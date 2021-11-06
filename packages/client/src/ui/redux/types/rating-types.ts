@@ -3,6 +3,7 @@ export const ACTION_TYPE_RATING_SET_HAS_MORE_USERS = "RATING/SET_HAS_MORE_USERS"
 export const ACTION_TYPE_RATING_SET_IS_FETCHING = "RATING/SET_IS_FETCHING";
 export const ACTION_TYPE_RATING_FETCH_USERS = "RATING/FETCH_USERS";
 export const ACTION_TYPE_RATING_SET_USERS = "RATING/SET_USERS";
+export const ACTION_TYPE_RATING_SET_TOTAL_USERS = "RATING/SET_TOTAL_USERS";
 
 export type UserRatingType = {
 	avatar: string;
@@ -13,6 +14,7 @@ export type UserRatingType = {
 export type RatingStateType = {
 	users: UserRatingType[];
 	hasMoreUsers: boolean;
+	totalUsers: number;
 	isFetching: boolean;
 };
 
@@ -41,5 +43,11 @@ export type SetUsersActionType = {
 	payload: UserRatingType[];
 };
 
+export type SetTotalUsersActionType = {
+	type: typeof ACTION_TYPE_RATING_SET_TOTAL_USERS;
+	payload: number;
+};
+
 export type RatingActionTypes = SetHasMoreUsersActionType | AddUsersActionType
-	| SetIsFetchingActionType | FetchUsersActionType | SetUsersActionType;
+	| SetIsFetchingActionType | FetchUsersActionType | SetUsersActionType
+	| SetTotalUsersActionType;

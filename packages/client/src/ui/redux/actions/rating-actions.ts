@@ -7,6 +7,13 @@ export const action_rating_add_users = (
     payload: users
 });
 
+export const action_rating_set_total_users = (
+    totalUsers: number
+): RatingTypes.SetTotalUsersActionType => ({
+    type: RatingTypes.ACTION_TYPE_RATING_SET_TOTAL_USERS,
+    payload: totalUsers
+});
+
 export const action_rating_set_has_more_users = (
     hasMoreUsers: boolean
 ): RatingTypes.SetHasMoreUsersActionType => ({

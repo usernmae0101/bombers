@@ -1,19 +1,7 @@
 .page {
     display: grid;
-    grid-template: 100px 1fr 6fr / 1fr;
+    grid-template: 100px 15vh 85vh / 1fr;
 
     width: 99vw;
     height: 100vh;
-}
-
-.label {
-    display: flex;
-    align-items: center;
-
-    width: 80%;
-
-    margin: 0 auto;
-
-    font-size: 2em;
-    background: silver;
 }

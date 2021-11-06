@@ -16,7 +16,7 @@ function* ratingFetchUsers(action: RatingTypes.FetchUsersActionType) {
             action.payload
         );
 
-        const { users, hasMoreUsers } = response;
+        const { users, hasMoreUsers, totalUsers } = response;
         
         // Добавляем пользователей в список (не устанавливаем)
         yield put(
@@ -25,7 +25,9 @@ function* ratingFetchUsers(action: RatingTypes.FetchUsersActionType) {
         yield put(
             RatingActions.action_rating_set_has_more_users(hasMoreUsers)
         );
-        
+        yield put(
+            RatingActions.action_rating_set_total_users(totalUsers)
+        );
     } catch (err) {
         debug(
             "Error occured trying fetch rating users",

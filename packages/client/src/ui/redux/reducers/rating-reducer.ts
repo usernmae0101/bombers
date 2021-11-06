@@ -3,7 +3,8 @@ import * as RatingTypes from "../types/rating-types";
 const initialState: RatingTypes.RatingStateType = {
     users: [],
     hasMoreUsers: true,
-    isFetching: false
+    isFetching: false,
+    totalUsers: null
 };
 
 export default function ratingReducer(
@@ -30,6 +31,11 @@ export default function ratingReducer(
             return { 
                 ...state, 
                 isFetching: action.payload 
+            };
+        case RatingTypes.ACTION_TYPE_RATING_SET_TOTAL_USERS:
+            return {
+                ...state,
+                totalUsers: action.payload
             };
         default: return state;  
     }

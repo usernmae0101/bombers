@@ -5,7 +5,8 @@ import Chat from "../../components/Chat";
 import Navbar from "../../components/Navbar";
 import * as ChatSelectors from "../../redux/selectors/chat-selectors";
 import Loader from "../../components/Loader";
-import RatingList from "../../components/RatingList";
+import RatingList from "../../components/Rating/RatingList";
+import RatingBanner from "../../components/Rating/RatingBanner";
 import styles from "./rating-page.module.scss";
 
 const RatingPage = () => {
@@ -16,7 +17,7 @@ const RatingPage = () => {
     return (
         <div className={styles.page}>
             <Navbar />
-            <div className={styles.label}>Рейтинг</div>
+            <RatingBanner />
             <RatingList />
         </div>
     );
