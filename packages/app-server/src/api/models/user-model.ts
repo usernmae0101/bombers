@@ -46,6 +46,6 @@ const userSchema = new mongoose.Schema({
 
 userSchema.static("findByNickname", function(nickname: string) {
     return this.findOne({ nickname });
-}); 
+});
 
 export const UserModel = mongoose.model<IDocumentUser>("User", userSchema);

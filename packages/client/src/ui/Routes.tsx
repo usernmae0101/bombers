@@ -44,7 +44,7 @@ const Routes: React.FC<{ roomToRedirect: string}> = ({
 			/>
 			<Route 
 				path="/profile/:nickname" 
-				render={() => checkoutRedirect(roomToRedirect, ProfilePage)} 
+				render={(props) => checkoutRedirect(roomToRedirect, ProfilePage, props)} 
 			/>
 			<Route 
 				path="/room/:address/:port" 

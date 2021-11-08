@@ -1,0 +1,7 @@
+.page {
+    width: 99vw;
+    height: 100vh;
+
+    display: grid;
+    grid-template: 100px 3fr 4fr / 1fr;
+}

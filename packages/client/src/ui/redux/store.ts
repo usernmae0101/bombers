@@ -7,6 +7,7 @@ import gameReducer from "./reducers/game-reducer";
 import lobbyReducer from "./reducers/lobby-reducer";
 import userReducer from "./reducers/user-reducer";
 import ratingReducer from "./reducers/rating-reducer";
+import profileReducer from "./reducers/profile-reducer";
 import rootSaga from "./sagas/root-saga";
 
 const reducer = combineReducers({
@@ -15,7 +16,8 @@ const reducer = combineReducers({
     dashboard: dashboardReducer,
     user: userReducer,
     game: gameReducer,
-    rating: ratingReducer
+    rating: ratingReducer,
+    profile: profileReducer
 });
 
 export type AppStateType = ReturnType<typeof reducer>;

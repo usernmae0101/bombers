@@ -248,9 +248,7 @@ export default class Game {
      * Добавляет задним фоном траву на игровой канвас.
      */
     public addGrassBackgroundCanvas() {
-        const grass = Sprite.from(
-            Shared.Constants.GAME_RESOURCES_IMAGE_GRASS
-        );
+        const grass = Sprite.from(Shared.Constants.GAME_RESOURCES_IMAGE_GRASS);
 
         grass.x = Shared.Constants.GAME_RESOLUTION_CANVAS_MARGIN;
         grass.y = Shared.Constants.GAME_RESOLUTION_CANVAS_MARGIN;
