@@ -3,11 +3,6 @@ import { calculatePlayerCellPosition, calculateOverlapDistance } from "./utils/h
 
 const { EntityNumbers } = Shared.Enums;
 
-/**
- * Проверяет, вышел ли игрок за границу канваса.
- * 
- * @returns да или нет
- */
 export function isOutOfBorder(
     player: Shared.Interfaces.IGameStatePlayer
 ): boolean {
@@ -27,9 +22,6 @@ export function isOutOfBorder(
  * Проверяет, находится ли в ячейке идентификатор игровой сущности
  * с которой игрок сталкивается. Если игрок хоть чуть-чуть находится 
  * на бомбе, игнорирует столкновение, позволяя "скользить".
- * 
- * @param overlapData - информация о пересечении с ячейкой
- * @returns да или нет
  */
 export const isPlayerCollide = (
     map: number[][][],

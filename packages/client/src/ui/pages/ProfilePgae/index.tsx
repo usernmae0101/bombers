@@ -5,8 +5,7 @@ import Navbar from "../../components/Navbar";
 import styles from "./profile-page.module.scss";
 import { RoutesPropsType } from "../../Routes";
 import Loader from "../../components/Loader";
-import ProfileBoard from "../../components/Profile/ProfileBoard";
-import ProfileNav from "../../components/Profile/ProfileNav";
+import ProfileContainer from "../../components/Profile/ProfileContainer";
 
 const ProfilePage: React.FC<RoutesPropsType> = ({ match }) => {
     const { nickname } = match.params;
@@ -14,8 +13,7 @@ const ProfilePage: React.FC<RoutesPropsType> = ({ match }) => {
     return (
         <div className={styles.page}>
             <Navbar />
-            <ProfileBoard {...{ nickname }} />
-            <ProfileNav {...{ nickname }} />
+            <ProfileContainer {...{ nickname }} />
         </div>
     );
 };

@@ -2,7 +2,8 @@ import React from "react";
 
 const ProfileNav: React.FC<{
     nickname: string;
-}> = ({ nickname }) => {
+    localUserNickname: string;
+}> = ({ nickname, localUserNickname }) => {
     return (
         <div>
         </div>

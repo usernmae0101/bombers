@@ -15,30 +15,19 @@ import {
 const { EntityNumbers } = Shared.Enums;
 
 interface IBlazeList {
-    /** Идентификатор игровой сущности пламени. */
     id: Shared.Enums.EntityNumbers;
-    /** Ряд ячейки на карте. */
     row: number;
-    /** Колонка ячейки на карте. */
     col: number;
 }
 
 interface IDirectionBlazeState {
-    /** Продолжать ли распространять пламя в направлении. */
     isStopped: boolean;
-    /** Идентификатор сущности края пламени для направления. */
     edge: Shared.Enums.EntityNumbers;
-    /** Идентификатор сущности промежуточного пламени для направления. */
     middle: Shared.Enums.EntityNumbers;
-    /** Ряд ячейки на карте, куда добавлять пламя. */
     row: number;
-    /** На какое число увеличивать ячейки. */
     increaseBy: 1 | -1;
-    /** Колонка ячейки на карте, куда добавлять пламя. */
     col: number;
-    /** В каком направлении распространять. */
     spreadBy: "col" | "row";
-    /** Предельный порядковый номер ячейки для направления. */
     limitSpread: number;
 }
 
@@ -82,13 +71,6 @@ export const placeBombToMap = (
     );
 };
 
-/**
- * Удаляет бомбу с игровой карты. Увеличивает количество
- * доступных бомб у игрока, поставившего бомбу. Добавляет 
- * кратер на карту. Вызывает функцию взрыва бомбы.
- * 
- * @param epicetner - [ряд ячеки, колонка ячейки]
- */
 export const removeBombFromMap = (
     epicenter: [number, number],
     proxyState: Shared.Interfaces.IGameState,
@@ -128,8 +110,6 @@ export const removeBombFromMap = (
 /**
  * Взрывает бомбу. Расчитывает радиус по каждому направлению и
  * добавляет идентификаторы пламени в ячейки на игровой карте.
- * 
- * @param epicenter - [ряд ячеки, колонка ячейки]
  */
 export const detonateBomb = (
     epicenter: [number, number],

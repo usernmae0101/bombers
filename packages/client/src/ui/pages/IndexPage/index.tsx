@@ -16,11 +16,8 @@ const IndexPage: React.FC<{
 			<Navbar />
 			<Dashboard />
 			<Lobby />
-
 			{ 
-				location.state && 
-
-				<BattleResult {...location.state}/> 
+				location.state && <BattleResult {...location.state} /> 
 			}
 		</div>
 	);

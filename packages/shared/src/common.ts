@@ -2,7 +2,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import { checkPlayerOverlap, isOutOfBorder, isPlayerCollide } from "./collision";
 
 /**
- * Перебирает идентификаторы игровых сущностей из ячейки, с которой 
+ * Перебирает идентификаторы игровых сущностей из ячейки с которой 
  * игрок пересёкся. Удаляет поднятый бонусный предмет с карты.
  */
 export const filterOverlapData = (
@@ -142,7 +142,7 @@ export const pickUpBonusItem = (
  * обновляет направление и выравнивает игрока по оси обратной его движению: 
  * если движется по Y - выравнивает по X, а если движется по X - выравнивает по Y.
  * 
- * @returns данные о ячейке, пресеbчённой игроком
+ * @returns данные о ячейке, пресечённой игроком
  */
 export const movePlayer = (
     player: Shared.Interfaces.IGameStatePlayer,

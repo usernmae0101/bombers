@@ -2,7 +2,7 @@ export const ACTION_TYPE_PROFILE_SET_AVATAR = "PROFILE/SET_AVATAR";
 export const ACTION_TYPE_PROFILE_SET_RATING = "PROFILE/SET_RATING"; 
 export const ACTION_TYPE_PROFILE_SET_PLACE = "PROFILE/SET_PLACE"; 
 export const ACTION_TYPE_PROFILE_FETCH_DATA = "PROFILE/FETCH_DATA"; 
-export const ACTION_TYPE_PROFILE_SET_READY = "PROFILE/SET_READY"; 
+export const ACTION_TYPE_PROFILE_SET_DATA_FETCHING = "PROFILE/SET_DATA_FETCHING"; 
 
 export type NotificationType = {};
 
@@ -14,10 +14,15 @@ type QueryTypes = {
 };
 
 export type ProfileStateType = {
-	avatar: string;
-	rating: number;
-	place: number;
-	isReady: boolean;
+	data: {
+		avatar: string;
+		rating: number;
+		place: number;
+		createdAt: number;
+		lastSeen: number;
+		isOnline: boolean;
+		isFetching: boolean;
+	};
 	notifications: QueryTypes & {
 		list: NotificationType[];
 	};
@@ -46,10 +51,10 @@ export type FetchDataActionType = {
 	payload: string;
 };
 
-export type SetReadyActionType = {
-	type: typeof ACTION_TYPE_PROFILE_SET_READY;
+export type SetDataFetchingActionType = {
+	type: typeof ACTION_TYPE_PROFILE_SET_DATA_FETCHING;
 	payload: boolean;
 };
 
 export type ProfileActionsType = SetRatingActionType | SetPlaceACtionType 
-	| SetAvatarActionType | SetReadyActionType;
+	| SetAvatarActionType | SetDataFetchingActionType;

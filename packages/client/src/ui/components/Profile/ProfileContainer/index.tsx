@@ -1,20 +1,21 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import styles from "./profile-board.module.scss";
+import styles from "./profile-container.module.scss";
 import * as ProfileActions from "@bombers/client/src/ui/redux/actions/profile-actions";
 import * as ProfileSelectors from "@bombers/client/src/ui/redux/selectors/profile-selectors";
+import * as UserSelectors from "@bombers/client/src/ui/redux/selectors/user-selecrots";
+import ProfileBanner from "./../ProfileBanner/";
+import ProfileNav from "./../ProfileNav/";
 
-const ProfileBoard: React.FC<{
+const ProfileContainer: React.FC<{
     nickname: string;
 }> = ({ nickname }) => {
     const dispatch = useDispatch();
-
-    const isReady = useSelector(ProfileSelectors.select_profile_is_ready);
-    const rating = useSelector(ProfileSelectors.select_profile_rating);
-    const place = useSelector(ProfileSelectors.select_profile_place);
-    const avatar = useSelector(ProfileSelectors.select_profile_avatar);
     
+    const isFetching = useSelector(ProfileSelectors.select_profile_data_is_fetching);
+    const localUserNickname = useSelector(UserSelectors.select_user_data_nickname);
+
     React.useEffect(
         () => {
             dispatch(
@@ -23,14 +24,14 @@ const ProfileBoard: React.FC<{
 
             return () => {
                 dispatch(
-                    ProfileActions.action_profile_set_ready(false)
+                    ProfileActions.action_profile_set_data_fetching(true)
                 ); 
             };
         },
         []
     );
 
-    if (!isReady) {
+    if (isFetching) {
         return (
             <div>Loading...</div>
         );
@@ -38,10 +39,10 @@ const ProfileBoard: React.FC<{
 
     return (
         <div>
-            <div>{rating}</div>
-            <div>{place}</div>
+            <ProfileBanner {...{ nickname, localUserNickname }} />
+            <ProfileNav {...{ nickname, localUserNickname }} />
         </div>
     );
 };
 
-export default ProfileBoard;
+export default ProfileContainer;

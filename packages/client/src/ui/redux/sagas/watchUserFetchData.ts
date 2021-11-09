@@ -3,7 +3,7 @@ import { call, put, takeEvery } from "@redux-saga/core/effects";
 import * as API from "@bombers/client/src/api/";
 import * as UserActions from "../actions/user-actions";
 import * as UserTypes from "../types/user-types";
-import { setUserData } from "./utils";
+import { setUserData } from "./helpers";
 
 function* userFetchDataSocail(action: UserTypes.UserFetchDataSocialActionType) {
     try {

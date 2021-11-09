@@ -3,7 +3,7 @@ import { call, takeEvery, put } from "@redux-saga/core/effects";
 import * as API from "@bombers/client/src/api/";
 import * as UserActions from "../actions/user-actions";
 import * as UserTypes from "../types/user-types";
-import { setUserData } from "./utils";
+import { setUserData } from "./helpers";
 
 function* userCreateSocial(action: UserTypes.UserCreateSocialActionType) {
 	try {

@@ -44,7 +44,7 @@ export function getDistanceHypot(
 };
 
 /**
- * Высчитывает дистанцию между двумя точками. Работет
+ * Высчитывает дистанцию между двумя точками. Работает
  * быстрее, чем Math.hypot(...).
  */
 export function getDistanceSqrt(

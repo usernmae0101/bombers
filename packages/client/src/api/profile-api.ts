@@ -7,6 +7,12 @@ export type ProfileDataResponseType = {
     rating: number;
     /** Занимаемое игроком место в рейтинге. */
     place: number;
+    /** ВременнАя метка создания аккаунта. */
+    createdAt: number;
+    /** ВременнАя метка последнего посещения. */
+    lastSeen: number;
+    /** Находится ли пользователь сейчас на сайте. */
+    isOnline: boolean;
 };
 
 export const api_profile_fetch_data = async (

@@ -23,14 +23,15 @@ function* profileFetchData(action: ProfileTypes.FetchDataActionType) {
       yield put(
          ProfileActions.action_profile_set_avatar(avatar)  
       ); 
-      yield put(
-         ProfileActions.action_profile_set_ready(true)  
-      ); 
    } catch (err) {
        debug(
            "Error occured trying fetch profile data",
            err.response
        );
+   } finally {
+      yield put(
+         ProfileActions.action_profile_set_data_fetching(false) 
+      ); 
    }
 }
 

@@ -3,6 +3,7 @@ import { Socket } from "socket.io";
 import SocketManager from "./SocketManager";
 import * as Shared from "@bombers/shared/src/idnex";
 import { debug } from "@bombers/shared/src/tools/debugger";
+import * as Models from "../api/models";
 
 interface IPaginationData {
     paginationPage: number;
@@ -42,6 +43,11 @@ export default class ClientSocketHandler {
             "Socket connected", 
              `token: ${token}`
         );
+
+        Models.UserModel.findOneAndUpdate(
+            { _id: token }, 
+            { is_online: true }
+        ).exec();
     }
 
     public static handle(
@@ -54,6 +60,14 @@ export default class ClientSocketHandler {
 
         // обновляем состояние приложения, если пользователь отключился
         socket.on("disconnect", () => {
+            Models.UserModel.findOneAndUpdate(
+                { _id: token }, 
+                { 
+                    is_online: false,
+                    last_seen: Date.now()
+                }
+            ).exec();
+
             manager.removeUserFromState(currentSocketUserData);
             delete this.connections[token];
         });

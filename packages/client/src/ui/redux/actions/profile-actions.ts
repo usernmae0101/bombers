@@ -14,11 +14,11 @@ export const action_profile_fetch_data = (
     payload: nickname
 });
 
-export const action_profile_set_ready = (
-    isReady: boolean
-): ProfileTypes.SetReadyActionType => ({
-    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_READY,
-    payload: isReady
+export const action_profile_set_data_fetching = (
+    isFetching: boolean
+): ProfileTypes.SetDataFetchingActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_DATA_FETCHING,
+    payload: isFetching
 });
 
 export const action_profile_set_place = (

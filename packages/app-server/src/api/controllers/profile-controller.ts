@@ -14,7 +14,10 @@ export const get_profile_data = async (req: Request, res: Response) => {
                 {
                    place,
                    rating: doc.rating,
-                   avatar: doc.avatar
+                   avatar: doc.avatar,
+                   createdAt: doc.created_at,
+                   lastSeen: doc.last_seen,
+                   isOnline: doc.is_online
                 }
             );
             break;
