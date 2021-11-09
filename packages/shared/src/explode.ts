@@ -91,13 +91,14 @@ export const removeBombFromMap = (
     ++bombsState[color];
 
     // добавляем кратер, если его нет в ячейке на карте
-    if (!proxyState.map[epicenterRow][epicenterCol].includes(EntityNumbers.CRATER))
+    if (!proxyState.map[epicenterRow][epicenterCol].includes(EntityNumbers.CRATER)) {
         addEntityToMap(
             EntityNumbers.CRATER, 
             proxyState.map, 
             epicenterRow, 
             epicenterCol
         );
+    }
 
     detonateBomb(
         [epicenterRow, epicenterCol], 
@@ -360,9 +361,7 @@ export const detonateBomb = (
 
 /**
  * Обновляет состояние пламени на карте. Добавляет
- * или удаляет, в зависимости от переданного коллбека.
- * 
- * @param callback - функция удаляения или добавления сущности на карту
+ * или удаляет, в зависимости от переданного коллбэка.
  */
 export const updateBlazeDependsCallback = (
     blaze: IBlazeList[],

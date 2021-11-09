@@ -56,15 +56,12 @@ export default class SocketManager {
             // если пользователь переподключился (например, вылетел)
             if (token as string in room.users) {
                 room.onReconnect(token, socket);
-
-                // подключаем сокет к комнате
                 socket.join("room");
 
                 BattleTCPClientSocketHandler.handle(socket, this, room);
                 return;
             }
 
-            // если игровая комната закрыта
             if (room.isLocked) {
                 // TODO: отправить сообщение соккету
                 socket.disconnect();
@@ -83,7 +80,6 @@ export default class SocketManager {
 
         // Срабатывает при подключении пользователя по UDP из игровой комнаты.
         this.serverSocketUDP.onConnection(socket => {
-            // если подключенный пользователь не в комнате - отключаем
             if (!(socket.userData.token in room.users)) {
                 socket.close();
                 return;
@@ -95,9 +91,6 @@ export default class SocketManager {
 
     /**
      * Находит сокет по идентификатору из списка подключенных по TCP.
-     * 
-     * @param socketId - идентификатор сокета
-     * @returns сокет
      */
     public getTCPSocketById(socketId: string): io.Socket {
         return this.serverSocketTCP.of("battle").sockets.get(socketId);
@@ -105,8 +98,6 @@ export default class SocketManager {
 
     /**
      * Отправляет игровые слоты всем подключенным к комнате сокетам.
-     * 
-     * @param slots - игровые слоты
      */
     public broadcastGameRoomSlots(slots: Shared.Interfaces.IGameSlots) {
         this.serverSocketTCP.of("battle").to("room").emit(
@@ -135,8 +126,6 @@ export default class SocketManager {
 
     /**
      * Отправляет изменения игрового состояния.
-     * 
-     * @param stateChanges - изменения в игровом состоянии
      */
     public broadcastStateChanges(stateChanges: Shared.Interfaces.IStateChanges) {
         // если есть изменения для UDP

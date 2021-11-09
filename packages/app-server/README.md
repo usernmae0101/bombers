@@ -3,7 +3,7 @@
 ## Коммуникация
 
 <p align="center">
-  <img src="https://i.ibb.co/vqnfdqm/connection-diagram.png" alt="connection">
+  <img src="https://raw.githubusercontent.com/username0101010/bombers/dev/docs/assets/connection-diagram.png" width="100%" alt="connection" />
 </p>
 
 ## Структура

@@ -3,9 +3,6 @@ import { debug } from "./debugger";
 
 /**
  * Имитация сетевой задержки в режиме разработки.
- * 
- * @param ping - сетевая задержка в млсек.
- * @param send - пакет
  */
 export const simulateLatency = async (
     ping: number,
@@ -24,10 +21,6 @@ export const simulateLatency = async (
 
 /**
  * Имитация потери пакетов в режиме разработки.
- *
- * @param percent - процент потери
- * @param ping - сетевая задержка в млсек.
- * @param send - пакет
  */
 export const simulatePackageLoss = (
     percent: number,

@@ -19,9 +19,6 @@ export default class ClientSocketHandler {
     /**
      * Добавляет сокет в список подключенных к серверу. Если сокет уже 
      * есть в списке, отключает предыдущий и перезписывает новым подключением.
-     *
-     * @param token - авторизационный токен пользователя
-     * @param socket - подключенный сокет пользователя
      */
     public static addSocketToConnectionSotre(
         token: string, 
@@ -44,10 +41,7 @@ export default class ClientSocketHandler {
              `token: ${token}`
         );
 
-        Models.UserModel.findOneAndUpdate(
-            { _id: token }, 
-            { is_online: true }
-        ).exec();
+        Models.UserModel.findOneAndUpdate({ _id: token }, { is_online: true }).exec();
     }
 
     public static handle(

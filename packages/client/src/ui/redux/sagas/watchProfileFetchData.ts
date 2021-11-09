@@ -12,7 +12,7 @@ function* profileFetchData(action: ProfileTypes.FetchDataActionType) {
          action.payload
       );
       
-      const { avatar, rating, place } = response;
+      const { avatar, rating, place, isOnline, createdAt, lastSeen } = response;
 
       yield put(
          ProfileActions.action_profile_set_rating(rating)  
@@ -22,6 +22,15 @@ function* profileFetchData(action: ProfileTypes.FetchDataActionType) {
       ); 
       yield put(
          ProfileActions.action_profile_set_avatar(avatar)  
+      ); 
+      yield put(
+         ProfileActions.action_profile_set_online(isOnline)
+      );
+      yield put(
+         ProfileActions.action_profile_set_last_seen(lastSeen)
+      ); 
+      yield put(
+         ProfileActions.action_profile_set_created_at(createdAt)
       ); 
    } catch (err) {
        debug(

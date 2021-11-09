@@ -15,9 +15,6 @@ export default class BattleTCPClientSocketHandler {
     /**
      * Добавляет сокет в список подключенных к серверу. Если сокет уже 
      * есть в списке, отключает предыдущий и перезписывает новым подключением.
-     *
-     * @param token - авторизационный токен пользователя
-     * @param socket - подключенный сокет пользователя
      */
     public static addSocketToConnectionSotre(
         token: string, 
@@ -44,8 +41,6 @@ export default class BattleTCPClientSocketHandler {
     /**
      * Срабатыват при подтверждении от центрального сервера, 
      * о том, что пользователь покинул комнату.
-     *
-     * @param token - авторизационный токен пользователя
      */
     public static confirmUserDisconnection(token: string) {
         debug(

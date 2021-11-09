@@ -5,8 +5,6 @@ const { PlayerColors, EntityNumbers } = Shared.Enums;
 
 /**
  * Определяет в какой ячейке на карте находится игрок.
- * 
- * @returns [ряд ячейки, колонка ячейки]
  */
 export const calculatePlayerCellPosition = (
     player: Shared.Interfaces.IGameStatePlayer
@@ -22,10 +20,6 @@ export const calculatePlayerCellPosition = (
 /**
  * Высчитывает количество пикселей, на которые 
  * спрайт игрока пересёк ячейку на карте.
- * 
- * @param playerPoint - позиция игрока по X или Y
- * @param cellPoint - позиция ячейки на карте по X или Y
- * @returns количество пикселей (абсолютное значение)
  */
 export const calculateOverlapDistance = (
     playerPoint: number, 
@@ -39,20 +33,14 @@ export const calculateOverlapDistance = (
 };
 
 /**
- * Перемножет количество тайлов в ширину
- * на размер тайла в пикселях.
- * 
- * @returns ширина канваса в пикселях
+ * Перемножет количество тайлов в ширину на размер тайла в пикселях.
  */
 export const calculateCanvasWidth = (): number => {
     return Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_X * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
 };
 
 /**
- * Перемножет количество тайлов в высоту
- * на размер тайла в пикселях.
- * 
- * @returns высота канваса в пикселях
+ * Перемножет количество тайлов в высоту на размер тайла в пикселях.
  */
 export const calculateCanvasHeight = (): number => {
     return Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_Y * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
@@ -74,9 +62,6 @@ export const calculateAppAreaHeight = (): number => {
 
 /**
  * Создает состояние бомб для игроков, инициализируя начальным значением.
- *
- * @param users - список подключеннык к комнате
- * @returns bombsState
  */
 export const createBombsState = (
     users: Shared.Interfaces.IRoomUsers
@@ -97,10 +82,7 @@ export const getTotalMapCells = (): number => {
 };
 
 /**
- * Делает копию объекта, включая все вложенные объекты.
- * 
- * @param object - объект, который нужно скопировать
- * @returns копия объекта
+ * Делает глубокую копию объекта: включая вложенные объекты.
  */
 export const makeCopyObject = <T>(object: T): T => {
     return JSON.parse(
@@ -110,8 +92,6 @@ export const makeCopyObject = <T>(object: T): T => {
 
 /**
  * Достаёт случайный бонусный предмет из списка.
- * 
- * @returns идентификатор игровой сущности предмета
  */
 export const chooseRandomBonusItem = (): Shared.Enums.EntityNumbers => {   
     const items = [
@@ -126,9 +106,6 @@ export const chooseRandomBonusItem = (): Shared.Enums.EntityNumbers => {
 
 /**
  * Получает индентификатор бомбы по цвету игрока.
- * 
- * @param color - цвет игрока
- * @returns индентификатор игровй сущности бомбы
  */
 export const getBombIdByPlayerColor = (color: number): Shared.Enums.EntityNumbers => {
     switch (color) {
@@ -145,8 +122,6 @@ export const getBombIdByPlayerColor = (color: number): Shared.Enums.EntityNumber
 
 /**
  * Получает список идентификаторов бомб всех цветов.
- * 
- * @returns массив всех идентификаторов бомб
  */
 export const getAllBombsIds = (): Shared.Enums.EntityNumbers[] => {
     return [
@@ -159,8 +134,6 @@ export const getAllBombsIds = (): Shared.Enums.EntityNumbers[] => {
 
 /**
  * Получает список игровых сущностей на карте в определенной ячейке.
- * 
- * @returns идентификаторы игровых сущностей
  */
 export const getAllEntitiesInCell = (
     map: number[][][], 

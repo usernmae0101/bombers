@@ -150,8 +150,8 @@ export default class SocketManager {
             if (authToken) {
                 UserModel.findOne({ _id: authToken })
                     .then(user => {
-                        // Если токен невалидный (пользователь не найден в БД) - отключаем пользователя.
-                        if (!user) socket.disconnect(true);
+                        if (!user) 
+                            socket.disconnect(true);
                         else {
                             const currentSocketUserData = this.parseUserData(user);
                             const roomConnectionData = this.findUserRoomConnection(authToken as string);
@@ -213,9 +213,6 @@ export default class SocketManager {
 
     /**
      * Извлекает из mongoose-документа данные пользователя.
-     * 
-     * @param userDocument - mongoose-документ пользователя
-     * @returns данные пользователя
      */
     public parseUserData(userDocument: IDocumentUser): Shared.Interfaces.IUser {
         return {

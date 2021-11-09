@@ -30,8 +30,6 @@ export default class AppSocketHandler {
                     }
 
                     gameRoom.onJoin(responseData.token, responseData.userData);
-                   
-                    // подключаем сокет к комнате
                     authSocket.join("room");
 
                     // отправляем данные подключенному сокету

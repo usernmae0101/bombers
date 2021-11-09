@@ -57,8 +57,6 @@ export const isPlayerCollide = (
 /**
  * Проверяет пересечение игрока с ячейкой на карте. Если ячейка не пустая, 
  * высчитывает дистанцию пересечения и расположение ячейки на карте.
- * 
- * @returns [информация о ячейке, у границы канваса ли игрок: да, нет]
  */
  export const checkPlayerOverlap = (
     player: Shared.Interfaces.IGameStatePlayer,

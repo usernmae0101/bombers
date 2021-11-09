@@ -47,6 +47,21 @@ export default function profileReducer(
                 ...state, 
                 data: { ...state.data, isFetching: action.payload } 
             };
+        case ProfileTypes.ACTION_TYPE_PROFILE_SET_ONLINE:
+            return {
+                ...state,
+                data: { ...state.data, isOnline: action.payload }
+            };
+        case ProfileTypes.ACTION_TYPE_PROFILE_SET_LAST_SEEN:
+            return {
+                ...state,
+                data: { ...state.data, lastSeen: action.payload }
+            };
+        case ProfileTypes.ACTION_TYPE_PROFILE_SET_CREATED_AT:
+            return {
+                ...state,
+                data: { ...state.data, createdAt: action.payload }
+            };
         default: return state;
     }
 };

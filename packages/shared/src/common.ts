@@ -141,8 +141,6 @@ export const pickUpBonusItem = (
  * Передвигает игрока. Если направление движения поменялось, 
  * обновляет направление и выравнивает игрока по оси обратной его движению: 
  * если движется по Y - выравнивает по X, а если движется по X - выравнивает по Y.
- * 
- * @returns данные о ячейке, пресечённой игроком
  */
 export const movePlayer = (
     player: Shared.Interfaces.IGameStatePlayer,
@@ -282,9 +280,6 @@ export const removeEntityFromMap = (
 
 /**
  * Пытается передвинуть игрока, если были нажаты клавиши.
- * 
- * @param keys - нажатые клавиши
- * @returns [двигать ли игрока: да или нет, в каком направлении]
  */
 export const tryToMovePlayer = (
     keys: number[]
@@ -359,11 +354,6 @@ export const getPlayerOccupiedCells = (
 
 /**
  * Пытается поставить бомбу, если были нажаты клавиши.
- * 
- * @param keys - нажатые клавиши
- * @param state - игровое состояние
- * @param color - цвет игрока
- * @returns можно ли ставить бомбу: да или нет
  */
 export const tryToPlaceBomb = (
     keys: number[],

@@ -34,3 +34,24 @@ export const action_profile_set_avatar = (
     type: ProfileTypes.ACTION_TYPE_PROFILE_SET_AVATAR,
     payload: avatar
 });
+
+export const action_profile_set_online = (
+    isOnline: boolean
+): ProfileTypes.SetDataOnlineActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_ONLINE,
+    payload: isOnline
+});
+
+export const action_profile_set_last_seen = (
+    timestamp: number
+): ProfileTypes.SetDataLastSeenActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_LAST_SEEN,
+    payload: timestamp
+});
+
+export const action_profile_set_created_at = (
+    timestamp: number
+): ProfileTypes.SetDataCreatedAtActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_CREATED_AT,
+    payload: timestamp
+});
