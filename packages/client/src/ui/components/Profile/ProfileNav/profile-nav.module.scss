@@ -1,0 +1,10 @@
+.nav {
+    display: grid;
+    grid-template: 1fr 6fr / 1fr;
+
+    .header {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 10px;
+    }
+}

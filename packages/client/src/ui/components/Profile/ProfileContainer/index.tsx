@@ -38,7 +38,7 @@ const ProfileContainer: React.FC<{
     }
 
     return (
-        <div>
+        <div className={styles.container}>
             <ProfileBanner {...{ nickname, localUserNickname }} />
             <ProfileNav {...{ nickname, localUserNickname }} />
         </div>

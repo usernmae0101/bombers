@@ -33,17 +33,39 @@ export const calculateOverlapDistance = (
 };
 
 /**
- * Перемножет количество тайлов в ширину на размер тайла в пикселях.
+ * Перемноает количество тайлов в ширину на размер тайла в пикселях.
  */
 export const calculateCanvasWidth = (): number => {
     return Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_X * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
 };
 
 /**
- * Перемножет количество тайлов в высоту на размер тайла в пикселях.
+ * Перемножает количество тайлов в высоту на размер тайла в пикселях.
  */
 export const calculateCanvasHeight = (): number => {
     return Shared.Constants.GAME_RESOLUTION_TILE_LENGTH_Y * Shared.Constants.GAME_RESOLUTION_TILE_SIZE;
+};
+
+/**
+ * Переводит unix-вермя в дату строкового формата.
+ */
+export const parseDateFromTimestamp = (
+    timestamp: number
+): string => {
+    const date = new Date(timestamp);
+    // TODO:
+    return "str";
+};
+
+/** 
+ * Переводит пройденный период, высчитанный в unix-времени, в строковый формат.
+ */
+export const parsePeriodFromTimestamp = (
+    timestamp: number
+): string => {
+    const seconds = (Date.now() - timestamp) / 1000;
+    // TODO:
+    return "str";
 };
 
 /**

@@ -1,0 +1,78 @@
+%full-size {
+    width: 100%;
+    height: 100%;
+}
+
+%online-status {
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+}
+
+.banner {
+    width: 80%;
+    height: 80%;
+
+    margin-left: 10%;
+    margin-top: 10%;
+
+    display: grid;
+    grid-template: 1fr 4fr / 1fr;
+
+    .bar {
+        @extend %full-size;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .nickname {
+            font-size: 2em;
+        }
+       
+        .online {
+            display: flex;
+
+            .seen {
+                font-size: 1em;
+            }
+
+            .on {
+                @extend %online-status;
+
+                background: green;   
+            }
+
+            .off {
+                @extend %online-status;
+                
+                background: red;
+            }
+        }
+    }
+
+    .board {
+        @extend %full-size;
+        
+        display: grid;
+        grid-template: 1fr / 1fr 4fr;
+
+        .avatar {
+            @extend %full-size;
+
+            img {
+                @extend %full-size;
+                
+                object-fit: cover;
+            }
+        }
+
+        .info {
+            @extend %full-size;
+
+            display: flex;
+            justify-content: space-around;
+        }
+    }
+}
