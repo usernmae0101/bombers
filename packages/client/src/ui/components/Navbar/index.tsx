@@ -26,7 +26,7 @@ const Navbar = () => {
             <NavLink 
                 className={styles.link}
                 activeClassName={styles.active} 
-                to="/rating"
+                to="/leaderboard"
             >Рейтинг</NavLink>
         </nav>
     );

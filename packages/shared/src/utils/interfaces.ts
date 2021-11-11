@@ -2,20 +2,22 @@ import * as Enums from "./enums";
 
 export interface IUser {
     /** Никнейм пользователя. */
-    nickname: string;
+    readonly nickname: string;
     /** Рйтинг пользователя. */
-    rating: number;
+    readonly rating: number;
     /** Аватар пользователя. URL. */
-    avatar: string;
+    readonly avatar: string;
 }
+
+export interface INotReliableStateData extends Partial<IGameStatePlayer> {}
 
 export interface IChatMessage {
     /** Автор сообщения. */
-    author: IUser;
+    readonly author: IUser;
     /** Текст сообщения. */
-    message: string;
-    /**  Unix-время создания сообщения. */
-    date: number;
+    readonly message: string;
+    /** Unix-время создания сообщения. */
+    readonly date: number;
 }
 
 export interface IOverlapData {
@@ -64,7 +66,6 @@ export interface IGameState {
 }
 
 export interface IGameStatePlayers {
-    /** Игроки. Ключ игрока - цвет. */
     [color: number]: IGameStatePlayer;
 }
 
@@ -75,21 +76,13 @@ export interface IKeysData {
     keys: Enums.InputKeys[];
 }
 
-export interface INotReliableStateData {
-    /** Позиция игрока по X на карте. */
-    x?: number;
-    /** Позиция игрока по Y на карте. */
-    y?: number;
-    /** Номер игрового такта. */
-    tick?: number;
-    /** Направление движения игрока. */
-    direction?: number;
-}
+export interface INotReliableSnapshot {
+    [color: string]: INotReliableStateData;
+};
 
 export interface INotReliableStateChanges {
-    s: {
-        [color: string]: INotReliableStateData;
-    };
+    /** Полученные изменения с сервера. */
+    s: INotReliableSnapshot;
     /** ВременнАя метка */
     t?: number;
 }
@@ -147,12 +140,10 @@ export interface IStateLobbyGameRoom {
 }
 
 export interface IRoomUser {
-    /** Цвет игрока пользователя. */
     color: Enums.PlayerColors;
 }
 
 export interface IRoomUsers {
-    /** Подключенные к комнате пользователи. */
     [token: string]: IRoomUser;
 }
 
@@ -181,6 +172,5 @@ export interface IGameSlot {
 }
 
 export interface IGameSlots {
-    /** Игровой слот. Ключ каждого слота - цвет. */
     [color: number]: IGameSlot;
 }

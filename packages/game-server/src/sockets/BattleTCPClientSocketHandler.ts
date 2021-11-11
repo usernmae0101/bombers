@@ -38,10 +38,6 @@ export default class BattleTCPClientSocketHandler {
         );
     }
   
-    /**
-     * Срабатыват при подтверждении от центрального сервера, 
-     * о том, что пользователь покинул комнату.
-     */
     public static confirmUserDisconnection(token: string) {
         debug(
             "Leaves room", 

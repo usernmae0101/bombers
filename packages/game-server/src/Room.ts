@@ -43,10 +43,7 @@ export default class Room {
     }
 
     /**
-     * Подключает пользователя к комнате.
-     * 
-     * @param token - авторизационный токен пользователя
-     * @param userData - данные пользователя
+     * Подключает ногово пользователя к комнате.
      */
     public onJoin(
         token: string, 
@@ -71,8 +68,6 @@ export default class Room {
 
     /**
      * Отключает пользователя от комнаты, если он её покинул.
-     *
-     * @param token - токен пользователя
      */
     public onLeave(token: string) {
         const color = this._users[token].color;
@@ -96,13 +91,13 @@ export default class Room {
     }
 
     /**
-     * Переподключает пользователя к комнате, если
-     * он её не покинул. Отправляет ему состояние комнаты.
-     * 
-     * @param token - токен пользователя
-     * @param socket - TCP-сокет пользователя
+     * Переподключает уже подключенного пользователя к комнате. 
+     * Отправляет ему состояние комнаты.
      */
-    public onReconnect(token: string, socket: any) {
+    public onReconnect(
+        token: string, 
+        socket: any
+    ) {
         this._socketManager.sendRoomDataToConnectedUser(
             socket, 
             this, 
@@ -110,7 +105,10 @@ export default class Room {
         );
     }
     
-    public onEmotionChange(token: string, emotion: number) {
+    public onEmotionChange(
+        token: string, 
+        emotion: number
+    ) {
         !this.isGameStarted && this._game.updatePlayerEmotion(
             this._users[token].color, 
             emotion
@@ -118,11 +116,8 @@ export default class Room {
     }
 
     /**
-     * Добавляет присланные нажатые клавиши и номер 
-     * игрового такта от пользователя в буфер.
-     * 
-     * @param token - токен пользователя
-     * @param keysData - нажатые клавиши и номер такта
+     * Добавляет присланные нажатые клавиши и номер игрового 
+     * такта от пользователя в буфер.
      */
     public onKeys(
         token: string, 
@@ -146,8 +141,6 @@ export default class Room {
      * Если игра не запущена, меняет статус готовности пользователя 
      * к игре и обновляет количество готовых игроков. Запускает игру,
      * если готовы больше одного игрока.
-     * 
-     * @param token - токен пользователя
      */
     public onReady(token: string) {
         if (this._game.isStarted)
@@ -165,8 +158,6 @@ export default class Room {
      * Отправляет результат игры всем подключенным к комнате
      * сокетам. Отключает каждый сокет. Обновляет состояние 
      * игрового сервера.
-     *
-     * @param result - результат игры
      */
     public onResult(result: any[]) {
         this._socketManager.serverSocketTCP.of("battle").in("room").allSockets()
@@ -262,8 +253,6 @@ export default class Room {
     /**
      * Выбирает случайный цвет игрока из списка доступных. 
      * Удаляет выбранный цвет из списка.
-     * 
-     * @returns цвет игрока 
      */
     private _chooseRandomColor(): Shared.Enums.PlayerColors {
         const index = Math.floor(Math.random() * this._availableColors.length);

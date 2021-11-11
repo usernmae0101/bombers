@@ -18,8 +18,8 @@ export const calculatePlayerCellPosition = (
 };
 
 /**
- * Высчитывает количество пикселей, на которые 
- * спрайт игрока пересёк ячейку на карте.
+ * Высчитывает количество пикселей, на которые спрайт 
+ * игрока пересёк ячейку на карте.
  */
 export const calculateOverlapDistance = (
     playerPoint: number, 

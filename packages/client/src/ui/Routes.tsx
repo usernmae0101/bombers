@@ -39,7 +39,7 @@ const Routes: React.FC<{ roomToRedirect: string}> = ({
 				render={(props: any) => checkoutRedirect(roomToRedirect, IndexPage, props)} 
 			/>
 			<Route 
-				path="/rating" 
+				path="/leaderboard" 
 				render={() => checkoutRedirect(roomToRedirect, RatingPage)} 
 			/>
 			<Route 
