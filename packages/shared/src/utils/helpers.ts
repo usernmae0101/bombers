@@ -95,7 +95,7 @@ export const parseDateFromTimestamp = (
     };
     
     const hours = String(date.getHours()).padStart(2, "0");
-    const minutesd = String(date.getMinutes()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
     const day = date.getDate();
     const month = months[date.getMonth()];
     const year = date.getFullYear();
