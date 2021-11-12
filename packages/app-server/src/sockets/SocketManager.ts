@@ -19,13 +19,12 @@ export default class SocketManager {
     ) { }
 
     /**
-     * Меняет состояние приложения при отключении пользователя от сокета. 
-     * Удаляет пользователя из списка участников чата, уменьшает онлайн. 
+     * Удаляет пользователя из списка участников чата. Уменьшает онлайн. 
      * Отправляет обновлённое состояние всем подключенным сокетам.
-     * 
-     * @param userData - данные отключенного пользователя
      */
-    public removeUserFromState(userData: Shared.Interfaces.IUser) {
+    public removeUserFromState(
+        userData: Shared.Interfaces.IUser
+    ) {
         --this.state.online;
 
         this.io.of("client").emit(
@@ -48,13 +47,12 @@ export default class SocketManager {
     }
 
     /**
-     * Меняет состояние приложения при отправке пользователем  
-     * сообщения в общий чат. Записывает сообщение в циклический 
-     * буфер. Отправляет сообщение всем подключенным сокетам.
-     * 
-     * @param message - сообщение, отправленное пользователем
+     * Записывает полученное сообщение в циклический буфер. 
+     * Отправляет сообщение всем подключенным сокетам.
      */
-    public addMessageToState(message: Shared.Interfaces.IChatMessage) {
+    public addMessageToState(
+        message: Shared.Interfaces.IChatMessage
+    ) {
         const circularBuffer = (this.state.chat.messages.length + 1) % (Shared.Constants.CHAT_MESSAGES_BUFFER_SIZE + 1);
 
         this.state.chat.messages[
@@ -68,13 +66,12 @@ export default class SocketManager {
     }
 
     /**
-     * Меняет состояние приложения при подключении нового игрового 
-     * сервера к центральному серверу. Добавляет игровой сервер в лобби. 
-     * Отправляет обновлённое количество игровых серверов всем подключнным сокетам.
-     * 
-     * @param server - подключеный игровой сервер
+     * Добавляет игровой сервер в лобби. Отправляет обновлённое 
+     * количество игровых серверов всем подключнным сокетам.
      */
-    public addGameServerToState(server: Shared.Interfaces.ILobbyServer) {
+    public addGameServerToState(
+        server: Shared.Interfaces.ILobbyServer
+    ) {
         // проверяем дубликаты (переподключение)
         for (let i = 0; i < this.state.lobby.length; i++) {
             const isSameAddress = this.state.lobby[i].address === server.address;
@@ -93,12 +90,8 @@ export default class SocketManager {
     }
 
     /**
-     * Меняет состояние приложения при подключении нового пользователя к сокету. 
-     * Увеличивает онлайн. Если пользователь не находится в игре, добавляет
-     * в список участников чата. Отправляет обновлённое состояние всем подключенным сокетам.
-     * 
-     * @param userData - данные подключеннного пользователя
-     * @param isPlaying - находится ли пользователь уже в комнате
+     * Увеличивает онлайн. Если пользователь не в игре, подключает к чату. 
+     * Отправляет обновлённое состояние всем подключенным сокетам.
      */
     public addUserToState(
         userData: Shared.Interfaces.IUser, 
@@ -120,15 +113,34 @@ export default class SocketManager {
         }
     }
 
-    public findUserRoomConnection(token: string): Shared.Interfaces.IAppPlayersData  {
+    /**
+     * Получает информацию о подключении пользователя к игровой комнате.
+     */
+    public findUserRoomConnection(
+        token: string
+    ): Shared.Interfaces.IAppPlayersData {
+        debug(
+            "Gets user's room connection data",
+            `token: ${token}`,
+            this._roomConnection[token].
+        );
+
         return this._roomConnection[token]; 
     }
 
-
-    public setUserToRoomConnection(token: string, server: string) {
+    /**
+     * Обновляет информацию о подключении пользователя кигровой комнате.
+     */
+    public setUserToRoomConnection(
+        token: string, 
+        server: string
+    ) {
         this._roomConnection[token] = { server };
     }
 
+    /**
+     * Удаляет информацию о подключении пользователя к игровой комнате.
+     */
     public removeUserFromRoomConnection(token: string) {
         delete this._roomConnection[token];
 
@@ -186,7 +198,12 @@ export default class SocketManager {
                                 );
                             }
 
-                            ClientSocketHandler.handle(socket, this, currentSocketUserData, authToken as string);
+                            ClientSocketHandler.handle(
+                                socket, 
+                                this, 
+                                currentSocketUserData, 
+                                authToken as string
+                            );
                         }
                     });
             } 
@@ -214,7 +231,9 @@ export default class SocketManager {
     /**
      * Извлекает из mongoose-документа данные пользователя.
      */
-    public parseUserData(userDocument: IDocumentUser): Shared.Interfaces.IUser {
+    public parseUserData(
+        userDocument: IDocumentUser
+    ): Shared.Interfaces.IUser {
         return {
             nickname: userDocument.nickname,
             rating: userDocument.rating,

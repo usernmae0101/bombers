@@ -31,11 +31,6 @@ interface IDirectionBlazeState {
     limitSpread: number;
 }
 
-/**
- * Добавляет бомбу на игровую карту. Уменьшает количество доступных
- * бомб у игрока, поставившего бомбу. Через таймаут вызывает функцию
- * удаления бомбы.
- */
 export const placeBombToMap = (
     state: Shared.Interfaces.IGameState, 
     bombsState: Shared.Interfaces.IBombsState,

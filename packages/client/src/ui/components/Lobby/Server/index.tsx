@@ -31,7 +31,7 @@ const Server: React.FC<LobbyServerType> = (props) => {
 
     return (
         <>
-            <tr>
+            <tr className={styles.tr}>
                 <td>{props.isConnected && props.room.mapId}</td>
                 <td>{props.isConnected && props.address}</td>
                 <td>{props.isConnected && `${props.room.activeSlots}/${props.room.totalSlots}`}</td>

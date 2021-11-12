@@ -4,9 +4,6 @@ import { createPlayer } from "./game-state";
 export default class PlayerFactory {
     /**
      * Создаёт игрока, задавая начальные координаты на канвасе.
-     * 
-     * @param color - цвет игрока
-     * @returns игрок
      */
     public static create(
         color: Shared.Enums.PlayerColors
@@ -20,11 +17,20 @@ export default class PlayerFactory {
             case Shared.Enums.PlayerColors.BLUE:
                 return createPlayer(0, 0);
             case Shared.Enums.PlayerColors.PURPLE:
-                return createPlayer(mapWidth - tileSize, 0);
+                return createPlayer(
+                    mapWidth - tileSize,
+                    0
+                );
             case Shared.Enums.PlayerColors.RED:
-                return createPlayer(0, mapHeight - tileSize);
+                return createPlayer(
+                    0,
+                    mapHeight - tileSize
+                );
             case Shared.Enums.PlayerColors.YELLOW:
-                return createPlayer(mapWidth - tileSize, mapHeight - tileSize);
+                return createPlayer(
+                    mapWidth - tileSize,
+                    mapHeight - tileSize
+                );
         }
     }
 }

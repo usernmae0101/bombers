@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import imgBombs from "@bombers/client/assets/images/bomb.png";
 import imgSpeed from "@bombers/client/assets/images/speed.png";
 import imgRadius from "@bombers/client/assets/images/radius.png";
-import * as Shared from "@bombers/shared/src/idnex";
 import * as GameSelectors from "../../../redux/selectors/game-selectors";
 import styles from "./game-hud.module.scss";
 

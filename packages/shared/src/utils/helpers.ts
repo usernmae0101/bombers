@@ -12,9 +12,33 @@ export const calculatePlayerCellPosition = (
     const { GAME_RESOLUTION_TILE_SIZE } = Shared.Constants;
 
     return [
-        Math.floor((player.y + (GAME_RESOLUTION_TILE_SIZE / 2)) / GAME_RESOLUTION_TILE_SIZE),
-        Math.floor((player.x + (GAME_RESOLUTION_TILE_SIZE / 2)) / GAME_RESOLUTION_TILE_SIZE)
+        Math.floor(
+            (player.y + (GAME_RESOLUTION_TILE_SIZE / 2)) / GAME_RESOLUTION_TILE_SIZE
+        ),
+        Math.floor(
+            (player.x + (GAME_RESOLUTION_TILE_SIZE / 2)) / GAME_RESOLUTION_TILE_SIZE
+        )
     ];
+};
+
+/**
+ * Определяет склониение количественных числительных.
+ */
+export const declension = (
+    number: number, 
+    titles: string[]
+): string => {  
+    const cases = [2, 0, 1, 1, 1, 2];  
+    
+    return titles[ 
+        (number % 100 > 4 && number % 100 < 20) ? 
+            2 : 
+            cases[
+                (number % 10 < 5) ?
+                    number % 10 :
+                    5
+            ] 
+    ];  
 };
 
 /**
@@ -53,8 +77,39 @@ export const parseDateFromTimestamp = (
     timestamp: number
 ): string => {
     const date = new Date(timestamp);
-    // TODO:
-    return "str";
+    const now = new Date();
+
+    const months = {
+        0: "января",
+        1: "февраля",
+        2: "марта",
+        3: "апреля",
+        4: "мая",
+        5: "июня",
+        6: "июля",
+        7: "августа",
+        8: "сентября",
+        9: "октября",
+        10: "ноября",
+        11: "декабря"
+    };
+    
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutesd = String(date.getMinutes()).padStart(2, "0");
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    
+    const isSameDay = date.getDate() === now.getDate();
+    const isSameMonth = date.getDate() === now.getDate();
+    const isSameYear = date.getDate() === now.getDate();
+
+    if (isSameDay && isSameMonth && isSameYear)
+        return `сегодня в ${hours}:${minutes}`;
+    else if (isSameYear)
+        return `${day} ${month} в ${hours}:${minutes}`;
+    else
+        return `${day} ${month} ${year} в ${hours}:${minutes}`;
 };
 
 /** 
@@ -64,8 +119,24 @@ export const parsePeriodFromTimestamp = (
     timestamp: number
 ): string => {
     const seconds = (Date.now() - timestamp) / 1000;
-    // TODO:
-    return "str";
+    const minutes = (seconds / 60) >> 0;
+    const hours = (minutes / 60) >> 0;
+    const days = (hours / 24) >> 0;
+    const months = (days / 30) >> 0;
+    const years = (months / 12) >> 0;
+    
+    if (years > 0)
+        return `${years} ${declension(years, ["год", "года", "лет"])}`;
+    else if (months > 0)
+        return `${months} ${declension(months, ["месяц", "месяца", "месяцев"])}`;
+    else if (days > 0)
+        return `${days} ${declension(days, ["день", "дня", "дней"])}`;
+    else if (hours > 0)
+        return `${hours} ${declension(hours, ["час", "часа", "часов"])}`;
+    else if (minutes > 0) 
+        return `${minutes} ${declension(minutes, ["минуту", "минуты", "минут"])}`;
+    else 
+        return `${seconds} ${declension(seconds, ["секунду", "секунды", "секунд"])}`;
 };
 
 /**

@@ -1,11 +1,6 @@
 import BaseEntity from "../core/BaseEntity";
 import * as Shared from "@bombers/shared/src/idnex";
 
-const { 
-    GAME_RESOLUTION_TILE_SIZE, 
-    GAME_RESOLUTION_TILE_OFFSET 
-} = Shared.Constants;
-
 export default class BombEntity extends BaseEntity {
     constructor(frameX: number, frameY: number) {
         super(frameX, frameY);
