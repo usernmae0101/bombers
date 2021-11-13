@@ -22,7 +22,7 @@ export const calculatePlayerCellPosition = (
 };
 
 /**
- * Определяет склониение количественных числительных.
+ * Определяет склониение после количественных числительных.
  */
 export const declension = (
     number: number, 
@@ -79,25 +79,25 @@ export const parseDateFromTimestamp = (
     const date = new Date(timestamp);
     const now = new Date();
 
-    const months = {
-        0: "января",
-        1: "февраля",
-        2: "марта",
-        3: "апреля",
-        4: "мая",
-        5: "июня",
-        6: "июля",
-        7: "августа",
-        8: "сентября",
-        9: "октября",
-        10: "ноября",
-        11: "декабря"
-    };
+    const months = new Map([
+        [0, "января"],
+        [1, "февраля"],
+        [2, "марта"],
+        [3, "апреля"],
+        [4, "мая"],
+        [5, "июня"],
+        [6, "июля"],
+        [7, "августа"],
+        [8, "сентября"],
+        [9, "октября"],
+        [10, "ноября"],
+        [11, "декабря"]
+    ]);
     
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
     const day = date.getDate();
-    const month = months[date.getMonth()];
+    const month = months.get(date.getMonth());
     const year = date.getFullYear();
     
     const isSameDay = date.getDate() === now.getDate();
@@ -118,7 +118,7 @@ export const parseDateFromTimestamp = (
 export const parsePeriodFromTimestamp = (
     timestamp: number
 ): string => {
-    const seconds = (Date.now() - timestamp) / 1000;
+    const seconds = ((Date.now() - timestamp) / 1000) >> 0;
     const minutes = (seconds / 60) >> 0;
     const hours = (minutes / 60) >> 0;
     const days = (hours / 24) >> 0;

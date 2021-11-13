@@ -122,7 +122,7 @@ export default class SocketManager {
         debug(
             "Gets user's room connection data",
             `token: ${token}`,
-            this._roomConnection[token].
+            this._roomConnection[token]
         );
 
         return this._roomConnection[token]; 
