@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 
 import SocketManager from "./SocketManager";
 import * as Shared from "@bombers/shared/src/idnex";
-import { UserModel } from "../api/models";
+import { UserModel, MatchModel } from "../api/models";
 import { debug } from "@bombers/shared/src/tools/debugger"; 
 
 /**
@@ -62,9 +62,7 @@ export default class GameServerSocketHandler {
         // заканчиваем игру
         socket.on(
             String(Shared.Enums.SocketChannels.GAME_ON_END),
-            async (
-                battleResult: { [place: number]: string; }
-            ): Promise<void> => {
+            async ({ battleResult, mapId }): Promise<void> => {
                 const result: any = [];
                 
                 for (let place in battleResult) {
@@ -97,7 +95,15 @@ export default class GameServerSocketHandler {
                         );
                     }
                 }
-                
+               
+                // сохраняем матч в базе данных
+                await MatchModel.create(
+                    {
+                        map_id: mapId,
+                        result
+                    }
+                );
+
                 // отправляем обновлённые данные обнатно на игровой сервер
                 socket.emit(
                     String(Shared.Enums.SocketChannels.GAME_ON_END),

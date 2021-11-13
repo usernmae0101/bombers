@@ -27,6 +27,40 @@ export const get_profile_data = async (req: Request, res: Response) => {
     }
 };
 
-export const get_portion_history_matches = (req: Request, res: Response) => {};
+export const get_portion_history_matches = (req: Request, res: Response) => {
+    const selector = {
+        "result.nickname": req.params.nickname
+    };
 
-export const get_portion_notifications = (req: Request, res: Response) => {};
+    Models.MatchModel.count(selector)
+        .then(totalMatches => {
+            const skip = +req.params.page * 10 - 10;
+        
+            Models.MatchModel.find(selector)
+                .sort(
+                    {
+                       created_at: -1 
+                    }
+                )
+                .skip(skip)
+                .limit(10)
+                .select(
+                    {
+                        created_at: true,
+                        map_id: true,
+                        result: true,
+                        id: true,
+                        _id: false
+                    }
+                )
+                .exec()
+                .then(matches => {
+                    res.json(
+                        {
+                            matches,
+                            hasMoreMatches: (totalMatches - (matches.length + skip)) > 0
+                        }
+                    );
+                });
+        });
+};

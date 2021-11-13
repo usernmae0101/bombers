@@ -8,9 +8,17 @@ const matchSchema = new mongoose.Schema({
         unique: true,
         min: 1
     }, 
+    map_id: Number,
+    result: [
+        {
+            nickname: String,
+            rating: String,
+            points: Number
+        }
+    ],
     created_at: {
-        type: Date,
-        default: Date.now
+        type: Number,
+        default: () => Date.now()
     }
 });
 

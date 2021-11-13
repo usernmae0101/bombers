@@ -55,3 +55,38 @@ export const action_profile_set_created_at = (
     type: ProfileTypes.ACTION_TYPE_PROFILE_SET_CREATED_AT,
     payload: timestamp
 });
+
+export const action_profile_set_matches = (
+    list: ProfileTypes.MatchesType[]
+): ProfileTypes.SetMatchesActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_MATCHES,
+    payload: list
+});
+
+export const action_profile_add_matches = (
+    list: ProfileTypes.MatchesType[]
+): ProfileTypes.AddMatchesActionType  => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_ADD_MATCHES,
+    payload: list
+});
+
+export const action_profile_set_matches_has_more = (
+    hasMoreMatches: boolean
+): ProfileTypes.SetMatchesHasMoreActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_MATCHES_HAS_MORE,
+    payload: hasMoreMatches
+});
+
+export const action_profile_set_matches_is_fetching = (
+    isFetching: boolean
+): ProfileTypes.SetMatchesIsFetchingActionType  => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_MATCHES_FETCHING,
+    payload: isFetching
+});
+
+export const action_profile_fetch_matches = (
+    data: ProfileTypes.FetchMatchesType
+): ProfileTypes.FetchMatchesActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_FETCH_MATCHES,
+    payload: data
+});

@@ -10,11 +10,6 @@ const initialState: ProfileTypes.ProfileStateType = {
         isOnline: false,
         createdAt: null
     },
-    notifications: {
-        isFetching: false,
-        hasMore: true,
-        list: []
-    },
     matches: {
         isFetching: false,
         hasMore: true,
@@ -61,6 +56,26 @@ export default function profileReducer(
             return {
                 ...state,
                 data: { ...state.data, createdAt: action.payload }
+            };
+        case ProfileTypes.ACTION_TYPE_PROFILE_SET_MATCHES_FETCHING:
+            return {
+                ...state,
+                matches: { ...state.matches, isFetching: action.payload }
+            };
+        case ProfileTypes.ACTION_TYPE_PROFILE_SET_MATCHES_HAS_MORE:
+            return {
+                ...state,
+                matches: { ...state.matches, hasMore: action.payload }
+            };
+        case ProfileTypes.ACTION_TYPE_PROFILE_SET_MATCHES:
+            return {
+                ...state,
+                matches: { ...state.matches, list: action.payload }
+            };
+        case ProfileTypes.ACTION_TYPE_PROFILE_ADD_MATCHES:
+            return {
+                ...state,
+                matches: { ...state.matches, list: [...state.matches.list, ...action.payload] }
             };
         default: return state;
     }

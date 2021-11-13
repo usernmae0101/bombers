@@ -245,7 +245,10 @@ export default class Room {
         // отправляем сообщение на центральный сервер
         this._socketManager.clientSocketTCP.emit(
             String(Shared.Enums.SocketChannels.GAME_ON_END),
-            this._battleResult
+            {
+                mapId: this._mapId,
+                battleResult: this._battleResult
+            }
         );
     }
 
@@ -324,18 +327,12 @@ export default class Room {
                 }
 
                 // поменяли координаты игрока - передаём ненадёжно
-                else if ([
-                    "x", 
-                    "y", 
-                    "tick", 
-                    "direction"
-                ].includes(key as string)) {
+                else if (["x", "y", "tick", "direction"].includes(key as string)) {
                     if (!(this._lastChangedStateKey in this._stateChanges.notReliable.s))
                         this._stateChanges.notReliable.s[this._lastChangedStateKey] = {};
 
-                    const _key = key as keyof Shared.Interfaces.INotReliableStateData;
-
-                    this._stateChanges.notReliable.s[this._lastChangedStateKey][_key] = value;
+                    // @ts-ignore
+                    this._stateChanges.notReliable.s[this._lastChangedStateKey][key] = value;
                 }
 
                 // запустили стену - оповещаем игрков
