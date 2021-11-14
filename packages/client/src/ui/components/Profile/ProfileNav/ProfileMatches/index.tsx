@@ -1,8 +1,42 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import styles from "./profile-matches.module.scss";
+import * as Shared from "@bombers/shared/src/idnex";
 import * as ProfileSelectors from "@bombers/client/src/ui/redux/selectors/profile-selectors";
 import * as ProfileActions from "@bombers/client/src/ui/redux/actions/profile-actions";
+
+type MatchPropsType = {
+    map_id: number;
+    place: number;
+    created_at: number;
+    points: number;
+};
+
+const Match: React.FC<{ ref: React.Ref<any> } & MatchPropsType> = React.forwardRef((props, ref) => {
+    return (
+        <div
+            className={styles.match}
+            ref={ref}
+        >
+            <div className={styles.map}>
+                <img src={String(props.map_id)} />
+            </div>
+
+            <div className={styles.place}>
+                {props.place} место
+            </div>
+            
+            <div className={styles.points}>
+                {props.place === 1 ? "Победа +" : "Поражение "}{props.points}
+            </div>
+
+            <div className={styles.finish}>
+                {Shared.Helpers.parseDateFromTimestamp(props.created_at)}
+            </div>
+        </div>
+    );
+});
 
 const ProfileMatches: React.FC<{
     nickname: string;
@@ -47,10 +81,47 @@ const ProfileMatches: React.FC<{
         },
         [pageNumber]
     );
+    
+    const observer: any = React.useRef();
+    const lastUserElementRef = React.useCallback(
+        (node) => {
+            if (isFetching)
+                return;
+            
+            observer.current?.disconnect();
+            observer.current = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting && hasMoreMatches) {
+                    setPageNumber(prevPageNumber => prevPageNumber + 1)
+                }
+            });
+            node && observer.current.observe(node)
+        },
+        [isFetching, hasMoreMatches]
+    );
 
     return (
-        <div>
+        <div className={styles.list}>
+            {
+                matches.map((match, index) => {
+                    for (let i = 0; i < match.result.length; i++) {
+                        const { nickname: resultNickname, points } = match.result[i];
+
+                        if (nickname === resultNickname) {
+                            return (
+                                <Match 
+                                    ref={matches.length === index + 1 ? lastUserElementRef : null}
+                                    key={match.created_at}
+                                    { ...{...match, points, place: i + 1} }
+                                />
+                            );
+                        }
+                    }
+                })
+            }
+
             { isFetching && <div>Loading...</div> }
+            
+            { !hasMoreMatches && !matches.length && <div>матчей нет</div> }
         </div>
     );
 };

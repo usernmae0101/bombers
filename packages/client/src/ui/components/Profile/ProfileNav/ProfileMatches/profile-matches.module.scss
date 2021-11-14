@@ -1,0 +1,36 @@
+.list {
+    height: 100%;
+    width: 80%;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    .match {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        width: 100%;
+        height: 15%;
+
+        border: 1px solid black;
+
+        .map {
+            background: white;
+        }
+
+        .place {
+            font-size: 1.3em;
+        }
+
+        .points {
+            font-size: 1.2;
+        }
+
+        .finish {
+            font-size: 1em;
+        }
+    }
+}

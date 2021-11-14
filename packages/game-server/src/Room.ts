@@ -132,6 +132,12 @@ export default class Room {
                 // FIXME: сделать буфер циклическим
                 const color = this._users[token]?.color;
                 color !== undefined && this._game.keysBuffer[color]?.push(keysData);
+                
+                debug(
+                    "Got input keys from user",
+                    `color: ${color}`,
+                    keysData
+                );
             }
         );
     }

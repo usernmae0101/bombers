@@ -2,6 +2,17 @@ import mongoose from "mongoose";
 
 import { CounterModel } from "./counter-model";
 
+const resultSchema = new mongoose.Schema(
+    {
+        nickname: String,
+        rating: String,
+        points: Number
+    },
+    {
+        _id: false
+    }
+);
+
 const matchSchema = new mongoose.Schema({
     id: {
         type: Number,
@@ -9,13 +20,7 @@ const matchSchema = new mongoose.Schema({
         min: 1
     }, 
     map_id: Number,
-    result: [
-        {
-            nickname: String,
-            rating: String,
-            points: Number
-        }
-    ],
+    result: [resultSchema],
     created_at: {
         type: Number,
         default: () => Date.now()
