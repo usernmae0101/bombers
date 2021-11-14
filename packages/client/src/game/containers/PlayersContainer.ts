@@ -41,10 +41,10 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
     /**
      * Удаляет игроков, если их больше нет в игровом состоянии. 
-     *
-     * @param players - игроки из состояния
      */
-    private _removePlayers(players: Shared.Interfaces.IGameStatePlayers) {
+    private _removePlayers(
+        players: Shared.Interfaces.IGameStatePlayers
+    ) {
         for (let color in this._players) {
             if (Object.keys(players).includes(color))
                 continue;
@@ -61,11 +61,11 @@ export default class PlayersContainer extends BaseContainer<PlayerEntity> {
 
     /**
      * Запускает анимацию взрыва после смерти игрока.
-     * 
-     * @param x - позиция взрыва на канвасе по X
-     * @param y - позиция взрыва на канвасе по Y
      */
-    private _animateExplosion(x: number, y: number) {
+    private _animateExplosion(
+        x: number, 
+        y: number
+    ) {
         const explosionTextures = [];
         const name = Shared.Constants.GAME_RESOURCES_SPRITESHEET_EXPLOSION;
         const sheet = Loader.shared.resources[name].spritesheet;

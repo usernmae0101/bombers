@@ -8,15 +8,14 @@ import * as UserActions from "@bombers/client/src/ui/redux/actions/user-actions"
 import * as GameActions from "@bombers/client/src/ui/redux/actions/game-actions";
 
 const ResultPlayer: React.FC<{
+    userNickname: string;
     nickname: string;
     rating: number;
     points: number;
-}> = ({ nickname, rating, points }) => {
+}> = ({ nickname, rating, points, userNickname }) => {
     const dispatch = useDispatch();
-    const userNickname = useSelector(UserSelectors.select_user_data_nickname);
     
     let className = styles.enemy;
-
     if (nickname === userNickname) {
         // обновляем рейтинг в состоянии
         dispatch(
@@ -27,13 +26,11 @@ const ResultPlayer: React.FC<{
     }
 
     return (
-        <li>
-            <div className={className}>
-                <span>{nickname}</span>
-                <span>{rating}</span>
-                <span>{points}</span>
-            </div>
-        </li>
+        <div className={className}>
+            <div>{nickname}</div>
+            <div>{rating}</div>
+            <div>{points}</div>
+        </div>
     );
 };
 
@@ -41,8 +38,18 @@ const Result: React.FC<{
     battleResult: any[]; 
 }> = ({ battleResult }) => {
     const dispatch = useDispatch();
+   
+    const userNickname = useSelector(UserSelectors.select_user_data_nickname);
     
+    const [place, setPlace] = React.useState(0);
+    const [isHideResult, setIsHideResult] = React.useState(false);
+
     React.useEffect(() => {
+        battleResult.forEach(({nickname}, index) => {
+            if (nickname === userNickname)
+                setPlace(index + 1);
+        });
+
         // обновляем игровые слоты
         dispatch(
             GameActions.action_game_set_slots(Shared.Slots.slots)
@@ -53,16 +60,32 @@ const Result: React.FC<{
             GameActions.action_game_set_loading(true)
         );
     }, []);
+    
+    if (isHideResult) { 
+        return (null);
+    }
 
     return (
         <div className={styles.result}>
-            <ul>
-                {
-                    battleResult.map(player => {
-                        return <ResultPlayer key={player.nickname} {...player} />
-                    })
-                }
-            </ul>
+            <div className={styles.place}>Вы заняли {place} место!</div>
+
+            {
+                battleResult.map(player => {
+                    return (
+                        <ResultPlayer 
+                            key={player.nickname} 
+                            { ...{ ...player, userNickname } } 
+                        />
+                    );
+                })
+            }
+
+            <button
+                className={styles.button}
+                onClick={() => setIsHideResult(true)}
+            >
+                Закрыть
+            </button>
         </div>
     );
 };

@@ -322,7 +322,7 @@ export default class Game {
                 this._predictionBuffer[this._tick] = {
                     x: _player.x,
                     y: _player.y,
-                    keys
+                    keys: [...keys]
                 };
             }
         }

@@ -35,11 +35,14 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
         game.addGrassBackgroundCanvas();
         setGame(game);
 
-        const gameSocketTCP = io(`http://${address}:${port}/battle`, {
-            auth: {
-                token: userToken
+        const gameSocketTCP = io(
+            `http://${address}:${port}/battle`, 
+            {
+                auth: {
+                    token: userToken
+                }
             }
-        });
+        );
 
         dispatch(
             GameActions.action_game_set_tcp_socket(gameSocketTCP)
@@ -74,7 +77,9 @@ const Battle: React.FC<BattlePropsType> = ({ address, port }) => {
         return <Redirect 
             to={{
                 pathname: "/",
-                state: { battleResult }
+                state: { 
+                    battleResult 
+                }
             }} 
         />
     }

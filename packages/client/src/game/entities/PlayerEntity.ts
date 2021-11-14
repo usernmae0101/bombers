@@ -129,9 +129,6 @@ export default class PlayerEntity extends BaseEntity {
 
     /**
      * Устанавливает позицию игрока на канвасе.
-     * 
-     * @param x - позиция по X (левый верхний край спрайта)
-     * @param y - позиция по Y (левый верхний край спрайта)
      */
     public setPosition(
         x: number, 
@@ -143,8 +140,6 @@ export default class PlayerEntity extends BaseEntity {
 
     /**
      * Меняет фрейм игрока при смене направления движения.
-     * 
-     * @param direction - направление игрока
      */
     public setDirection(direction: number) {
         const { x, y } = getEntityFrame(EntityNumbers.PLAYER, this._color, direction);

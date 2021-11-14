@@ -43,7 +43,7 @@ export default class Room {
     }
 
     /**
-     * Подключает ногово пользователя к комнате.
+     * Подключает нового пользователя к комнате.
      */
     public onJoin(
         token: string, 

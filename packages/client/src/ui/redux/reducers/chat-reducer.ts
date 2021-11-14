@@ -12,9 +12,15 @@ export default function chatReducer(
 ): ChatTypes.ChatStateType {
     switch (action.type) {
         case ChatTypes.ACTION_TYPE_CHAT_ADD_MESSAGE:
-            return { ...state, messages: [...state.messages, action.payload] };
+            return { 
+                ...state, 
+                messages: [...state.messages, action.payload] 
+            };
         case ChatTypes.ACTION_TYPE_CHAT_ADD_MEMBER:
-            return { ...state, members: [...state.members, action.payload] };
+            return { 
+                ...state, 
+                members: [...state.members, action.payload] 
+            };
         case ChatTypes.ACTION_TYPE_CHAT_DELETE_MEMBER:
             return {
                 ...state, members: state.members.filter(member => {

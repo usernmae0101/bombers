@@ -31,7 +31,6 @@ export default class GameServerSocketHandler {
                             responseData.userData = manager.parseUserData(user);
                         }
 
-                        // отправляем данные обратно на игровой сервер
                         socket.emit(
                             String(Shared.Enums.SocketChannels.APP_ON_GAME_AUTH),
                             responseData
@@ -51,7 +50,6 @@ export default class GameServerSocketHandler {
                 
                 manager.removeUserFromRoomConnection(token)
 
-                // подтверждаем на игровом сервере
                 socket.emit(
                     String(Shared.Enums.SocketChannels.GAME_ON_LEAVVE_ROOM),
                     token
@@ -68,24 +66,22 @@ export default class GameServerSocketHandler {
                 for (let place in battleResult) {
                     const token = battleResult[place];
                     
-                    // удаляем пользователя из списка подключенных
                     manager.removeUserFromRoomConnection(token);
 
                     try {
                         const user = await UserModel.findOne({ _id: token });
                         if (user) {
                             const points = place === "1" ? + 10 : -10;
-
-                            // обновляем рейтинг в документе
-                            user.rating += points;                           
-                           
-                            result.push({
-                                rating: user.rating,
-                                nickname: user.nickname,
-                                points 
-                            });
                             
-                            // сохраняем изменения в документе
+                            result.push(
+                                {
+                                    rating: user.rating,
+                                    nickname: user.nickname,
+                                    points 
+                                }
+                            );
+                            
+                            user.rating += points;                           
                             user.save();
                         }
                     } catch (error) {
@@ -96,15 +92,8 @@ export default class GameServerSocketHandler {
                     }
                 }
                
-                // сохраняем матч в базе данных
-                await MatchModel.create(
-                    {
-                        map_id: mapId,
-                        result
-                    }
-                );
+                await MatchModel.create({ map_id: mapId, result });
 
-                // отправляем обновлённые данные обнатно на игровой сервер
                 socket.emit(
                     String(Shared.Enums.SocketChannels.GAME_ON_END),
                     result

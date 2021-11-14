@@ -52,6 +52,8 @@ export const startHandlingAppSocket = (
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_ADD_CHAT_MEMBER), 
 		(member: Shared.Interfaces.IUser) => {
+			return; // TODO
+
 			dispatch(
 				ChatActions.action_chat_add_member(member)
 			);

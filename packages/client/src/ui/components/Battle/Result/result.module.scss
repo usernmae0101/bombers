@@ -1,16 +1,47 @@
+%slot {
+    height: 10%;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .result {
+    display: flex;
+    flex-direction: column;
+    gap: 3%;
+
     position: absolute;
-    width: 200;
-    height: 300;
+    width: 50%;
+    height: 30%;
     
-    background-color: red;
+    left: 25%;
+    top: 35%;
+
+    background: red;
     color: blue;
 }
 
+.place {
+    display: flex;
+    justify-content: center;
+}
+
 .me {
+    @extend %slot;
+
     background-color: yellow;
 }
 
 .enemy {
-    background-color: purple;
+    @extend %slot;
+
+    background-color:  silver;
+}
+
+.button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
 }

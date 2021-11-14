@@ -16,20 +16,25 @@ const Lobby = () => {
     const paginationItems = useSelector(LobbySelectors.select_lobby_pagination_items);
     const servers = useSelector(LobbySelectors.select_lobby_servers);
 
-    React.useEffect(() => {
-        socket.emit(
-            String(Shared.Enums.SocketChannels.APP_ON_GET_PORTION_GAME_SERVERS), 
-            {
-                paginationPage, 
-                paginationItems
-            }
-        );
-    }, [paginationPage]);
+    React.useEffect(
+        () => {
+            socket.emit(
+                String(Shared.Enums.SocketChannels.APP_ON_GET_PORTION_GAME_SERVERS), 
+                {
+                    paginationPage, 
+                    paginationItems
+                }
+            );
+        }, 
+        [paginationPage]
+    );
 
     const isDisablePaginationLeft = paginationPage === 1;
     const isDisablePaginationRight = servers.length <= paginationPage * paginationItems;
 
-    if (isLoading) return (<Loader />);
+    if (isLoading) {
+        return (<Loader />);
+    }
 
     return (
         <div className={styles.lobby}>

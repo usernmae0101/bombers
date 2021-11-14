@@ -1,3 +1,5 @@
+import { debug } from "@bombers/shared/src/tools/debugger";
+
 export interface IKeyboardKeys {
     /** Состояние клавиш. */
     [code: string]: boolean;
@@ -8,14 +10,21 @@ export default class Keyboard {
     public static keys: IKeyboardKeys = {};
     /** Состояние клавиш: заблокирована или нет. */
     public static locked: IKeyboardKeys = {};
-
+    
     private static _handle(event: KeyboardEvent) {
         const isKeyPressed = event.type === "keydown";
+        
+        debug(
+            "Got keyboard input from user",
+            `is pressed: ${isKeyPressed}`,
+            `code: ${event.code}`
+        ); 
 
         // снимаем блокировку с клавиши, если отпущена
-        if (!isKeyPressed)
+        if (!isKeyPressed) {
             Keyboard.locked[event.code] = false;
-        
+        }
+
         // устанавливем состояние клавиши
         Keyboard.keys[event.code] = isKeyPressed;
     }

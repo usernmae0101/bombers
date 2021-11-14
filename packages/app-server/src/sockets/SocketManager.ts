@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 import * as Shared from "@bombers/shared/src/idnex";
 import { UserModel, IDocumentUser } from "../api/models";
 import ClientSocketHandler from "./ClientSocketHandler";
-import GameServerSocketHandler from "./GameSeverSocketHandler";
+import GameServerSocketHandler from "./GameServerSocketHandler";
 import { debug } from "@bombers/shared/src/tools/debugger";
 
 export default class SocketManager {
