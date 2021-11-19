@@ -6,7 +6,6 @@ import * as Shared from "@bombers/shared/src/idnex";
 import * as UserSelectors from "@bombers/client/src/ui/redux/selectors/user-selecrots";
 import * as UserActions from "@bombers/client/src/ui/redux/actions/user-actions";
 import * as GameActions from "@bombers/client/src/ui/redux/actions/game-actions";
-import { debug } from "@bombers/shared/src/tools/debugger"; 
 
 const ResultPlayer: React.FC<{
     userNickname: string;

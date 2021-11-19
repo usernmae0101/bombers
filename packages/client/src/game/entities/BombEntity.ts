@@ -1,5 +1,4 @@
 import BaseEntity from "../core/BaseEntity";
-import * as Shared from "@bombers/shared/src/idnex";
 
 export default class BombEntity extends BaseEntity {
     constructor(frameX: number, frameY: number) {
