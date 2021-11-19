@@ -33,6 +33,14 @@ export const select_profile_matches_is_fetching = (state: AppStateType): boolean
     return state.profile.matches.isFetching;
 };
 
+export const select_profile_statistic_is_fetching = (state: AppStateType): boolean => {
+    return state.profile.statistic.isFetching;
+};
+
+export const select_profile_statistic_data = (state: AppStateType): ProfileTypes.StatisticDataType => {
+    return state.profile.statistic.data;
+};
+
 export const select_profile_matches_has_more = (state: AppStateType): boolean => {
     return state.profile.matches.hasMore;
 };

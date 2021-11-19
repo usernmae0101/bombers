@@ -5,6 +5,7 @@ import watchUserFetchData from "./watchUserFetchData";
 import watchProfileFetchData from "./watchProfileFetchData";
 import watchRatingFetchUsers from "./watchRatingFetchUsers";
 import watchProfileFetchMatches from "./watchProfileFetchMatches";
+import watchProfileFetchStatistic from "./watchProfileFetchStatistic";
 
 export default function* rootSaga() {
     yield all([
@@ -12,6 +13,7 @@ export default function* rootSaga() {
         watchUserCreate(),
         watchRatingFetchUsers(),
         watchProfileFetchData(),
-        watchProfileFetchMatches()
+        watchProfileFetchMatches(),
+        watchProfileFetchStatistic()
     ]);
 };

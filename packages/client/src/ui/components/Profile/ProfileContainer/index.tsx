@@ -28,7 +28,7 @@ const ProfileContainer: React.FC<{
                 ); 
             };
         },
-        []
+        [nickname]
     );
 
     if (isFetching) {

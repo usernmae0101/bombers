@@ -88,7 +88,7 @@ const RatingList = () => {
                     setPageNumber(prevPageNumber => prevPageNumber + 1)
                 }
             });
-            node && observer.current.observe(node)
+            node && observer.current.observe(node);
         },
         [isFetching, hasMoreUsers]
     );

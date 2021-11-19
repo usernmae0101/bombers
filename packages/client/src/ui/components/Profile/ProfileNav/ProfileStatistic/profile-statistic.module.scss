@@ -1,0 +1,19 @@
+.statistic {
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    .places, .rating {
+        display: flex;
+        flex-direction: column;
+
+        width: 50%;
+        height: 100%;
+
+         canvas {
+           width: 100%;
+           height: 70%;
+        }
+    }
+}

@@ -15,6 +15,14 @@ export type ProfileDataResponseType = {
     isOnline: boolean;
 };
 
+export const api_profile_fetch_data = async (
+    nickname: string
+): Promise<ProfileDataResponseType> => {
+    const response = await axios.get(`/api/profile/${nickname}`); 
+
+    return response.data;
+};
+
 type MatchResultResponseType = {
     /** Аватар пользователя. */
     points: number;
@@ -42,19 +50,28 @@ export type ProfileMatchesResponseType = {
     hasMoreMatches: boolean;
 };
 
-export const api_profile_fetch_data = async (
-    nickname: string
-): Promise<ProfileDataResponseType> => {
-    const response = await axios.get(`/api/profile/${nickname}`); 
-
-    return response.data;
-};
-
 export const api_profile_fetch_matches = async (
     nickname: string,
     page: number
 ): Promise<ProfileMatchesResponseType> => {
     const response = await axios.get(`/api/profile/${nickname}/matches/${page}`); 
+
+    return response.data;
+};
+
+export type ProfileStatisticResponseType = {
+    /** Всего сыгранных матчей. */
+    totalMatches: number;
+    /** Статистика по занимаемым местам. */
+    placesDataset: number[];
+    /** Статистика изменения рейтинга за последние 100 матчей. */
+    ratingDataset: number[];
+};
+
+export const api_profile_fetch_statistic = async (
+    nickname: string
+): Promise<ProfileStatisticResponseType> => {
+    const response = await axios.get(`/api/profile/${nickname}/statistic`);
 
     return response.data;
 };

@@ -96,7 +96,7 @@ const ProfileMatches: React.FC<{
                     setPageNumber(prevPageNumber => prevPageNumber + 1)
                 }
             });
-            node && observer.current.observe(node)
+            node && observer.current.observe(node);
         },
         [isFetching, hasMoreMatches]
     );
@@ -107,6 +107,7 @@ const ProfileMatches: React.FC<{
                 matches.map((match, index) => {
                     return (
                         <Match 
+                            key={match.id}
                             ref={matches.length === index + 1 ? lastUserElementRef : null}
                             {...match}
                         />

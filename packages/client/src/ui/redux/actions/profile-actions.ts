@@ -21,6 +21,27 @@ export const action_profile_set_data_fetching = (
     payload: isFetching
 });
 
+export const action_profile_set_statistic = (
+    data: ProfileTypes.StatisticDataType
+): ProfileTypes.SetStatisticActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_STATISTIC,
+    payload: data
+});
+
+export const action_profile_fetch_statistic = (
+    nickname: string
+): ProfileTypes.FetchStatisticActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_FETCH_STATISTIC,
+    payload: nickname
+});
+
+export const action_profile_set_statistic_is_fetching = (
+    isFetching: boolean
+): ProfileTypes.SetStatisticFetchingActionType => ({
+    type: ProfileTypes.ACTION_TYPE_PROFILE_SET_STATISTIC_FETCHING,
+    payload: isFetching
+});
+
 export const action_profile_set_place = (
     place: number
 ): ProfileTypes.SetPlaceACtionType => ({

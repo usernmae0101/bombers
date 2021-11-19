@@ -51,3 +51,38 @@ export const get_portion_history_matches = (req: Request, res: Response) => {
                 });
         });
 };
+
+export const get_profile_statistic = (req: Request, res: Response) => {
+    Models.MatchModel.count({ "result.nickname": req.params.nickname })
+        .then(totalMatches => {
+            Models.MatchModel.aggregate([
+                { $unwind: "$result" },
+                { $match: { "result.nickname": req.params.nickname } },
+                { $group: { _id: "$result.place", count: { $sum: 1 } } }
+            ])
+                .then(places => {
+                    Models.MatchModel.aggregate([
+                        { $unwind: "$result" },
+                        { $match: { "result.nickname": req.params.nickname } },
+                        { $sort: { created_at: 1 } },
+                        { $group: { _id: null, rating: { $push: "$result.rating" } } },
+                        { $skip: totalMatches > 100 ? totalMatches - 100 : 0 },
+                        { $limit: 100 }
+                    ]) 
+                        .then(rating => {
+                            const placesDataset = Array(4).fill(0);
+                            for (let {_id, count} of places) {
+                                placesDataset[_id - 1] = count;
+                            }
+
+                            res.json(
+                                {
+                                    placesDataset,
+                                    ratingDataset: rating[0]?.rating || [],
+                                    totalMatches
+                                }
+                            )
+                        });
+                });
+        });
+};

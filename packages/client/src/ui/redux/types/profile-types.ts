@@ -11,6 +11,9 @@ export const ACTION_TYPE_PROFILE_SET_MATCHES_HAS_MORE = "PROFILE/SET_MATCHES_HAS
 export const ACTION_TYPE_PROFILE_SET_MATCHES = "PROFILE/SET_MATCHES"; 
 export const ACTION_TYPE_PROFILE_ADD_MATCHES = "PROFILE/ADD_MATCHES"; 
 export const ACTION_TYPE_PROFILE_FETCH_MATCHES = "PROFILE/FETCH_MATCHES"; 
+export const ACTION_TYPE_PROFILE_FETCH_STATISTIC = "PROFILE/FETCH_STATISTIC"; 
+export const ACTION_TYPE_PROFILE_SET_STATISTIC = "PROFILE/SET_STATISTIC"; 
+export const ACTION_TYPE_PROFILE_SET_STATISTIC_FETCHING = "PROFILE/SET_STATISTIC_FETCHING"; 
 
 export type MatchesType = {
 	result: {
@@ -33,6 +36,12 @@ export type FetchMatchesType = {
 	page: number;
 };
 
+export type StatisticDataType = {
+	totalMatches: number;
+	placesDataset: number[];
+	ratingDataset: number[];
+};
+
 export type ProfileStateType = {
 	data: {
 		avatar: string;
@@ -45,6 +54,10 @@ export type ProfileStateType = {
 	};
 	matches: QueryTypes & {
 		list: MatchesType[];
+	};
+	statistic: {
+		isFetching: boolean;
+		data: StatisticDataType;
 	};
 };
 
@@ -108,6 +121,21 @@ export type SetMatchesActionType = {
 	payload: MatchesType[];
 };
 
+export type SetStatisticActionType = {
+	type: typeof ACTION_TYPE_PROFILE_SET_STATISTIC;
+	payload: StatisticDataType;
+};
+
+export type FetchStatisticActionType = {
+	type: typeof ACTION_TYPE_PROFILE_FETCH_STATISTIC;
+	payload: string;
+};
+
+export type SetStatisticFetchingActionType = {
+	type: typeof ACTION_TYPE_PROFILE_SET_STATISTIC_FETCHING;
+	payload: boolean;
+};
+
 export type FetchMatchesActionType = {
 	type: typeof ACTION_TYPE_PROFILE_FETCH_MATCHES;
 	payload: FetchMatchesType;
@@ -116,4 +144,5 @@ export type FetchMatchesActionType = {
 export type ProfileActionsType = SetRatingActionType | SetPlaceACtionType 
 	| SetAvatarActionType | SetDataFetchingActionType | SetDataOnlineActionType 
 	| SetDataLastSeenActionType | SetDataCreatedAtActionType | SetMatchesIsFetchingActionType
-	| SetMatchesHasMoreActionType | SetMatchesActionType | AddMatchesActionType;
+	| SetMatchesHasMoreActionType | SetMatchesActionType | AddMatchesActionType
+	| SetStatisticActionType | SetStatisticFetchingActionType;

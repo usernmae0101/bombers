@@ -14,6 +14,14 @@ const initialState: ProfileTypes.ProfileStateType = {
         isFetching: false,
         hasMore: true,
         list: []
+    },
+    statistic: {
+        isFetching: true,
+        data: {
+            totalMatches: null,
+            placesDataset: [],
+            ratingDataset: []
+        }
     }
 };
 
@@ -76,6 +84,16 @@ export default function profileReducer(
             return {
                 ...state,
                 matches: { ...state.matches, list: [...state.matches.list, ...action.payload] }
+            };
+        case ProfileTypes.ACTION_TYPE_PROFILE_SET_STATISTIC_FETCHING:
+            return {
+                ...state,
+                statistic: { ...state.statistic, isFetching: action.payload }
+            };
+        case ProfileTypes.ACTION_TYPE_PROFILE_SET_STATISTIC:
+            return {
+                ...state,
+                statistic: { ...state.statistic, data: { ...action.payload } }
             };
         default: return state;
     }
