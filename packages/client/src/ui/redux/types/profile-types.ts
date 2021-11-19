@@ -14,10 +14,10 @@ export const ACTION_TYPE_PROFILE_FETCH_MATCHES = "PROFILE/FETCH_MATCHES";
 
 export type MatchesType = {
 	result: {
-		nickname: string;
+		place: number;
 		rating: number;
 		points: number;
-	}[];
+	};
 	id: number;
 	created_at: number;
 	map_id: number;

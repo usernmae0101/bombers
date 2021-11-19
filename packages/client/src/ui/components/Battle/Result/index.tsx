@@ -6,6 +6,7 @@ import * as Shared from "@bombers/shared/src/idnex";
 import * as UserSelectors from "@bombers/client/src/ui/redux/selectors/user-selecrots";
 import * as UserActions from "@bombers/client/src/ui/redux/actions/user-actions";
 import * as GameActions from "@bombers/client/src/ui/redux/actions/game-actions";
+import { debug } from "@bombers/shared/src/tools/debugger"; 
 
 const ResultPlayer: React.FC<{
     userNickname: string;
@@ -15,18 +16,20 @@ const ResultPlayer: React.FC<{
 }> = ({ nickname, rating, points, userNickname }) => {
     const dispatch = useDispatch();
     
-    let className = styles.enemy;
-    if (nickname === userNickname) {
-        // обновляем рейтинг в состоянии
-        dispatch(
-            UserActions.action_user_set_data_rating(rating)
-        );
-
-        className = styles.me;
-    }
+    React.useEffect(
+        () => {
+            if (nickname === userNickname) {
+                // обновляем рейтинг в состоянии
+                dispatch(
+                    UserActions.action_user_set_data_rating(rating)
+                );
+            }
+        },
+        [nickname, userNickname]
+    );
 
     return (
-        <div className={className}>
+        <div className={userNickname === nickname ? styles.me : styles.enemy}>
             <div>{nickname}</div>
             <div>{rating}</div>
             <div>{points}</div>
@@ -61,7 +64,7 @@ const Result: React.FC<{
         );
     }, []);
     
-    if (isHideResult) { 
+    if (isHideResult || place === 0) { 
         return (null);
     }
 

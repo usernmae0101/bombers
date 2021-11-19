@@ -82,6 +82,8 @@ export const startHandlingAppSocket = (
 	socket.on(
 		String(Shared.Enums.SocketChannels.APP_ON_REMOVE_CHAT_MEMBER), 
 		(nickname: string) => {
+			return; // TODO
+
 			dispatch(
 				ChatActions.action_chat_delete_member(nickname)
 			);

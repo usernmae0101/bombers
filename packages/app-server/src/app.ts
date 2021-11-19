@@ -11,18 +11,14 @@ import apiRouter from "./api/routers";
 import SocketManager from "./sockets/SocketManager";
 import { state } from "./app-state";
 
-// parse .env
 config();
 
-// express app
 const app = express();
 
-// set .env params
 const isDevMode = process.env.NODE_ENV === "development";
 const port = +process.env.APP_SERVER_PORT || 3000;
 const mongoHostname = (isDevMode ? "localhost" : process.env.MONGO_DB_HOSTNAME);
 
-// set static path
 const staticPath = isDevMode ? "../client/dist" : "public";
 
 // middlewares
@@ -44,23 +40,18 @@ app.use("*", appRateLimiter, (_, res) => {
     );
 });
 
-// http-server
 const server = createServer(app);
 
-// websocket-server
 const io = new Server(server);
 const socketManager = new SocketManager(io, state);
 socketManager.handle();
 
-// disable autoIdex in production
 mongoose.set("autoIndex", isDevMode);
-
-// mongoose connection
 mongoose.connect(`mongodb://${mongoHostname}:27017/bombers`)
     .then(() => {
         server.listen(port);
         console.log(`handlig as localhost:${port}`);
     })
-    .catch(() => { 
-        console.error("mongodb error connection") 
+    .catch((error) => { 
+        console.error("mongodb error connection", error) 
     });

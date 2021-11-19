@@ -8,9 +8,11 @@ import * as ProfileActions from "@bombers/client/src/ui/redux/actions/profile-ac
 
 type MatchPropsType = {
     map_id: number;
-    place: number;
     created_at: number;
-    points: number;
+    result: {
+        place: number;
+        points: number;
+    };
 };
 
 const Match: React.FC<{ ref: React.Ref<any> } & MatchPropsType> = React.forwardRef((props, ref) => {
@@ -24,11 +26,11 @@ const Match: React.FC<{ ref: React.Ref<any> } & MatchPropsType> = React.forwardR
             </div>
 
             <div className={styles.place}>
-                {props.place} место
+                {props.result.place} место
             </div>
             
             <div className={styles.points}>
-                {props.place === 1 ? "Победа +" : "Поражение "}{props.points}
+                {props.result.place === 1 ? "Победа +" : "Поражение "}{props.result.points}
             </div>
 
             <div className={styles.finish}>
@@ -103,19 +105,12 @@ const ProfileMatches: React.FC<{
         <div className={styles.list}>
             {
                 matches.map((match, index) => {
-                    for (let i = 0; i < match.result.length; i++) {
-                        const { nickname: resultNickname, points } = match.result[i];
-
-                        if (nickname === resultNickname) {
-                            return (
-                                <Match 
-                                    ref={matches.length === index + 1 ? lastUserElementRef : null}
-                                    key={match.created_at}
-                                    { ...{...match, points, place: i + 1} }
-                                />
-                            );
-                        }
-                    }
+                    return (
+                        <Match 
+                            ref={matches.length === index + 1 ? lastUserElementRef : null}
+                            {...match}
+                        />
+                    );
                 })
             }
 

@@ -23,7 +23,8 @@ export default function chatReducer(
             };
         case ChatTypes.ACTION_TYPE_CHAT_DELETE_MEMBER:
             return {
-                ...state, members: state.members.filter(member => {
+                ...state, 
+                members: state.members.filter(member => {
                 	return member.nickname !== action.payload
                 })
             };

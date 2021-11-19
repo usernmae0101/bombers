@@ -18,15 +18,15 @@ export type ProfileDataResponseType = {
 type MatchResultResponseType = {
     /** Аватар пользователя. */
     points: number;
-    /** Игровой рейтинг пользователя. */
+    /** Игровой рейтинг пользователя на момент матча. */
     rating: number;
-    /** Никнейм пользователя. */
-    nickname: string;
+    /** Занимаемое место игроком в матче. */
+    place: number;
 };
 
 type MatchResponseType = {
     /** Результат матча. */
-    result: MatchResultResponseType[];
+    result: MatchResultResponseType;
     /** Идентификатор матча. */
     id: number;
     /** Идентификатор карты. */

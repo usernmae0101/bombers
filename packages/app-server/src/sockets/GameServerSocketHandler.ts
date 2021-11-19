@@ -73,16 +73,17 @@ export default class GameServerSocketHandler {
                         if (user) {
                             const points = place === "1" ? + 10 : -10;
                             
+                            user.rating += points;                           
+                            user.save();
+
                             result.push(
                                 {
                                     rating: user.rating,
                                     nickname: user.nickname,
+                                    place,
                                     points 
                                 }
                             );
-                            
-                            user.rating += points;                           
-                            user.save();
                         }
                     } catch (error) {
                         debug(

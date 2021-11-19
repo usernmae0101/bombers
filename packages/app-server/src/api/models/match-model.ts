@@ -5,8 +5,9 @@ import { CounterModel } from "./counter-model";
 const resultSchema = new mongoose.Schema(
     {
         nickname: String,
-        rating: String,
-        points: Number
+        rating: Number,
+        points: Number,
+        place: Number
     },
     {
         _id: false

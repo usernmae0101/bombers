@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import * as Models from "../models/";
 
-export const get_sorted_portion = (req: Request, res: Response) => {
+export const get_sorted_portion_users = (req: Request, res: Response) => {
     Models.UserModel.count({})
         .then(totalUsers => {
             const skip = +req.params.page * 10 - 10;
@@ -17,10 +17,10 @@ export const get_sorted_portion = (req: Request, res: Response) => {
                 )
                 .select(
                     {
-                        nickname: true,
-                        avatar: true,
-                        rating: true,
-                        _id: false
+                        nickname: 1,
+                        avatar: 1,
+                        rating: 1,
+                        _id: 0
                     }
                 )
                 .exec()

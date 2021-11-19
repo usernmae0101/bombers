@@ -28,31 +28,18 @@ export const get_profile_data = async (req: Request, res: Response) => {
 };
 
 export const get_portion_history_matches = (req: Request, res: Response) => {
-    const selector = {
-        "result.nickname": req.params.nickname
-    };
-
-    Models.MatchModel.count(selector)
+    Models.MatchModel.count({ "result.nickname": req.params.nickname })
         .then(totalMatches => {
             const skip = +req.params.page * 10 - 10;
-        
-            Models.MatchModel.find(selector)
-                .sort(
-                    {
-                       created_at: -1 
-                    }
-                )
-                .skip(skip)
-                .limit(10)
-                .select(
-                    {
-                        created_at: true,
-                        map_id: true,
-                        result: true,
-                        id: true,
-                        _id: false
-                    }
-                )
+       
+            Models.MatchModel.aggregate([
+                { $unwind: "$result" },
+                { $match: { "result.nickname": req.params.nickname } },
+                { $project: { _id: 0, "result.nickname": 0, __v: 0 } },
+                { $sort: { created_at: -1 } },
+                { $skip: skip },
+                { $limit: 10 }
+            ])
                 .exec()
                 .then(matches => {
                     res.json(

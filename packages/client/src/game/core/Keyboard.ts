@@ -1,7 +1,6 @@
 import { debug } from "@bombers/shared/src/tools/debugger";
 
 export interface IKeyboardKeys {
-    /** Состояние клавиш. */
     [code: string]: boolean;
 }
 
