@@ -386,9 +386,11 @@ export const tryToPlaceBomb = (
     );
     
     // проверяем, есть ли в ячейке бомба любого цвета
-    for (let eintity of allEntities)
-        if (getAllBombsIds().includes(eintity))
+    for (let eintity of allEntities) {
+        if (getAllBombsIds().includes(eintity)) {
             return false;
+        }
+    }
 
     return true;
 };

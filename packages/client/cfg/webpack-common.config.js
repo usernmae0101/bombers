@@ -2,7 +2,6 @@ const path = require("path");
 
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: "./src/ui/index.tsx",
@@ -17,13 +16,6 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: "ts-loader",
                 exclude: /node_modules/
-            },
-            {
-                test: /\.(jpe?g|png)$/i,
-                loader: "file-loader",
-                options: {
-                    name: "images/[name].[contenthash].[ext]"
-                }
             }
         ]
     },
@@ -32,19 +24,15 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: [
+                '**/*',
+                '!images/**',
+            ],
             cleanAfterEveryBuildPatterns: [
                 "*.js", 
                 "*.map", 
-                "*.css", 
+                "*.css",
                 "*.LICENSE.txt"
-            ]
-        }),
-        new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: "./assets/images",
-                    to: "./images"
-                }
             ]
         }),
         new HTMLWebpackPlugin({

@@ -11,15 +11,11 @@ import { simulatePackageLoss, simulateLatency } from "@bombers/shared/src/tools/
 interface IConnectRoomData {
     /** Цвет игрока, выделенный сервером для пользователя. */
     color: Shared.Enums.PlayerColors;
-    /** UDP порт, чтобы установить второе (ненадёжное) соединение. */
     UDP_port: number;
     /** Список ICE серверов (необходим TURN для соединения p2p). */
     iceServers: any[];
-    /** Состояние игровых слотов в комнате. */
     slots: Shared.Interfaces.IGameSlots;
-    /** Игровое состояние. */
     gameState: Shared.Interfaces.IGameState;
-    /** Статус игры: начата или нет. */
     isGameStarted: boolean;
 }
 

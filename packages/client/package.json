@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "scripts": {
         "build": "webpack --config cfg/webpack-production.config.js",
-        "dev": "webpack --config cfg/webpack-development.config.js"
+        "dev": "webpack --env NODE_ENV=development --config cfg/webpack-development.config.js"
     },
     "browserslist": {
         "production": [

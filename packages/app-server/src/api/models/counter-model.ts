@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
 
 interface ICounterModel extends mongoose.Model<{}> {
-    /**
-     * Увеличивает счетчик на единицу.
-     */
     increment: (a: string, b: any, c: any) => void;
 }
 

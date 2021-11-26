@@ -24,7 +24,7 @@ export default class FireEntity extends BaseEntity {
                 this.height += GAME_RESOLUTION_TILE_OFFSET * 2;
                 break;
             case EntityNumbers.FIRE_BOTTOM:
-                this.rotate180degress();
+                this.rotate180degrees();
                 this.height += GAME_RESOLUTION_TILE_OFFSET * 2;
                 break;
             case EntityNumbers.FIRE_LEFT:

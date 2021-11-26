@@ -14,7 +14,7 @@ export const auth_user_social = (req: Request, res: Response) => {
         "nickname rating avatar _id"
     )
         .then(user => {
-            if (!user) { // if user === null 
+            if (!user) { 
                 res.status(404).json(
                     {
                         code: Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL

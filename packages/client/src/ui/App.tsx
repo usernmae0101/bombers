@@ -1,5 +1,6 @@
 import React from "react";
 import { Loader } from "pixi.js";
+import { Dispatch } from "redux";
 import bridge from '@vkontakte/vk-bridge';
 import { BrowserRouter } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -14,6 +15,22 @@ import { startHandlingAppSocket } from "../handlers/socket-app-handler";
 import LoaderComponent from "./components/Loader";
 import { debug } from "@bombers/shared/src/tools/debugger";
 
+const dispatchSocialData = (
+    type: string, 
+    id: number, 
+    dispatch: Dispatch
+) => {
+    dispatch(
+        UserActions.action_user_set_social_type(type)
+    );
+    dispatch(
+        UserActions.action_uesr_set_social_uid(id)
+    );
+    dispatch(
+        UserActions.action_user_set_auth_is_social(true)
+    );
+};
+
 const Main = () => {
     const dispatch = useDispatch();
 
@@ -27,35 +44,22 @@ const Main = () => {
     const isAuth = useSelector(UserSelectors.select_user_auth);
     const socket = useSelector(UserSelectors.select_user_socket_instance);
    
-    const dispatchSocial = (type: string, id: number) => {
-        dispatch(
-            UserActions.action_user_set_social_type(type)
-        );
-        dispatch(
-            UserActions.action_uesr_set_social_uid(id)
-        );
-        dispatch(
-            UserActions.action_user_set_auth_is_social(true)
-        );
-    };
-
-    // Подписка на монтирование компонента. ComponentDidMonut.
     React.useEffect(
         () => {
-            // Режим разработки. Задаём невалидные данные, чтобы создать новый аккаунт.
+            // режим разработки. задаём невалидные данные, чтобы создать новый аккаунт
             if (isDevMode) {
                 const id = window.crypto.getRandomValues(new Uint16Array(1))[0];
-                dispatchSocial("vk", id);
+                dispatchSocialData("vk", id, dispatch);
             }
             
-            // Авторизация через IFrame.
+            // авторизация через IFrame
             else if (window.parent != window) {
                 const host = window.parent.location.host;
 
                 if (host === "vk.com") {
                     bridge.send(`VKWebAppInit`).then(async () => {
                         const { id } = await bridge.send("VKWebAppGetUserInfo");
-                        dispatchSocial("vk", id);
+                        dispatchSocialData("vk", id, dispatch);
                     });
                 }
             }
@@ -63,10 +67,9 @@ const Main = () => {
         []
     );
     
-    // Подписка на изменение свойства "isAuthViaSocial".
     React.useEffect(
         () => {
-            // Авторизация выполнена через социальную сеть, получаем данные через API.
+            // авторизация выполнена через социальную сеть, получаем данные через API
             if (isAuthViaSocial === true) {
                 dispatch(
                     UserActions.action_user_fetch_data_social({
@@ -82,11 +85,10 @@ const Main = () => {
         [isAuthViaSocial]
     );
   
-    // Подписка на измениение свойства "errorCode".  
     React.useEffect(
         () => {
             switch (errorCode) { 
-                // Пользователь не был найден в базе данных - создаём.
+                // пользователь не был найден в базе данных - создаём
                 case Shared.Enums.ApiResponseCodes.USER_NOT_EXISTS_SOCIAL:
                     dispatch(
                         UserActions.action_user_create_social({
@@ -103,12 +105,11 @@ const Main = () => {
         [errorCode]
     );
 
-    // Подписка на измение свойства "isAuth".
     React.useEffect(
         () => {
             (async () => {
                 if (isAuth) {
-                    // Подключение к веб-сокету по авторизационному токену.
+                    // подключение к веб-сокету по авторизационному токену
                     const _socket = io("/client", {
                         query: {
                             authToken
@@ -144,8 +145,9 @@ const Main = () => {
         [isAuth]
     );
 
-    if (!isAuth || !socket) 
+    if (!isAuth || !socket) {
         return (<LoaderComponent />);
+    }
 
     return (
         <BrowserRouter>

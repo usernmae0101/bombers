@@ -77,7 +77,7 @@ export default class BaseEntity extends Sprite {
     /**
      * Поворачивает спрайт на 180 градусов.
      */
-    public rotate180degress() {
+    public rotate180degrees() {
         this.angle = 180;
         this.x += GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_OFFSET * 2;
         this.y += GAME_RESOLUTION_TILE_SIZE - GAME_RESOLUTION_TILE_OFFSET * 2; 

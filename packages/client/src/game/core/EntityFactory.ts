@@ -7,9 +7,6 @@ const { EntityNumbers } = Shared.Enums;
 export default class EntityFactory {
     /**
      * Создаёт игровую сущность по переданному идентификатору.
-     * 
-     * @param entityId - идентификатор игровой сущности
-     * @returns игровая сущность
      */
     public static create(entityId: Shared.Enums.EntityNumbers): any {
         const { x: frameX, y: frameY } = getEntityFrame(entityId);

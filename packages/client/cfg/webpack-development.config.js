@@ -30,6 +30,14 @@ module.exports = merge(commonConfig, {
                         }
                     },
                 ]
+            },
+            {
+                test: /\.(jpe?g|png)$/i,
+                loader: "file-loader",
+                options: {
+                    emitFile: false,
+                    name: "images/[name].[ext]"
+                }
             }
         ]
     },

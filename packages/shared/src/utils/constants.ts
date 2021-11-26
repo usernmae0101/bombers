@@ -79,6 +79,7 @@ export const GAME_RESOLUTION_TILE_LENGTH_Y = 11;
  */
 export const GAME_RESOLUTION_CANVAS_MARGIN = 10;
 
+
 /***************************************
  * CHAT--------------------------------*
  ***************************************/
@@ -148,8 +149,6 @@ export const GAME_RESOURCES_IMAGE_TILESET = "/images/tilemap_72x72.png";
  */
 export const GAME_RESOURCES_SPRITESHEET_EXPLOSION = "/images/explosion.json";
 
-/**
- *
 
 /***************************************
  * DEVELOPMENT-------------------------*

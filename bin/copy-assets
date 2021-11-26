@@ -1,0 +1,13 @@
+#!/bin/bash
+
+root="./packages/client/"
+
+for folder in images ; do
+    for file in $(ls "$root/assets/$folder/") ; do
+        if [ ! -d "$root/dist/$folder" ]; then
+            mkdir -p "$root/dist/$folder"
+        fi
+
+        cp -u "$root/assets/$folder/$file" "$root/dist/$folder/"
+    done;
+done;

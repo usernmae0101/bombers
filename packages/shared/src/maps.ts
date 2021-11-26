@@ -1,13 +1,12 @@
 import * as Enums from "./utils/enums";
 
-/** Коробка. */
 const B = [Enums.EntityNumbers.BOX];
-/** Камень. */
 const R = [Enums.EntityNumbers.ROCK];
-/** Пустая клетка. */
 const E = [] as number[];
 
-export const createMapById = (mapId: Enums.GameMaps): number[][][] => {
+export const createMapById = (
+    mapId: Enums.GameMaps
+): number[][][] => {
     switch (mapId) {
         case Enums.GameMaps.MAP_1:
             return [

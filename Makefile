@@ -10,12 +10,19 @@ run-dev:
 ifeq ($(TARGET), mongo)
 	docker run --rm --name mongo -p 27017:27017 mongo
 else 
+ifeq ($(TARGET), client)
+	bin/copy-assets
+endif
 	npm run dev:$(TARGET)
 endif
 
 install:
-	$(if $(findstring Linux,$(OS)), sudo) npm install --global yarn
+	chmod +x bin/copy-assets && \
+		bin/copy-assets
 
+	$(if $(findstring Linux,$(OS)), sudo) \
+		npm install --global yarn
+	
 	yarn && yarn install
 	
 build:
