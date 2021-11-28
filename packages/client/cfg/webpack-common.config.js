@@ -1,5 +1,4 @@
 const path = require("path");
-
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 
@@ -23,20 +22,16 @@ module.exports = {
         extensions: [".tsx", ".ts", ".js"]
     },
     plugins: [
+        new HTMLWebpackPlugin({
+            template: "./assets/index.html"
+        }),
         new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: [
-                '**/*',
-                '!images/**',
-            ],
             cleanAfterEveryBuildPatterns: [
                 "*.js", 
                 "*.map", 
                 "*.css",
                 "*.LICENSE.txt"
             ]
-        }),
-        new HTMLWebpackPlugin({
-            template: "./assets/index.html"
         })
     ]
 };

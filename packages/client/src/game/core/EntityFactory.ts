@@ -8,7 +8,9 @@ export default class EntityFactory {
     /**
      * Создаёт игровую сущность по переданному идентификатору.
      */
-    public static create(entityId: Shared.Enums.EntityNumbers): any {
+    public static create(
+        entityId: Shared.Enums.EntityNumbers
+    ): any {
         const { x: frameX, y: frameY } = getEntityFrame(entityId);
 
         switch (entityId) {
