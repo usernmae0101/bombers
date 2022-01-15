@@ -1446,10 +1446,12 @@ arr-union@^3.1.0:
   resolved "https://registry.yarnpkg.com/arr-union/-/arr-union-3.1.0.tgz#e39b09aea9def866a8f206e288af63919bae39c4"
   integrity sha1-45sJrqne+Gao8gbiiK9jkZuuOcQ=
 
-array-buffer-serializer@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/array-buffer-serializer/-/array-buffer-serializer-0.3.1.tgz#aacc7bf5eb75b8cc2fd68d64ea651a935ff73e8f"
-  integrity sha512-U4Ur3P3C0S1xNoVDOivHpANAj8ouP2KAZ6kHmGDtbz9gSM82wTdGg7cGtQELk31gw3UiISlB6hKJ7Y8HGcRiJQ==
+array-buffer-serializer@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/array-buffer-serializer/-/array-buffer-serializer-0.4.0.tgz#1a0f0ac88f43d9bf96a65f624dd91369c452e6e4"
+  integrity sha512-5mLX0RIU0vfXA7evXOvuTJTwMbTueIficrU6IVc1dby2rmLgH/4yoICqvxACcqBs9uQtg9xrOXrEXY3MyHmRSQ==
+  dependencies:
+    ieee754 "^1.2.1"
 
 array-filter@^1.0.0:
   version "1.0.0"
@@ -3552,7 +3554,7 @@ icss-utils@^5.0.0, icss-utils@^5.1.0:
   resolved "https://registry.yarnpkg.com/icss-utils/-/icss-utils-5.1.0.tgz#c6be6858abd013d768e98366ae47e25d5887b1ae"
   integrity sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==
 
-ieee754@^1.1.13:
+ieee754@^1.1.13, ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==

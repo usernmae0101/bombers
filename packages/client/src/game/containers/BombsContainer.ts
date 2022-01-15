@@ -58,7 +58,11 @@ export default class BombsContainer extends BaseContainer<BombEntity> {
     
         const period = Math.ceil((t1 / t2) * 3) * (2 * Math.PI);
         const amplitude = GAME_RESOLUTION_TILE_OFFSET;
-
+        
+        //  поменять на затухающие колебания? 
+        //  --------------------------------
+        //  f(t) = A * e^-kt * sin(wt)
+        //  --------------------------------
         const scale = amplitude * Math.sin(
             (t1 / 700) * period
         );
