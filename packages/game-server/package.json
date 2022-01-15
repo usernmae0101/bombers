@@ -6,7 +6,7 @@
         "serve": "ts-node src src/server.ts"
     },
     "dependencies": {
-        "@geckos.io/server": "^1.7.2",
+        "@geckos.io/server": "^2.1.6",
         "@types/node": "^15.0.2",
         "array-buffer-serializer": "^0.4.0",
         "cross-env": "^7.0.3",
