@@ -8,13 +8,13 @@ import SocketManager from "./sockets/SocketManager";
 
 config();
 
-const isDevMode = process.env.NODE_ENV === "development";
-const appServerPort = isDevMode ? 3000 : +process.env.APP_SERVER_PORT;
-const appServerAddress = isDevMode ? "127.0.0.1" : process.env.APP_SERVER_ADDRESS;
-const gameServerPortUDP = isDevMode ? 3001 : +process.env.GAME_SERVER_UDP_PORT;
-const gameServerPortTCP = isDevMode ? 3002 : +process.env.GAME_SERVER_TCP_PORT;
-const gameServerAddress = isDevMode ? "127.0.0.1" : process.env.GAME_SERVER_ADDRESS;
-const iceServers = isDevMode ? [] : JSON.parse(process.env.GAME_SERVER_ICE_LIST);
+const isDevMode         = process.env.NODE_ENV === "development";
+const appServerPort     = +process.env.APP_SERVER_PORT || 3000;
+const appServerAddress  = process.env.APP_SERVER_ADDRESS ||  "127.0.0.1" ;
+const gameServerPortUDP = +process.env.GAME_SERVER_UDP_PORT || 3001;
+const gameServerPortTCP = +process.env.GAME_SERVER_TCP_PORT || 3002;
+const gameServerAddress = process.env.GAME_SERVER_ADDRESS ||  "127.0.0.1" ;
+const iceServers = process.env.GAME_SERVER_ICE_LIST ? JSON.parse(process.env.GAME_SERVER_ICE_LIST) : [];
 
 const clientSocketTCP = io(
     `http://${appServerAddress}:${appServerPort}/game-server`, 

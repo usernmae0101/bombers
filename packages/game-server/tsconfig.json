@@ -2,12 +2,8 @@
     "compilerOptions": {
         "esModuleInterop": true,
         "noImplicitAny": true,
-        "target": "es6",
+        "target": "ES2019",
+        "module": "es2020",
         "moduleResolution": "node"
-    },
-    "references": [
-        {
-            "path": "../shared"
-        }
-    ]
+    }
 }

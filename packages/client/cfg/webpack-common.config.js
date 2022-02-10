@@ -26,6 +26,13 @@ module.exports = {
             template: "./assets/index.html"
         }),
         new CleanWebpackPlugin({
+            root: process.cwd(),
+            verbose: true,
+            dry: false,
+            cleanOnceBeforeBuildPatterns: [
+                "**/*",
+                "!images/**"
+            ],
             cleanAfterEveryBuildPatterns: [
                 "*.js", 
                 "*.map", 

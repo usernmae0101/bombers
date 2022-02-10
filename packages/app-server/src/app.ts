@@ -33,7 +33,7 @@ app.use(urlencoded({
 }));
 
 // routers
-app.use("/api", apiRouter);
+app.use("/api", appRateLimiter, apiRouter);
 app.use("*", appRateLimiter, (_, res) => {
     res.sendFile(
     	path.resolve(staticPath, "index.html")

@@ -35,7 +35,7 @@
         "webpack-merge": "^5.7.3"
     },
     "dependencies": {
-        "@geckos.io/client": "^2.1.6",
+        "@geckos.io/client": "^2.1.8",
         "@types/react-router-dom": "^5.1.7",
         "@vkontakte/vk-bridge": "^2.4.8",
         "array-buffer-serializer": "^0.4.0",

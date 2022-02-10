@@ -1,5 +1,4 @@
 const { DefinePlugin } = require("webpack");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const { merge } = require("webpack-merge");
 
 const commonConfig = require("./webpack-common.config");
@@ -43,19 +42,7 @@ module.exports = merge(commonConfig, {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: [
-                '**/*',
-                '!images/**'
-            ],
-            cleanAfterEveryBuildPatterns: [
-                "*.js", 
-                "*.map", 
-                "*.css",
-                "*.LICENSE.txt"
-            ]
-        }),
-        new DefinePlugin({
+       new DefinePlugin({
             isDevMode: true,
             'process.env': {
                 'NODE_ENV': '"development"'
